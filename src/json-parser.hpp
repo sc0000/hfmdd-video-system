@@ -1,16 +1,16 @@
 #pragma once
 
-#include <QDate>
-#include <QVector>
-
 #include "booking.h"
 
 class JsonParser
 {
 public:
 
-  static QVector<Booking> getBookingsAtDate(const QDate& date);
-  static void addBookingToDate(const QDate& date, const Booking& booking);
+  static void addBooking(const Booking& booking);
+  static void getBookingsForEmail(const QString& mailAddress, QVector<Booking>& outVector);
+  static void getBookingsOnDate(const QDate& date, QVector<Booking>& outVector);
+  static void removeBooking(const Booking& booking);
+  
 
   static QJsonArray readJsonArrayFromFile(const QString& path);
   static void writeJsonArrayToFile(const QJsonArray& arr, const QString& path);

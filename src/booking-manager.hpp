@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QWidget>
-#include <QDockWidget>
+// #include <QDockWidget>
 #include <QDialog>
-
+#include <QListWidget>
+#include "booking.h"
 // #ifdef __cplusplus
 // extern "C" {
 // #endif
@@ -28,10 +29,21 @@ private:
   static BookingManager* instance;
   Ui::BookingManager* ui;
 
+  // children
+  QListWidget* bookingsList;
+
+  // props
+  QString currentMailAddress;
+  QVector<Booking> bookings;
+
+  // methods
+  void updateBookings();
+
 private slots:
   void on_newBookingButton_pressed();
-  void on_editSelectedBookingButton_pressed();
-    
+  void on_editBookingButton_pressed();
+  void on_deleteBookingButton_pressed();  
+
 public:
   BookingManager(QWidget *parent = nullptr);
   ~BookingManager();

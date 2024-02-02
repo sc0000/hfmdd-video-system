@@ -6,26 +6,60 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>188</height>
+    <width>600</width>
+    <height>400</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>251</width>
-     <height>181</height>
+     <x>20</x>
+     <y>20</y>
+     <width>561</width>
+     <height>351</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="newBookingButton">
-      <property name="text">
-       <string>New Booking</string>
+     <widget class="QListWidget" name="bookingsList">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
       </property>
      </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="newBookingButton">
+        <property name="text">
+         <string>New Booking</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="editBookingButton">
+        <property name="text">
+         <string>Edit Booking</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deleteBookingButton">
+        <property name="text">
+         <string>Delete Booking</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

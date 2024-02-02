@@ -6,6 +6,9 @@
 struct Booking
 {
   QString email;
+  QDate date;
   QTime startTime;
   QTime stopTime;
+  QString event;
 };
+

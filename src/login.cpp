@@ -19,15 +19,19 @@ void login_load(void)
 }
 
 Login::Login(QWidget *parent)
-    : QDockWidget("Login", parent), 
-      ui(new Ui::Login), 
-      mailAddressIsValid(false)
+  : QDockWidget("Login", parent), 
+    ui(new Ui::Login), 
+    mailAddressIsValid(false)
 {
   instance = this;
   ui->setupUi(this);
   setAllowedAreas(Qt::RightDockWidgetArea);
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   setTitleBarWidget(new QWidget());
+
+  QLabel* reminderLabel = findChild<QLabel*>("reminderLabel");
+  reminderLabel->setMinimumHeight(reminderLabel->fontMetrics().lineSpacing() * 2);
+
   show();
 }
 
@@ -71,11 +75,6 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
   }
 
   verifyMailAddress();
-}
-
-void Login::on_newBookingButton_pressed()
-{
-  if (!verifyMailAddress()) return;
 }
 
 void Login::on_manageBookingsButton_pressed()

@@ -1,22 +1,36 @@
-#include "json-parser.h"
+#include "json-parser.hpp"
 
+#include <QVector>
+#include <QDate>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 
-// #define BOOKINGS_PATH "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/Bookings/bookings.json"
+// QString JsonParser::BOOKINGS_PATH = "V:/sb-terminal-test/bookings.json";
+QString JsonParser::BOOKINGS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
 
-QString JsonParser::BOOKINGS_PATH = "V:/sb-terminal-test/bookings.json";
-const QString JsonParser::DATE_FIELD = "00-Date";
-const QString JsonParser::BOOKINGS_FIELD = "01-Bookings";
-
-QVector<Booking> JsonParser::getBookingsAtDate(const QDate& date)
+void JsonParser::addBooking(const Booking& booking)
 {
-  QVector<Booking> outVector;
-
   QJsonArray arr = 
-    readJsonArrayFromFile(BOOKINGS_PATH);
+      readJsonArrayFromFile(BOOKINGS_PATH);
+
+  QJsonObject bookingObj;
+  bookingObj.insert("Email", booking.email);
+  bookingObj.insert("Date", booking.date.toString(Qt::ISODate));
+  bookingObj.insert("StartTime", booking.startTime.toString());
+  bookingObj.insert("StopTime", booking.stopTime.toString());
+  bookingObj.insert("Event", booking.event);
+
+  arr.append(bookingObj);
+  writeJsonArrayToFile(arr, BOOKINGS_PATH);
+}
+
+void JsonParser::getBookingsOnDate(const QDate& date, QVector<Booking>& outVector)
+{
+  outVector.clear();
+
+  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
 
   for (const QJsonValue& val : arr)
   {
@@ -24,71 +38,68 @@ QVector<Booking> JsonParser::getBookingsAtDate(const QDate& date)
 
     QJsonObject obj = val.toObject();
 
-    if (obj.value(DATE_FIELD) != date.toString(Qt::ISODate))
+    if (!obj.contains("Date") || obj.value("Date").toString() != date.toString(Qt::ISODate))
       continue;
 
-    QJsonArray bookings = obj.value(BOOKINGS_FIELD).toArray();
-
-    for (const QJsonValue& bookingVal : bookings)
-    {
-      if (!bookingVal.isObject()) continue;
-
-      QJsonObject bookingObj = bookingVal.toObject();
-
-      Booking booking =
+    Booking booking =
       {
-        bookingObj.value("Email").toString(),
-        QTime::fromString(bookingObj.value("StartTime").toString()),
-        QTime::fromString(bookingObj.value("StopTime").toString())
+        obj.value("Email").toString(),
+        QDate::fromString(obj.value("Date").toString()),
+        QTime::fromString(obj.value("StartTime").toString()),
+        QTime::fromString(obj.value("StopTime").toString())
       };
 
       outVector.append(booking);
-    }
   }
-  
-  return outVector;
 }
 
-void JsonParser::addBookingToDate(const QDate& date, const Booking& booking)
+void JsonParser::getBookingsForEmail(const QString& mailAddress, QVector<Booking>& outVector)
 {
-  QJsonArray arr = 
-      readJsonArrayFromFile(BOOKINGS_PATH);
+  outVector.empty();
 
-  QJsonObject bookingObj;
-  bookingObj.insert("Email", booking.email);
-  bookingObj.insert("StartTime", booking.startTime.toString());
-  bookingObj.insert("StopTime", booking.stopTime.toString());
+  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
 
-  for (qsizetype i = 0; i < arr.size(); ++i) // for (const QJsonValue& val : arr)
+  for (const QJsonValue& val : arr)
   {
-    if (!arr[i].isObject()) continue;
+    if (!val.isObject()) continue;
 
-    QJsonObject obj = arr[i].toObject();
+    QJsonObject obj = val.toObject();
 
-    if (obj.value(DATE_FIELD) == date.toString(Qt::ISODate))
-    {
-      QJsonArray bookingsArr = obj.value(BOOKINGS_FIELD).toArray();
-      bookingsArr.append(bookingObj);
+    if (!obj.contains("Email") || obj.value("Email").toString() != mailAddress)
+      continue;
 
-      obj[BOOKINGS_FIELD] = bookingsArr;
-      arr[i] = obj;
+    Booking booking =
+      {
+        obj.value("Email").toString(),
+        QDate::fromString(obj.value("Date").toString(), Qt::ISODate),
+        QTime::fromString(obj.value("StartTime").toString("HH:mm")),
+        QTime::fromString(obj.value("StopTime").toString("HH:mm")),
+        obj.value("Event").toString()
+      };
 
-      writeJsonArrayToFile(arr, BOOKINGS_PATH);
+      outVector.append(booking);
+  }
+}
 
-      return;
-    } 
+void JsonParser::removeBooking(const Booking& booking)
+{
+  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+
+  for (qsizetype i = arr.size() - 1; i >= 0; --i) {
+    QJsonValue val = arr[i];
+
+    if (!val.isObject()) continue;
+
+    QJsonObject obj = val.toObject();
+
+    if (obj.value("Email").toString() == booking.email &&
+        obj.value("Date").toString() == booking.date.toString(Qt::ISODate) &&
+        obj.value("StartTime").toString() == booking.startTime.toString() &&
+        obj.value("StopTime").toString() == booking.stopTime.toString())
+        arr.removeAt(i);
   }
 
-  QJsonArray bookingsArr;
-  bookingsArr.append(bookingObj);
-
-  QJsonObject dateObj;
-  dateObj.insert("00-Date", date.toString(Qt::ISODate));
-  dateObj.insert("01-Bookings", bookingsArr);
-
-  arr.append(dateObj);
-  
-  writeJsonArrayToFile(arr, BOOKINGS_PATH);
+  writeJsonArrayToFile(arr, BOOKINGS_PATH); 
 }
 
 QJsonArray JsonParser::readJsonArrayFromFile(const QString& path)

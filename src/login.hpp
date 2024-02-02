@@ -36,14 +36,14 @@ private:
 
 private slots:
   void on_mailAddressLineEdit_textEdited(const QString& text);
-  void on_newBookingButton_pressed();
   void on_manageBookingsButton_pressed();
   void on_toPTZControlsButton_pressed();
     
 public:
   Login(QWidget *parent = nullptr);
   ~Login();
-  static inline Login* getInstance() { return instance; }
 
+  static inline Login* getInstance() { return instance; }
+  inline const QString& getCurrentMailAddress() { return currentMailAddress; }
 };
 

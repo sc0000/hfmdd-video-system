@@ -1,5 +1,5 @@
 #include "simple-recording.h"
-#include "json-parser.h"
+#include "json-parser.hpp"
 #include "source-record.h"
 #include "ptz-controls.hpp"
 
@@ -292,11 +292,13 @@ void SimpleRecordingWidget::onConfirmDateTimeButtonClicked()
   Booking booking =
   {
     m_mailAddressLineEdit->text(),
+    m_selectedDate,
     startTime,
-    stopTime
+    stopTime,
+    QString("Konzert/Prüfung/Klassenabend")
   };
   
-  JsonParser::addBookingToDate(m_selectedDate, booking);
+  JsonParser::addBooking(booking);
 
   m_outerDir = m_selectedDate.toString(Qt::ISODate) + "/";
   const QString newFilePath = m_baseDir + m_outerDir + m_innerDir;
@@ -357,7 +359,7 @@ void SimpleRecordingWidget::onCalendarCellClicked(const QDate& date)
 
   if (m_bookedTimesLabel == nullptr) return;
   
-  m_selectedDateBookings = JsonParser::getBookingsAtDate(date);
+  JsonParser::getBookingsOnDate(date, m_selectedDateBookings);
 
   if (m_selectedDateBookings.isEmpty())
   {

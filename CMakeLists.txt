@@ -76,6 +76,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/login.hpp
   src/message-box.hpp
   src/booking-manager.hpp
+  src/json-parser.hpp
   src/ptz-controls.hpp
   src/ptz-device.hpp
   src/settings.hpp
