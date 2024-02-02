@@ -5,6 +5,7 @@
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-box.hpp"
+#include "booking-manager.hpp"
 
 Login* Login::instance = NULL;
 
@@ -18,7 +19,9 @@ void login_load(void)
 }
 
 Login::Login(QWidget *parent)
-    : QDockWidget("Login", parent), ui(new Ui::Login)
+    : QDockWidget("Login", parent), 
+      ui(new Ui::Login), 
+      mailAddressIsValid(false)
 {
   instance = this;
   ui->setupUi(this);
@@ -36,9 +39,15 @@ Login::~Login()
 bool Login::verifyMailAddress()
 {
   if (!mailAddressIsValid) {
-     std::unique_ptr<MessageBox> messageBox = std::make_unique<MessageBox>("Please enter a valid email address!", this);
-    messageBox->exec();
+    findChild<QLabel*>("reminderLabel")->setText("Please enter a valid HfMDD email address");
+    findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet("QLineEdit { border: 2px solid #FF5952 }");
+    // MessageBox::dInstance("Please enter a valid email address!", this);
     return false;
+  }
+
+  else {
+    findChild<QLabel*>("reminderLabel")->setText(" ");
+    findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet("QLineEdit { border: 2px solid #48FF8B }");
   }
 
   return true;
@@ -46,8 +55,7 @@ bool Login::verifyMailAddress()
 
 void Login::on_mailAddressLineEdit_textEdited(const QString& text)
 {
- currentMailAddress = text;
-
+  currentMailAddress = text;
   mailAddressIsValid = false;
 
   const QString mailSuffices[] = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" }; // TODO: Remove gmx
@@ -62,15 +70,7 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
     }
   }
 
-  QString styleSheet;
-
-  if (mailAddressIsValid)
-    styleSheet = "QLineEdit { border: 2px solid #48FF8B }";
-
-  else
-    styleSheet = "QLineEdit { border: 2px solid #FF5952 }";
-
-  findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet(styleSheet);
+  verifyMailAddress();
 }
 
 void Login::on_newBookingButton_pressed()
@@ -81,6 +81,9 @@ void Login::on_newBookingButton_pressed()
 void Login::on_manageBookingsButton_pressed()
 {
   if (!verifyMailAddress()) return;
+
+  BookingManager* bookingManager = new BookingManager(this);
+  bookingManager->exec();
 }
 
 void Login::on_toPTZControlsButton_pressed()

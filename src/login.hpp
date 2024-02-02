@@ -24,7 +24,7 @@ class Login : public QDockWidget
   Q_OBJECT
 private:
   static Login* instance;
-  Ui::Login *ui;
+  Ui::Login* ui;
 
 private:
   QString currentMailAddress;
