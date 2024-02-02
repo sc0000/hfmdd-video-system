@@ -9,4 +9,5 @@ class MessageBox : public QDialog
 
 public:
   explicit MessageBox(const QString& message, QWidget* parent = nullptr);
+  static void dInstance(const QString& message, QWidget* parent = nullptr);
 };

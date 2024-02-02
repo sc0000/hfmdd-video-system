@@ -24,3 +24,9 @@ MessageBox::MessageBox(const QString& message, QWidget* parent)
 
   setFocus();
 }
+
+void MessageBox::dInstance(const QString& message, QWidget* parent)
+{
+  std::unique_ptr<MessageBox> messageBox = std::make_unique<MessageBox>(message, parent);
+  messageBox->exec();
+}
