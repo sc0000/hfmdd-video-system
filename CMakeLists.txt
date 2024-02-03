@@ -44,7 +44,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/plugin-main.cpp 
   src/simple-recording.cpp
   src/json-parser.cpp
-  src/message-box.cpp
+  src/message-dialog.cpp
   src/booking-manager.cpp
   src/login.cpp
   src/source-record.c
@@ -74,7 +74,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/imported/spinbox-ignorewheel.cpp
   # src/ptz.h
   src/login.hpp
-  src/message-box.hpp
+  src/message-dialog.hpp
   src/booking-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp

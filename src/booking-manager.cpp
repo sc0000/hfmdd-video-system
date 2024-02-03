@@ -1,6 +1,6 @@
 #include <QLabel>
 #include "login.hpp"
-#include "message-box.hpp"
+#include "message-dialog.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
@@ -59,6 +59,17 @@ void BookingManager::on_editBookingButton_pressed()
 
 void BookingManager::on_deleteBookingButton_pressed()
 {
+  if (bookingsList->selectedItems().isEmpty()) {
+    OkDialog::instance("Please select the booking you want to delete.", this);
+    return;
+  }
+
+  bool confirmed;
+
+  OkCancelDialog::instance("Do you really want to delete the selected booking? This cannot be undone.", confirmed, this);
+
+  if (!confirmed) return;
+
   int rowIndex = bookingsList->currentRow();
   const Booking& selectedBooking = bookings[rowIndex];
   JsonParser::removeBooking(selectedBooking);

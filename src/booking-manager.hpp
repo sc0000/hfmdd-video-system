@@ -5,15 +5,6 @@
 #include <QDialog>
 #include <QListWidget>
 #include "booking.h"
-// #ifdef __cplusplus
-// extern "C" {
-// #endif
-
-// extern void booking_manager_load(void);
-
-// #ifdef __cplusplus
-// }
-// #endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

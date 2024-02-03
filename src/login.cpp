@@ -4,7 +4,7 @@
 #include "ui_login.h"
 #include "ptz.h"
 #include "ptz-controls.hpp"
-#include "message-box.hpp"
+#include "message-dialog.hpp"
 #include "booking-manager.hpp"
 
 Login* Login::instance = NULL;
@@ -13,9 +13,9 @@ void login_load(void)
 {
   QWidget* main_window =
     (QWidget*)obs_frontend_get_main_window();
-    auto* tmp = new Login(main_window);
-    obs_frontend_add_dock(tmp);
-    tmp->setFloating(false);
+  auto* tmp = new Login(main_window);
+  obs_frontend_add_dock(tmp);
+  tmp->setFloating(false);
 }
 
 Login::Login(QWidget *parent)
@@ -45,7 +45,7 @@ bool Login::verifyMailAddress()
   if (!mailAddressIsValid) {
     findChild<QLabel*>("reminderLabel")->setText("Please enter a valid HfMDD email address");
     findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet("QLineEdit { border: 2px solid #FF5952 }");
-    // MessageBox::dInstance("Please enter a valid email address!", this);
+    // OkDialog::dInstance("Please enter a valid email address!", this);
     return false;
   }
 
