@@ -36,7 +36,7 @@ private slots:
   void on_deleteBookingButton_pressed();  
 
 public:
-  BookingManager(QWidget *parent = nullptr);
+  BookingManager(QWidget* parent = nullptr);
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
 

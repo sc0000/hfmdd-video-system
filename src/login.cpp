@@ -43,9 +43,8 @@ Login::~Login()
 bool Login::verifyMailAddress()
 {
   if (!mailAddressIsValid) {
-    // findChild<QLabel*>("reminderLabel")->setText("Please enter a valid HfMDD email address");
+    findChild<QLabel*>("reminderLabel")->setText("Please enter a valid HfMDD email address");
     findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet("QLineEdit { border: 2px solid #FF5952 }");
-    OkDialog::instance("Please enter a valid email address!", this);
     return false;
   }
 

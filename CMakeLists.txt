@@ -45,10 +45,12 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/simple-recording.cpp
   src/json-parser.cpp
   src/message-dialog.cpp
+  src/booking-editor.cpp
   src/booking-manager.cpp
   src/login.cpp
   src/source-record.c
   src/login.ui
+  src/booking-editor.ui
   src/booking-manager.ui
   src/ptz-controls.ui
   src/settings.ui
@@ -75,6 +77,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # src/ptz.h
   src/login.hpp
   src/message-dialog.hpp
+  src/booking-editor.hpp
   src/booking-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp

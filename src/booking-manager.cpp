@@ -1,6 +1,7 @@
 #include <QLabel>
 #include "login.hpp"
 #include "message-dialog.hpp"
+#include "booking-editor.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
@@ -46,10 +47,7 @@ void BookingManager::updateBookings()
 
 void BookingManager::on_newBookingButton_pressed()
 {
-  Login* l = Login::getInstance();
-  l->findChild<QLabel*>("reminderLabel")->setText("TEST");
-  // MessageBox::dInstance("test", nullptr);
-  // delete this;
+  BookingEditor::instance(nullptr, this);
 }
 
 void BookingManager::on_editBookingButton_pressed()
