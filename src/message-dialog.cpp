@@ -2,34 +2,28 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-
+#include "ui_ok-dialog.h"
 #include "ui_ok-cancel-dialog.h"
 #include "message-dialog.hpp"
 
 OkDialog::OkDialog(const QString& message, QWidget* parent)
-  : QDialog(parent)
+  : QDialog(parent),
+    ui(new Ui::OkDialog)
 {
   setWindowFlag(Qt::FramelessWindowHint);
-  QVBoxLayout* layout = new QVBoxLayout(this);
-
-  QLabel* label = new QLabel(message);
-  layout->addWidget(label);
-
-  QPushButton* okButton = new QPushButton("OK");
-  connect(okButton, &QPushButton::clicked, this, &QDialog::accept);
-  okButton->setMaximumWidth(60);
-  layout->addWidget(okButton, 0, Qt::AlignHCenter);
-
-  setLayout(layout);
-  show();
-
-  setFocus();
+  ui->setupUi(this);
+  findChild<QLabel*>("messageLabel")->setText(message);
 }
 
 void OkDialog::instance(const QString& message, QWidget* parent)
 {
   std::unique_ptr<OkDialog> messageBox = std::make_unique<OkDialog>(message, parent);
   messageBox->exec();
+}
+
+void OkDialog::on_okButton_pressed()
+{
+  hide();
 }
 
 OkCancelDialog::OkCancelDialog(const QString& message, bool& out, QWidget* parent)

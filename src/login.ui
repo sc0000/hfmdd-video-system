@@ -79,7 +79,7 @@
         </font>
        </property>
        <property name="placeholderText">
-        <string>mail address...</string>
+        <string>Enter Mail Address</string>
        </property>
       </widget>
      </item>

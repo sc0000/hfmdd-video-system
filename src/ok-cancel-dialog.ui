@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>301</width>
+    <width>300</width>
     <height>120</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>20</y>
+     <y>10</y>
      <width>261</width>
      <height>91</height>
     </rect>
@@ -46,6 +46,12 @@
       </property>
       <item>
        <widget class="QPushButton" name="okButton">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>OK</string>
         </property>
@@ -53,6 +59,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="cancelButton">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Cancel</string>
         </property>
