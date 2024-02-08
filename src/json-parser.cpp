@@ -1,3 +1,5 @@
+#include "message-dialog.hpp"
+#include "booking-manager.hpp"
 #include "json-parser.hpp"
 
 #include <QVector>
@@ -13,7 +15,7 @@ QString JsonParser::BOOKINGS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-Recor
 void JsonParser::addBooking(const Booking& booking)
 {
   QJsonArray arr = 
-      readJsonArrayFromFile(BOOKINGS_PATH);
+    readJsonArrayFromFile(BOOKINGS_PATH);
 
   QJsonObject bookingObj;
   bookingObj.insert("Email", booking.email);
@@ -23,6 +25,22 @@ void JsonParser::addBooking(const Booking& booking)
   bookingObj.insert("Event", booking.event);
 
   arr.append(bookingObj);
+  writeJsonArrayToFile(arr, BOOKINGS_PATH);
+}
+
+void JsonParser::updateBooking(qsizetype index, const Booking& booking)
+{
+  QJsonArray arr = 
+    readJsonArrayFromFile(BOOKINGS_PATH);
+
+  QJsonObject bookingObj;
+  bookingObj.insert("Email", booking.email);
+  bookingObj.insert("Date", booking.date.toString(Qt::ISODate));
+  bookingObj.insert("StartTime", booking.startTime.toString());
+  bookingObj.insert("StopTime", booking.stopTime.toString());
+  bookingObj.insert("Event", booking.event);
+
+  arr[index] = bookingObj;
   writeJsonArrayToFile(arr, BOOKINGS_PATH);
 }
 
@@ -55,9 +73,11 @@ void JsonParser::getBookingsOnDate(const QDate& date, QVector<Booking>& outVecto
 
 void JsonParser::getBookingsForEmail(const QString& mailAddress, QVector<Booking>& outVector)
 {
-  outVector.empty();
+  outVector.clear();
 
   QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+
+  if (arr.isEmpty()) return;
 
   for (const QJsonValue& val : arr)
   {
@@ -104,18 +124,20 @@ void JsonParser::removeBooking(const Booking& booking)
 
 QJsonArray JsonParser::readJsonArrayFromFile(const QString& path)
 {
-  QVector<Booking> outVector;
-
   QFile file(path);
-  file.open(QIODevice::ReadOnly | QIODevice::Text);
+  
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return QJsonArray();
 
   QString jsonStr = file.readAll();
   file.close();
 
   QJsonDocument doc = QJsonDocument::fromJson(jsonStr.toUtf8());
-  QJsonArray arr = doc.array();
 
-  return arr;
+  if (!doc.isArray()) 
+    return QJsonArray();
+  
+  return doc.array();
 }
 
 void JsonParser::writeJsonArrayToFile(const QJsonArray& arr, const QString& path)
@@ -124,7 +146,10 @@ void JsonParser::writeJsonArrayToFile(const QJsonArray& arr, const QString& path
   doc.setArray(arr);
   
   QFile file(path);
-  file.open(QIODevice::WriteOnly | QIODevice::Text);
+  
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) 
+    return;
+
   file.write(doc.toJson());
   file.close();
 }

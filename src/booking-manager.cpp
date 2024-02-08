@@ -11,16 +11,17 @@ BookingManager* BookingManager::instance = NULL;
 
 BookingManager::BookingManager(QWidget* parent)
   : QDialog(parent), 
-    ui(new Ui::BookingManager),
-    currentMailAddress(Login::getInstance()->getCurrentMailAddress())
+    ui(new Ui::BookingManager)
 {
+  if (parent)
+    currentMailAddress = static_cast<Login*>(parent)->getCurrentMailAddress();
+
   setWindowTitle("Booking Manager");
-  // setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint);
   instance = this;
   ui->setupUi(this);
   bookingsList = findChild<QListWidget*>("bookingsList");
   
-  updateBookings();
+  loadBookings();
 }
 
 BookingManager::~BookingManager()
@@ -28,21 +29,48 @@ BookingManager::~BookingManager()
   delete ui;
 }
 
-void BookingManager::updateBookings()
+void BookingManager::loadBookings()
 {
-  bookings.clear();
+  QVector<Booking> temp;
 
-  JsonParser::getBookingsForEmail(currentMailAddress, bookings);
+  JsonParser::getBookingsForEmail(currentMailAddress, temp);
 
-  for (const Booking& b : bookings) {
-    QString entry = 
-      b.date.toString() + ", " +
-      b.startTime.toString("HH:mm") + " - " +
-      b.stopTime.toString("HH:mm") + ": " +
-      b.event;
-
-    bookingsList->addItem(entry);
+  for (const Booking& b : temp) {
+   addBooking(b);
   }
+}
+
+QString BookingManager::makeEntry(const Booking& booking)
+{
+  QString entry = 
+      booking.date.toString() + ", " +
+      booking.startTime.toString("HH:mm") + " - " +
+      booking.stopTime.toString("HH:mm") + ": " +
+      booking.event + 
+      " (" + booking.email + ")";
+
+  return entry;
+}
+
+void BookingManager::addBooking(const Booking& booking)
+{
+  bookings.append(booking);
+
+  if (bookingsList != nullptr)
+    bookingsList->addItem(makeEntry(booking));
+}
+
+void BookingManager::updateBooking(const Booking& booking)
+{
+  int rowIndex = bookingsList->currentRow();
+
+  bookings[rowIndex] = booking;
+
+  QListWidgetItem* item = bookingsList->takeItem(rowIndex);
+  if (item) delete item;
+
+  bookingsList->insertItem(rowIndex, makeEntry(booking));
+  JsonParser::updateBooking(rowIndex, booking);
 }
 
 void BookingManager::on_newBookingButton_pressed()
@@ -52,7 +80,7 @@ void BookingManager::on_newBookingButton_pressed()
 
 void BookingManager::on_editBookingButton_pressed()
 {
-  
+  BookingEditor::instance(&bookings[bookingsList->currentRow()], this);
 }
 
 void BookingManager::on_deleteBookingButton_pressed()

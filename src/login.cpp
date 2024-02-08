@@ -80,8 +80,22 @@ void Login::on_manageBookingsButton_pressed()
 {
   if (!verifyMailAddress()) return;
 
-  BookingManager* bookingManager = new BookingManager(this);
-  bookingManager->exec();
+  BookingManager* bookingManager = BookingManager::getInstance();
+
+  if (bookingManager) {
+    // OkDialog::instance("Booking Manager instance valid", this);
+    bookingManager->show();
+  }
+    
+
+  else {
+    // OkDialog::instance("Booking Manager instance invalid", this);
+    bookingManager = new BookingManager(this);
+
+    if (!bookingManager) return;
+    
+    bookingManager->exec();
+  }
 }
 
 void Login::on_toPTZControlsButton_pressed()

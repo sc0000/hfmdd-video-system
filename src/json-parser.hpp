@@ -7,6 +7,7 @@ class JsonParser
 public:
 
   static void addBooking(const Booking& booking);
+  static void updateBooking(qsizetype index, const Booking& booking);
   static void getBookingsForEmail(const QString& mailAddress, QVector<Booking>& outVector);
   static void getBookingsOnDate(const QDate& date, QVector<Booking>& outVector);
   static void removeBooking(const Booking& booking);

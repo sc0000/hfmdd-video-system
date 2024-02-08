@@ -28,8 +28,9 @@ private:
   QVector<Booking> bookings;
 
   // methods
-  void updateBookings();
-
+  void loadBookings();
+  QString makeEntry(const Booking& booking);
+  
 private slots:
   void on_newBookingButton_pressed();
   void on_editBookingButton_pressed();
@@ -39,5 +40,9 @@ public:
   BookingManager(QWidget* parent = nullptr);
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
+  inline QListWidget* getBookingsList() { return bookingsList; }
+  inline const QString& getCurrentMailAddress() { return currentMailAddress; }
 
+  void addBooking(const Booking& booking);
+  void updateBooking(const Booking& booking);
 };

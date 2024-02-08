@@ -15,17 +15,22 @@ private:
   Ui::BookingEditor* ui;
 
   // children
+  class QCalendarWidget* calendarWidget;
   class QLabel* existingBookingsLabel;
-  // class QTimeEdit* startTimeEdit;
-  // class QTimeEdit* stopTimeEdit;
-  // class QLineEdit* eventTypeLineEdit;
+  class QTimeEdit* startTimeEdit;
+  class QTimeEdit* stopTimeEdit;
+  class QLineEdit* eventTypeLineEdit;
 
   // props
   QVector<Booking> bookings;
-  QTime startTime;
-  QTime stopTime;
-  QString eventType;
+  // QTime startTime;
+  // QTime stopTime;
+  // QString eventType;
   Booking booking;
+  bool isEditing;
+
+  // methods
+  void updateExistingBookingsLabel(QDate date);
  
 private slots:
   void on_calendarWidget_clicked(QDate date);
