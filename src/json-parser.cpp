@@ -64,7 +64,8 @@ void JsonParser::getBookingsOnDate(const QDate& date, QVector<Booking>& outVecto
         obj.value("Email").toString(),
         QDate::fromString(obj.value("Date").toString()),
         QTime::fromString(obj.value("StartTime").toString()),
-        QTime::fromString(obj.value("StopTime").toString())
+        QTime::fromString(obj.value("StopTime").toString()),
+        obj.value("Event").toString()
       };
 
       outVector.append(booking);

@@ -16,13 +16,13 @@ private:
 
   // children
   class QCalendarWidget* calendarWidget;
-  class QLabel* existingBookingsLabel;
+  class QLabel* bookingsOnSelectedDateLabel;
   class QTimeEdit* startTimeEdit;
   class QTimeEdit* stopTimeEdit;
   class QLineEdit* eventTypeLineEdit;
 
   // props
-  QVector<Booking> bookings;
+  QVector<Booking> bookingsOnSelectedDate;
   // QTime startTime;
   // QTime stopTime;
   // QString eventType;

@@ -14,7 +14,7 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
    setWindowTitle("Booking Editor");
   
   calendarWidget = findChild<QCalendarWidget*>("calendarWidget");
-  existingBookingsLabel = findChild<QLabel*>("existingBookingsLabel");
+  bookingsOnSelectedDateLabel = findChild<QLabel*>("bookingsOnSelectedDateLabel");
   startTimeEdit = findChild<QTimeEdit*>("startTimeEdit");
   stopTimeEdit = findChild<QTimeEdit*>("stopTimeEdit");
   eventTypeLineEdit = findChild<QLineEdit*>("eventTypeLineEdit");
@@ -47,6 +47,8 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
   booking.startTime = startTimeEdit->time();
   booking.stopTime = stopTimeEdit->time();
   booking.event = eventTypeLineEdit->text();
+
+  bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
 }
 
 BookingEditor::~BookingEditor()
@@ -62,29 +64,45 @@ void BookingEditor::instance(Booking* bookingToEdit, QWidget* parent)
 
 void BookingEditor::updateExistingBookingsLabel(QDate date)
 {
-  QVector<Booking> existingBookings;
+  bookingsOnSelectedDate.clear();
   
-  JsonParser::getBookingsOnDate(date, existingBookings);
+  JsonParser::getBookingsOnDate(date, bookingsOnSelectedDate);
 
-  if (existingBookings.isEmpty())
+  if (bookingsOnSelectedDate.isEmpty())
   {
-    existingBookingsLabel->setText("There are no bookings yet on " + date.toString() + ".");
+    bookingsOnSelectedDateLabel->setText("There are no bookings yet on " + date.toString() + ".");
     return;
   }
 
   QString str = "The following times have been booked on " + date.toString() + ":\n";
 
-  for (const Booking& b : existingBookings)
-    str += b.startTime.toString() + "-" + b.stopTime.toString() + ": " + b.event + " (" + b.email + ")\n";
+  str += "<html><head/><body>";
 
-  existingBookingsLabel->setText(str);
+  for (const Booking& b : bookingsOnSelectedDate) {
+    if ((booking.startTime >= b.startTime && booking.startTime < b.stopTime) ||
+        (booking.stopTime > b.startTime && booking.stopTime <= b.stopTime))
+        str += "<span style=\"background-color:red;\">";
+
+    str += b.startTime.toString() + "-" + b.stopTime.toString() + ": " + b.event + " (" + b.email + ")";
+
+    if ((booking.startTime >= b.startTime && booking.startTime < b.stopTime) ||
+        (booking.stopTime > b.startTime && booking.stopTime <= b.stopTime))
+        str += " COLLIDING!</span>";
+
+    str += "<br/>";
+  }
+
+  str += "</body></html>";
+
+  bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
+  bookingsOnSelectedDateLabel->setText(str);
 }
 
 void BookingEditor::on_calendarWidget_clicked(QDate date)
 {
   booking.date = date;
 
-  if (!existingBookingsLabel) return;
+  if (!bookingsOnSelectedDateLabel) return;
 
   updateExistingBookingsLabel(date);
 }
@@ -92,11 +110,13 @@ void BookingEditor::on_calendarWidget_clicked(QDate date)
 void BookingEditor::on_startTimeEdit_timeChanged(QTime time)
 {
   booking.startTime = time;
+  updateExistingBookingsLabel(booking.date);
 }
 
 void BookingEditor::on_stopTimeEdit_timeChanged(QTime time)
 {
   booking.stopTime = time;
+  updateExistingBookingsLabel(booking.date);
 }
 
 void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
@@ -110,6 +130,11 @@ void BookingEditor::on_saveButton_pressed()
 
   if (!bookingManager) 
     return;
+
+  if (booking.event == "") {
+    OkDialog::instance("Please specify the type of event!");
+    return;
+  }
 
   if (isEditing) {
     bookingManager->updateBooking(booking);
