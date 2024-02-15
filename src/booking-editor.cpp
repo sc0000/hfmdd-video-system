@@ -110,12 +110,20 @@ void BookingEditor::on_calendarWidget_clicked(QDate date)
 void BookingEditor::on_startTimeEdit_timeChanged(QTime time)
 {
   booking.startTime = time;
+
+  if (time > booking.stopTime) 
+    stopTimeEdit->setTime(time.addSecs(60));
+
   updateExistingBookingsLabel(booking.date);
 }
 
 void BookingEditor::on_stopTimeEdit_timeChanged(QTime time)
 {
   booking.stopTime = time;
+
+  if (time < booking.startTime) 
+    startTimeEdit->setTime(time.addSecs(-60));
+
   updateExistingBookingsLabel(booking.date);
 }
 

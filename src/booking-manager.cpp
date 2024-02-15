@@ -99,8 +99,8 @@ void BookingManager::addBooking(const Booking& booking)
 
   bookingsList->clear();
     
-    for (const Booking& b : bookings)
-      bookingsList->addItem(makeEntry(b));
+  for (const Booking& b : bookings)
+    bookingsList->addItem(makeEntry(b));
 }
 
 void BookingManager::updateBooking(const Booking& booking)
