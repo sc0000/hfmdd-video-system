@@ -87,7 +87,7 @@ void BookingEditor::updateExistingBookingsLabel(QDate date)
 
     if ((booking.startTime >= b.startTime && booking.startTime < b.stopTime) ||
         (booking.stopTime > b.startTime && booking.stopTime <= b.stopTime))
-        str += " COLLIDING!</span>";
+        str += " CONFLICTING!</span>";
 
     str += "<br/>";
   }

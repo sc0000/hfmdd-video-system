@@ -36,8 +36,46 @@ void BookingManager::loadBookings()
   JsonParser::getBookingsForEmail(currentMailAddress, temp);
 
   for (const Booking& b : temp) {
-   addBooking(b);
+   bookings.append(b);
   }
+
+  sortBookings();
+
+  if (!bookingsList) return;
+
+  bookingsList->clear();
+    
+  for (const Booking& b : bookings)
+    bookingsList->addItem(makeEntry(b));
+}
+
+void BookingManager::sortBookings()
+{
+  qsizetype size = bookings.size();
+
+  for (qsizetype i = 0; i < size; ++i) {
+    bool flag = false;
+
+    for (qsizetype j = 0; j < size - 1 - i; ++j) {
+      QString dateTime0 = bookings[j].date.toString(Qt::ISODate) + "_" +
+        bookings[j].startTime.toString("HH:mm");
+
+      QString dateTime1 = bookings[j + 1].date.toString(Qt::ISODate) + "_" +
+        bookings[j + 1].startTime.toString("HH:mm");
+
+      if (dateTime0 > dateTime1) {
+        Booking tmp = bookings[j];
+        bookings[j] = bookings[j + 1];
+        bookings[j + 1] = tmp;
+
+        flag = true;
+      }
+    }
+
+    if (flag == 0) break;
+  }
+
+
 }
 
 QString BookingManager::makeEntry(const Booking& booking)
@@ -55,9 +93,14 @@ QString BookingManager::makeEntry(const Booking& booking)
 void BookingManager::addBooking(const Booking& booking)
 {
   bookings.append(booking);
+  sortBookings();
 
-  if (bookingsList != nullptr)
-    bookingsList->addItem(makeEntry(booking));
+  if (!bookingsList) return;
+
+  bookingsList->clear();
+    
+    for (const Booking& b : bookings)
+      bookingsList->addItem(makeEntry(b));
 }
 
 void BookingManager::updateBooking(const Booking& booking)
@@ -65,12 +108,16 @@ void BookingManager::updateBooking(const Booking& booking)
   int rowIndex = bookingsList->currentRow();
 
   bookings[rowIndex] = booking;
+  sortBookings();
 
-  QListWidgetItem* item = bookingsList->takeItem(rowIndex);
-  if (item) delete item;
-
-  bookingsList->insertItem(rowIndex, makeEntry(booking));
   JsonParser::updateBooking(rowIndex, booking);
+
+  if (!bookingsList) return;
+  
+  bookingsList->clear();
+  
+  for (const Booking& b : bookings)
+    bookingsList->addItem(makeEntry(b));
 }
 
 void BookingManager::on_newBookingButton_pressed()

@@ -29,6 +29,7 @@ private:
 
   // methods
   void loadBookings();
+  void sortBookings();
   QString makeEntry(const Booking& booking);
   
 private slots:
