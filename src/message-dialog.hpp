@@ -45,3 +45,26 @@ private slots:
   void on_okButton_pressed();
   void on_cancelButton_pressed();
 };
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class PasswordDialog;
+}
+QT_END_NAMESPACE
+
+class PasswordDialog : public QDialog
+{
+  Q_OBJECT
+
+private:
+  Ui::PasswordDialog* ui;
+  bool& valid;
+
+public:
+  explicit PasswordDialog(bool& out, QWidget* parent = nullptr);
+  static void instance(bool& out, QWidget* parent = nullptr);
+
+private slots:
+  void on_okButton_pressed();
+  void on_cancelButton_pressed();  
+};

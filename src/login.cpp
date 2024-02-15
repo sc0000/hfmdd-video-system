@@ -73,6 +73,9 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
     }
   }
 
+  if (currentMailAddress == "oliver.fenk@hfmdd.de")
+    PasswordDialog::instance(mailAddressIsValid, this);
+
   verifyMailAddress();
 }
 
@@ -84,6 +87,7 @@ void Login::on_manageBookingsButton_pressed()
 
   if (bookingManager) {
     // OkDialog::instance("Booking Manager instance valid", this);
+    bookingManager->loadBookings();
     bookingManager->show();
   }
     

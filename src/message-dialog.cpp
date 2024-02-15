@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include "ui_ok-dialog.h"
 #include "ui_ok-cancel-dialog.h"
+#include "ui_password-dialog.h"
 #include "message-dialog.hpp"
 
 OkDialog::OkDialog(const QString& message, QWidget* parent)
@@ -53,3 +54,37 @@ void OkCancelDialog::on_cancelButton_pressed()
   decision = false;
   hide();
 }
+
+PasswordDialog::PasswordDialog(bool& out, QWidget* parent)
+  : QDialog(parent),
+    ui(new Ui::PasswordDialog),
+    valid(out)
+{
+  setWindowFlag(Qt::FramelessWindowHint);
+  ui->setupUi(this);
+}
+
+void PasswordDialog::instance(bool& out, QWidget* parent)
+{
+  std::unique_ptr<PasswordDialog> messageBox = std::make_unique<PasswordDialog>(out, parent);
+  messageBox->exec();
+}
+
+void PasswordDialog::on_okButton_pressed()
+{
+  if (findChild<QLineEdit*>("passwordLineEdit")->text() == "pw") {
+    valid = true;
+    hide();
+  }
+
+  else {
+    OkDialog::instance("Invalid password.", this);
+    valid = false;
+  }
+}
+
+void PasswordDialog::on_cancelButton_pressed()
+{
+  valid = false;
+  hide();
+}  

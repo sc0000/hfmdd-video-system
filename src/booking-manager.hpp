@@ -28,7 +28,6 @@ private:
   QVector<Booking> bookings;
 
   // methods
-  void loadBookings();
   void sortBookings();
   QString makeEntry(const Booking& booking);
   
@@ -44,6 +43,7 @@ public:
   inline QListWidget* getBookingsList() { return bookingsList; }
   inline const QString& getCurrentMailAddress() { return currentMailAddress; }
 
+  void loadBookings();
   void addBooking(const Booking& booking);
   void updateBooking(const Booking& booking);
 };

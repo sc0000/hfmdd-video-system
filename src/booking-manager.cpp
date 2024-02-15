@@ -13,9 +13,6 @@ BookingManager::BookingManager(QWidget* parent)
   : QDialog(parent), 
     ui(new Ui::BookingManager)
 {
-  if (parent)
-    currentMailAddress = static_cast<Login*>(parent)->getCurrentMailAddress();
-
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);
@@ -31,11 +28,19 @@ BookingManager::~BookingManager()
 
 void BookingManager::loadBookings()
 {
-  QVector<Booking> temp;
+  currentMailAddress = Login::getInstance()->getCurrentMailAddress();
+    
+  QVector<Booking> tmp;
 
-  JsonParser::getBookingsForEmail(currentMailAddress, temp);
+  if (currentMailAddress == "oliver.fenk@hfmdd.de")
+    JsonParser::getAllBookings(tmp);
 
-  for (const Booking& b : temp) {
+  else   
+    JsonParser::getBookingsForEmail(currentMailAddress, tmp);
+
+  bookings.clear();  
+
+  for (const Booking& b : tmp) {
    bookings.append(b);
   }
 
@@ -74,8 +79,6 @@ void BookingManager::sortBookings()
 
     if (flag == 0) break;
   }
-
-
 }
 
 QString BookingManager::makeEntry(const Booking& booking)
