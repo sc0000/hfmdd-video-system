@@ -34,8 +34,8 @@ OBS_MODULE_USE_DEFAULT_LOCALE(PLUGIN_NAME, "en-US")
 bool obs_module_load(void)
 {
   QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
-  SimpleRecordingWidget* simpleRecordingWidget = new SimpleRecordingWidget(mainWindow);
-  obs_frontend_add_dock(simpleRecordingWidget);
+  // SimpleRecordingWidget* simpleRecordingWidget = new SimpleRecordingWidget(mainWindow);
+  // obs_frontend_add_dock(simpleRecordingWidget);
   
   ptz_load_devices();
 	ptz_load_action_source();

@@ -50,8 +50,18 @@ void BookingManager::loadBookings()
 
   bookingsList->clear();
     
-  for (const Booking& b : bookings)
-    bookingsList->addItem(makeEntry(b));
+  // for (const Booking& b : bookings)
+  //   bookingsList->addItem(makeEntry(b));
+
+  for (qsizetype i = 0; i < bookings.size(); ++i) {
+    QString entryText = makeEntry(bookings[i]);
+    QListWidgetItem* item = new QListWidgetItem(entryText);
+    
+    if (bookings[i].isConflicting)
+      item->setBackground(Qt::red);
+
+    bookingsList->addItem(item);
+  }
 }
 
 void BookingManager::sortBookings()
@@ -88,39 +98,22 @@ QString BookingManager::makeEntry(const Booking& booking)
       booking.startTime.toString("HH:mm") + " - " +
       booking.stopTime.toString("HH:mm") + ": " +
       booking.event + 
-      " (" + booking.email + ")";
+      " (" + booking.email + ")" +
+      (booking.isConflicting ? " --CONFLICTING" : "");
 
   return entry;
 }
 
+// ! DEPRECATED
 void BookingManager::addBooking(const Booking& booking)
 {
-  bookings.append(booking);
-  sortBookings();
-
-  if (!bookingsList) return;
-
-  bookingsList->clear();
-    
-  for (const Booking& b : bookings)
-    bookingsList->addItem(makeEntry(b));
+  JsonParser::addBooking(booking);
 }
 
+// ! DEPRECATED
 void BookingManager::updateBooking(const Booking& booking)
 {
-  int rowIndex = bookingsList->currentRow();
-
-  bookings[rowIndex] = booking;
-  sortBookings();
-
-  JsonParser::updateBooking(rowIndex, booking);
-
-  if (!bookingsList) return;
-  
-  bookingsList->clear();
-  
-  for (const Booking& b : bookings)
-    bookingsList->addItem(makeEntry(b));
+  JsonParser::updateBooking(booking);
 }
 
 void BookingManager::on_newBookingButton_pressed()
@@ -130,6 +123,11 @@ void BookingManager::on_newBookingButton_pressed()
 
 void BookingManager::on_editBookingButton_pressed()
 {
+   if (bookingsList->selectedItems().isEmpty()) {
+    OkDialog::instance("Please select the booking you want to edit.", this);
+    return;
+  }
+
   BookingEditor::instance(&bookings[bookingsList->currentRow()], this);
 }
 

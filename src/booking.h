@@ -10,5 +10,7 @@ struct Booking
   QTime startTime;
   QTime stopTime;
   QString event;
+  bool isConflicting;
+  int index;
 };
 

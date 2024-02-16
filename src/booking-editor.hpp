@@ -31,6 +31,8 @@ private:
 
   // methods
   void updateExistingBookingsLabel(QDate date);
+  void updateConflictingBookings(const QDate& date);
+  bool bookingsAreConflicting(const Booking& booking0, const Booking& booking1);
  
 private slots:
   void on_calendarWidget_clicked(QDate date);
