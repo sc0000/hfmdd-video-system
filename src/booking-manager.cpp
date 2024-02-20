@@ -13,6 +13,7 @@ BookingManager::BookingManager(QWidget* parent)
   : QDialog(parent), 
     ui(new Ui::BookingManager)
 {
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);

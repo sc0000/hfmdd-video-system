@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QWidget>
-// #include <QDockWidget>
 #include <QDialog>
 #include <QListWidget>
 #include "booking.h"

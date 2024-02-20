@@ -178,19 +178,17 @@ int JsonParser::availableIndex()
     occupiedIndices.append(obj.value("Index").toVariant().toInt());
   }
 
-  QString toPrint = "";
+  // QString toPrint = "";
 
-  for (int i : occupiedIndices)
-    toPrint.append(QString::number(i) + " ");
-
-  
+  // for (int i : occupiedIndices)
+  //   toPrint.append(QString::number(i) + " ");
 
   while (occupiedIndices.contains(index))
     ++index;
 
-  toPrint.append("Available index: " + QString::number(index));
+  // toPrint.append("Available index: " + QString::number(index));
+  // OkDialog::instance(toPrint);
 
-  OkDialog::instance(toPrint);
   return index;  
 }
 

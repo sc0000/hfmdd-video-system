@@ -10,8 +10,9 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
     ui(new Ui::BookingEditor)
 {
   ui->setupUi(this);
-
-   setWindowTitle("Booking Editor");
+  
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+  setWindowTitle("Booking Editor");
   
   calendarWidget = findChild<QCalendarWidget*>("calendarWidget");
   bookingsOnSelectedDateLabel = findChild<QLabel*>("bookingsOnSelectedDateLabel");

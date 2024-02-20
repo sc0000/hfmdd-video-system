@@ -7,12 +7,15 @@
 #include "ui_password-dialog.h"
 #include "message-dialog.hpp"
 
+// TODO: Setup some form of inheritance structure here?
+
 OkDialog::OkDialog(const QString& message, QWidget* parent)
   : QDialog(parent),
     ui(new Ui::OkDialog)
 {
-  setWindowFlag(Qt::FramelessWindowHint);
   ui->setupUi(this);
+  
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   findChild<QLabel*>("messageLabel")->setText(message);
 }
 
@@ -32,8 +35,9 @@ OkCancelDialog::OkCancelDialog(const QString& message, bool& out, QWidget* paren
     ui(new Ui::OkCancelDialog), 
     decision(out)
 {
-  setWindowFlag(Qt::FramelessWindowHint);
   ui->setupUi(this);
+  
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   findChild<QLabel*>("messageLabel")->setText(message);
 }
 
@@ -60,8 +64,9 @@ PasswordDialog::PasswordDialog(bool& out, QWidget* parent)
     ui(new Ui::PasswordDialog),
     valid(out)
 {
-  setWindowFlag(Qt::FramelessWindowHint);
   ui->setupUi(this);
+
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 }
 
 void PasswordDialog::instance(bool& out, QWidget* parent)
