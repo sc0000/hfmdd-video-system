@@ -12,6 +12,7 @@
 #include "ptz-onvif.hpp"
 #include "ptz.h"
 #include "protocol-helpers.hpp"
+#include "message-dialog.hpp"
 
 #if defined(ENABLE_SERIALPORT)
 #include "ptz-visca-uart.hpp"
@@ -28,6 +29,8 @@ static void source_rename_cb(void *data, calldata_t *cd)
 	auto ptzlm = static_cast<PTZListModel *>(data);
 	ptzlm->renameDevice(calldata_string(cd, "new_name"),
 			    calldata_string(cd, "prev_name"));
+
+  OkDialog::instance("Test");
 }
 
 void PTZListModel::renameDevice(QString new_name, QString prev_name)

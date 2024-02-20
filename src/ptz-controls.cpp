@@ -317,10 +317,6 @@ PTZControls::PTZControls(QWidget *parent)
 					this);
 		preset_hotkey_map[hotkey] = i;
 	}
-
-  //----------------------------------------------------
-  connect(this, SIGNAL(item_select), SLOT(&PTZControls::onNewSelectedItem));
-  //----------------------------------------------------
 }
 
 PTZControls::~PTZControls()
@@ -563,7 +559,9 @@ void PTZControls::setDisableLiveMoves(bool disable)
 
 PTZDevice *PTZControls::currCamera()
 {
-	return ptzDeviceList.getDevice(ui->cameraList->currentIndex());
+	// return ptzDeviceList.getDevice(ui->cameraList->currentIndex());
+
+  return ptzDeviceList.getDeviceByName(currCameraName);
 }
 
 QList<PTZDevice*> PTZControls::allCameras()

@@ -571,7 +571,7 @@
         <item>
          <widget class="CircularListView" name="cameraList">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -582,13 +582,13 @@
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>0</height>
+            <height>50</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>0</height>
+            <height>20</height>
            </size>
           </property>
           <property name="contextMenuPolicy">

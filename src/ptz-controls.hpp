@@ -181,4 +181,6 @@ public:
 	bool liveMovesDisabled() { return live_moves_disabled; };
 	static PTZControls *getInstance() { return instance; };
   virtual QAbstractListModel *presetModel() { return &m_presetsModel; }
+
+  QString currCameraName = "Birddog1";
 };
