@@ -118,8 +118,11 @@ private slots:
 
   void on_savePresetButton_clicked();
   void on_loadPresetButton_clicked();
+
+  // ! TODO: REMOVE!
   void on_showGlobalPresetsButton_clicked();
   void on_writeToConfigButton_clicked();
+  
   void on_recordButton_clicked();
   void on_logoutButton_clicked();
 

@@ -25,6 +25,7 @@
 #include "settings.hpp"
 #include "ptz.h"
 #include "login.hpp"
+#include "message-dialog.hpp"
 
 void ptz_load_controls(void)
 {
@@ -1141,6 +1142,12 @@ void PTZControls::on_cameraList_customContextMenuRequested(const QPoint &pos)
 
 void PTZControls::on_actionPTZProperties_triggered()
 {
+  bool passwordIsValid;
+
+  PasswordDialog::instance(passwordIsValid, this);
+
+  if (!passwordIsValid) return;
+
 	ptz_settings_show(
 		ptzDeviceList.getDeviceId(ui->cameraList->currentIndex()));
 }

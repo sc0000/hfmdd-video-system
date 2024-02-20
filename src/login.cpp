@@ -86,14 +86,12 @@ void Login::on_manageBookingsButton_pressed()
   BookingManager* bookingManager = BookingManager::getInstance();
 
   if (bookingManager) {
-    // OkDialog::instance("Booking Manager instance valid", this);
     bookingManager->loadBookings();
     bookingManager->show();
   }
     
 
   else {
-    // OkDialog::instance("Booking Manager instance invalid", this);
     bookingManager = new BookingManager(this);
 
     if (!bookingManager) return;
