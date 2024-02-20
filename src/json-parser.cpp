@@ -156,11 +156,8 @@ void JsonParser::removeBooking(const Booking& booking)
 
     QJsonObject obj = val.toObject();
 
-    if (obj.value("Email").toString() == booking.email &&
-        obj.value("Date").toString() == booking.date.toString(Qt::ISODate) &&
-        obj.value("StartTime").toString() == booking.startTime.toString() &&
-        obj.value("StopTime").toString() == booking.stopTime.toString())
-        arr.removeAt(i);
+    if (obj.value("Index").toVariant().toInt() == booking.index)
+      arr.removeAt(i);
   }
 
   writeJsonArrayToFile(arr, BOOKINGS_PATH); 
