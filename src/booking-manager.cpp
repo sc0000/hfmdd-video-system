@@ -148,9 +148,11 @@ void BookingManager::on_deleteBookingButton_pressed()
   // TODO: Select more than one booking for deletion?
 
   bool confirmed;
-
-  OkCancelDialog::instance("Do you really want to delete the selected booking? This cannot be undone.", confirmed, this);
-
+  OkCancelDialog::instance(
+    "Do you really want to delete the selected booking? This cannot be undone.", 
+    confirmed, this
+  );
+  
   if (!confirmed) return;
 
   int rowIndex = bookingsList->currentRow();

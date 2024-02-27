@@ -807,8 +807,37 @@ void PTZControls::on_savePresetButton_clicked()
 
 void PTZControls::on_loadPresetButton_clicked()
 {
-  int id = presetIndexToId(ui->presetListView->currentIndex());
+  QModelIndex index = ui->presetListView->currentIndex();
+
+  if (!index.isValid()) {
+    OkDialog::instance("Please select the booking you want to delete.", this);
+    return;
+  }
+
+  int id = presetIndexToId(index);
   presetRecallAll(id);
+}
+
+void PTZControls::on_deletePresetButton_clicked()
+{
+  QModelIndex index = ui->presetListView->currentIndex();
+
+  if (!index.isValid()) {
+    OkDialog::instance("Please select the booking you want to delete.", this);
+    return;
+  }
+
+  bool confirmed;
+  OkCancelDialog::instance(
+    "Do you really want to delete the selected preset? This cannot be undone.", 
+    confirmed, this
+  );
+  
+  if (!confirmed) return;
+
+  auto model = ui->presetListView->model();
+	model->removeRows(index.row(), 1);
+	presetUpdateActions();
 }
 
 bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*)

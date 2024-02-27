@@ -122,6 +122,7 @@ private slots:
 
   void on_savePresetButton_clicked();
   void on_loadPresetButton_clicked();
+  void on_deletePresetButton_clicked();
   
   void on_recordButton_clicked();
   void on_logoutButton_clicked();
