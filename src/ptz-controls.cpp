@@ -26,6 +26,8 @@
 #include "ptz.h"
 #include "login.hpp"
 #include "message-dialog.hpp"
+#include "ui_preset-dialog.h"
+#include "booking-manager.hpp"
 
 void ptz_load_controls(void)
 {
@@ -131,6 +133,21 @@ void PTZControls::onNewSelectedItem(obs_scene_t* scene, obs_sceneitem_t* item)
 
   if (obs_sceneitem_selected(item))
     QMessageBox::information(nullptr, "INFO", QString(obs_source_get_name(source)));
+}
+
+static void item_select_cb(void* data, calldata_t* cd) {
+  // obs_source_t* scene = (obs_source_t*)calldata_ptr(cd, "scene");
+  obs_sceneitem_t* item = (obs_sceneitem_t*)calldata_ptr(cd, "item");
+  obs_source_t* source = obs_sceneitem_get_source(item);
+
+  PTZControls::getInstance()->currCameraName = QString(obs_source_get_name(source));
+}
+
+void PTZControls::connectSignalItemSelect()
+{
+  obs_source_t* scene_source = obs_frontend_get_current_scene();
+  signal_handler_t *sh = obs_source_get_signal_handler(scene_source);
+  signal_handler_connect(sh, "item_select", item_select_cb, NULL);
 }
 
 PTZControls::PTZControls(QWidget *parent)
@@ -761,29 +778,31 @@ void PTZControls::on_savePresetButton_clicked()
 {
   // TODO: Move to own class, use .ui paradigm!
 
-  savePresetDialog = new QDialog(this);
-  QHBoxLayout* savePresetLayout = new QHBoxLayout();
+  PresetDialog::instance(BookingManager::getInstance()->selectedBooking, this);
 
-  QLineEdit* savePresetLineEdit = new QLineEdit();
-  savePresetLineEdit->setPlaceholderText("New Preset Name");
+  // savePresetDialog = new QDialog(this);
+  // QHBoxLayout* savePresetLayout = new QHBoxLayout();
 
-  QPushButton* confirmSavePresetButton = new QPushButton();
-  confirmSavePresetButton->setText("Confirm");
+  // QLineEdit* savePresetLineEdit = new QLineEdit();
+  // savePresetLineEdit->setPlaceholderText("New Preset Name");
 
-  savePresetLayout->addWidget(savePresetLineEdit);
-  savePresetLayout->addWidget(confirmSavePresetButton);
+  // QPushButton* confirmSavePresetButton = new QPushButton();
+  // confirmSavePresetButton->setText("Confirm");
 
-  savePresetDialog->setLayout(savePresetLayout);
+  // savePresetLayout->addWidget(savePresetLineEdit);
+  // savePresetLayout->addWidget(confirmSavePresetButton);
 
-  QObject::connect(savePresetLineEdit, 
-    &QLineEdit::textEdited, this,
-    &PTZControls::onSavePresetLineEdited);
+  // savePresetDialog->setLayout(savePresetLayout);
 
-  QObject::connect(confirmSavePresetButton, 
-    &QPushButton::clicked, this,
-    &PTZControls::onConfirmSavePresetButtonClicked);
+  // QObject::connect(savePresetLineEdit, 
+  //   &QLineEdit::textEdited, this,
+  //   &PTZControls::setNewPresetName);
 
-  savePresetDialog->show();
+  // QObject::connect(confirmSavePresetButton, 
+  //   &QPushButton::clicked, this,
+  //   &PTZControls::savePreset);
+
+  // savePresetDialog->show();
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -800,34 +819,6 @@ bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, vo
     QMessageBox::information(nullptr, "INFO", QString(obs_source_get_name(source)));
 
   return true;
-}
-
-void PTZControls::on_showGlobalPresetsButton_clicked()
-{
-  // // QMessageBox::information(this, "INFO", QString(obs_module_config_path("config.json")));
-  // ui->presetListView->setModel(presetModel());
-
-  // // ???
-  // // auto *selectionModel = ui->presetListView->selectionModel();
-  // // if (selectionModel)
-  // //   connect(selectionModel,
-  // //     SIGNAL(currentChanged(QModelIndex,
-  // //               QModelIndex)),
-  // //     this, SLOT(presetUpdateActions()));
-  // presetUpdateActions();
-
-  // updateMoveControls();
-
-  obs_source_t* currentScene = obs_frontend_get_current_scene();
-  if (!currentScene) return;
-  obs_scene_t* scene = obs_scene_from_source(currentScene);
-  obs_scene_enum_items(scene, &selected_source_enum_callback, NULL);
-}
-
-void PTZControls::on_writeToConfigButton_clicked()
-{
-  // SaveConfig();
-  LoadConfig();
 }
 
 void PTZControls::on_recordButton_clicked()
@@ -1033,12 +1024,12 @@ int PTZControls::presetIndexToId(QModelIndex index)
 	return -1;
 }
 
-void PTZControls::onSavePresetLineEdited(const QString& text)
+void PTZControls::setNewPresetName(const QString& text)
 {
-  savePresetLineEditText = text;
+  newPresetName = text;
 }
 
-void PTZControls::onConfirmSavePresetButtonClicked()
+void PTZControls::savePreset()
 {
   auto model = ui->presetListView->model();
 	auto row = model->rowCount();
@@ -1046,7 +1037,7 @@ void PTZControls::onConfirmSavePresetButtonClicked()
 	QModelIndex index = model->index(row, 0);
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
-		model->setData(index, savePresetLineEditText, Qt::EditRole);
+		model->setData(index, newPresetName, Qt::EditRole);
 	}
 	presetUpdateActions();
   presetSetAll(presetIndexToId(ui->presetListView->currentIndex()));

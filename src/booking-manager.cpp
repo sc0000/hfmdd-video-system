@@ -5,9 +5,10 @@
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
+#include "ptz-controls.hpp"
 
 
-BookingManager* BookingManager::instance = NULL;
+BookingManager* BookingManager::instance = nullptr;
 
 BookingManager::BookingManager(QWidget* parent)
   : QDialog(parent), 
@@ -129,6 +130,11 @@ void BookingManager::on_editBookingButton_pressed()
     return;
   }
 
+  else if (bookingsList->selectedItems().size() > 1) {
+    OkDialog::instance("Please select only one booking to edit.", this);
+    return;
+  }
+
   BookingEditor::instance(&bookings[bookingsList->currentRow()], this);
 }
 
@@ -138,6 +144,8 @@ void BookingManager::on_deleteBookingButton_pressed()
     OkDialog::instance("Please select the booking you want to delete.", this);
     return;
   }
+
+  // TODO: Select more than one booking for deletion?
 
   bool confirmed;
 
@@ -151,4 +159,27 @@ void BookingManager::on_deleteBookingButton_pressed()
   bookings.removeAt(rowIndex);
   QListWidgetItem* item = bookingsList->takeItem(rowIndex);
   if (item) delete item;
+}
+
+void BookingManager::on_toPTZControlsButton_pressed()
+{
+   if (bookingsList->selectedItems().isEmpty()) {
+    OkDialog::instance("Please select a booking to continue.", this);
+    return;
+  }
+
+  else if (bookingsList->selectedItems().size() > 1) {
+    OkDialog::instance("Please select only one booking to continue.", this);
+    return;
+  }
+
+  selectedBooking = &bookings[bookingsList->currentRow()];
+
+  hide();
+
+  Login::getInstance()->hide();
+  PTZControls::getInstance()->setFloating(false);
+  PTZControls::getInstance()->show();
+
+  PTZControls::getInstance()->connectSignalItemSelect();
 }

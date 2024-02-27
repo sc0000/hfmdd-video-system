@@ -1,6 +1,7 @@
 #include <QDialog>
 #include <QString>
 #include <QWidget>
+#include <QLineEdit>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -63,6 +64,30 @@ private:
 public:
   explicit PasswordDialog(bool& out, QWidget* parent = nullptr);
   static void instance(bool& out, QWidget* parent = nullptr);
+
+private slots:
+  void on_okButton_pressed();
+  void on_cancelButton_pressed();  
+};
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class PresetDialog;
+}
+QT_END_NAMESPACE
+
+class PresetDialog : public QDialog
+{
+  Q_OBJECT
+
+private:
+  Ui::PresetDialog* ui;
+
+  QLineEdit* presetNameLineEdit;
+
+public:
+  explicit PresetDialog(struct Booking* booking = nullptr, QWidget* parent = nullptr);
+  static void instance(Booking* booking = nullptr, QWidget* parent = nullptr);
 
 private slots:
   void on_okButton_pressed();

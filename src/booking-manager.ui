@@ -67,6 +67,13 @@
       </item>
      </layout>
     </item>
+    <item>
+     <widget class="QPushButton" name="toPTZControlsButton">
+      <property name="text">
+       <string>To Camera Controls... (TBD)</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>

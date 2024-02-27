@@ -5,7 +5,11 @@
 #include "ui_ok-dialog.h"
 #include "ui_ok-cancel-dialog.h"
 #include "ui_password-dialog.h"
+#include "ui_preset-dialog.h"
+#include "booking.h"
+#include "ptz-controls.hpp"
 #include "message-dialog.hpp"
+
 
 // TODO: Setup some form of inheritance structure here?
 
@@ -14,7 +18,6 @@ OkDialog::OkDialog(const QString& message, QWidget* parent)
     ui(new Ui::OkDialog)
 {
   ui->setupUi(this);
-  
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   findChild<QLabel*>("messageLabel")->setText(message);
 }
@@ -36,7 +39,6 @@ OkCancelDialog::OkCancelDialog(const QString& message, bool& out, QWidget* paren
     decision(out)
 {
   ui->setupUi(this);
-  
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   findChild<QLabel*>("messageLabel")->setText(message);
 }
@@ -65,7 +67,6 @@ PasswordDialog::PasswordDialog(bool& out, QWidget* parent)
     valid(out)
 {
   ui->setupUi(this);
-
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 }
 
@@ -92,4 +93,49 @@ void PasswordDialog::on_cancelButton_pressed()
 {
   valid = false;
   hide();
-}  
+}
+
+
+PresetDialog::PresetDialog(Booking* booking, QWidget* parent)
+  : QDialog(parent),
+    ui(new Ui::PresetDialog)
+{
+  ui->setupUi(this);
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+
+  presetNameLineEdit = findChild<QLineEdit*>("presetNameLineEdit");
+
+  if (booking) {
+    presetNameLineEdit->setText(
+      booking->date.toString() + ", " +
+      booking->startTime.toString("HH:mm") + " - " +
+      booking->event
+    );
+  }
+
+  else {
+    presetNameLineEdit->setPlaceholderText("New Preset Name");
+  }
+}
+
+void PresetDialog::instance(Booking* booking, QWidget* parent)
+{
+  std::unique_ptr<PresetDialog> messageBox = std::make_unique<PresetDialog>(booking, parent);
+  messageBox->exec();
+}
+
+
+void PresetDialog::on_okButton_pressed()
+{
+  PTZControls* ptzControls = PTZControls::getInstance();
+
+  if (!ptzControls || !presetNameLineEdit) return;
+
+  ptzControls->setNewPresetName(presetNameLineEdit->text());
+  ptzControls->savePreset();
+}
+
+void PresetDialog::on_cancelButton_pressed()
+{
+  hide();
+}

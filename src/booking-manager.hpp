@@ -33,7 +33,8 @@ private:
 private slots:
   void on_newBookingButton_pressed();
   void on_editBookingButton_pressed();
-  void on_deleteBookingButton_pressed();  
+  void on_deleteBookingButton_pressed();
+  void on_toPTZControlsButton_pressed();  
 
 public:
   BookingManager(QWidget* parent = nullptr);
@@ -45,4 +46,6 @@ public:
   void loadBookings();
   void addBooking(const Booking& booking);
   void updateBooking(const Booking& booking);
+
+  Booking* selectedBooking;
 };

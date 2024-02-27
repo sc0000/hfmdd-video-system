@@ -49,7 +49,7 @@ private:
   
   QDialog* savePresetDialog;
   QString newPresetName;
-  QString savePresetLineEditText;
+  // QString savePresetLineEditText;
 
 	void copyActionsDynamicProperties();
 	void SaveConfig();
@@ -61,9 +61,13 @@ private:
 	void setCurrent(unsigned int index);
 	int presetIndexToId(QModelIndex index);
 
-  void onSavePresetLineEdited(const QString& text);
-  void onConfirmSavePresetButtonClicked();
+
+// TODO: Tidy up!
+public:
+  void setNewPresetName(const QString& text);
+  void savePreset();
   
+private:
 	void presetSet(int id);
   void presetSetAll(int preset_id);
 
@@ -118,10 +122,6 @@ private slots:
 
   void on_savePresetButton_clicked();
   void on_loadPresetButton_clicked();
-
-  // ! TODO: REMOVE!
-  void on_showGlobalPresetsButton_clicked();
-  void on_writeToConfigButton_clicked();
   
   void on_recordButton_clicked();
   void on_logoutButton_clicked();
@@ -181,6 +181,8 @@ public:
 	bool liveMovesDisabled() { return live_moves_disabled; };
 	static PTZControls *getInstance() { return instance; };
   virtual QAbstractListModel *presetModel() { return &m_presetsModel; }
+
+  void connectSignalItemSelect();
 
   QString currCameraName = "Birddog1";
 };

@@ -19,8 +19,8 @@ void login_load(void)
 }
 
 Login::Login(QWidget *parent)
-  : QDockWidget("Login", parent), 
-    ui(new Ui::Login), 
+  : QDockWidget("Login", parent),
+    ui(new Ui::Login),
     mailAddressIsValid(false)
 {
   instance = this;
@@ -62,7 +62,7 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
   mailAddressIsValid = false;
 
   const QString mailSuffices[] = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" }; // TODO: Remove gmx
-  
+
   for (const QString& suffix : mailSuffices)
   {
     if (currentMailAddress.endsWith(suffix))
@@ -89,13 +89,13 @@ void Login::on_manageBookingsButton_pressed()
     bookingManager->loadBookings();
     bookingManager->show();
   }
-    
+
 
   else {
     bookingManager = new BookingManager(this);
 
     if (!bookingManager) return;
-    
+
     bookingManager->exec();
   }
 }
@@ -103,11 +103,11 @@ void Login::on_manageBookingsButton_pressed()
 static void item_select_cb(void* data, calldata_t* cd) {
   // obs_source_t* scene = (obs_source_t*)calldata_ptr(cd, "scene");
   obs_sceneitem_t* item = (obs_sceneitem_t*)calldata_ptr(cd, "item");
-  
+
   // actual useful code...
 
 
-  obs_source_t* source = obs_sceneitem_get_source(item); 
+  obs_source_t* source = obs_sceneitem_get_source(item);
 
   PTZControls::getInstance()->currCameraName = QString(obs_source_get_name(source));
 
