@@ -30,8 +30,6 @@ private:
   QString currentMailAddress;
   bool mailAddressIsValid;
 
-  QString innerDir;
-
   bool verifyMailAddress();
 
 private slots:

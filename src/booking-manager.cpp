@@ -6,6 +6,7 @@
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
+#include "path-manager.hpp"
 
 
 BookingManager* BookingManager::instance = nullptr;
@@ -152,7 +153,7 @@ void BookingManager::on_deleteBookingButton_pressed()
     "Do you really want to delete the selected booking? This cannot be undone.", 
     confirmed, this
   );
-  
+
   if (!confirmed) return;
 
   int rowIndex = bookingsList->currentRow();
@@ -176,6 +177,10 @@ void BookingManager::on_toPTZControlsButton_pressed()
   }
 
   selectedBooking = &bookings[bookingsList->currentRow()];
+  PathManager::outerDirectory = selectedBooking->date.toString(Qt::ISODate) + "/";
+
+  // TODO: Check: always reset or update, and setup option to reset manually?
+  PathManager::resetFilterSettings();
 
   hide();
 

@@ -54,6 +54,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-manager.ui
   src/ptz-controls.ui
   src/settings.ui
+  src/path-manager.cpp
   src/ptz-controls.qrc
   # src/ptz.c
   src/ptz-controls.cpp
@@ -79,6 +80,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/message-dialog.hpp
   src/booking-editor.hpp
   src/booking-manager.hpp
+  src/path-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp
   src/ptz-device.hpp

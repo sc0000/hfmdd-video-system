@@ -416,7 +416,7 @@ void SimpleRecordingWidget::onMailAddressLineEdited(const QString& text)
   m_mailAddressLineEdit->setStyleSheet(styleSheet);
 }
 
-bool scene_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*) 
+static bool scene_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*) 
 {
     obs_source_t* source = obs_sceneitem_get_source(item);
 
@@ -426,7 +426,7 @@ bool scene_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*)
     return true; // Returning true continues the enumeration
 }
 
-void filter_enum_callback(obs_source_t* source, obs_source_t* filter, void*)
+static void filter_enum_callback(obs_source_t* source, obs_source_t* filter, void*)
 {
   if (!source || !filter) return;
 

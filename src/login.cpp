@@ -6,6 +6,7 @@
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
+#include "path-manager.hpp"
 
 Login* Login::instance = NULL;
 
@@ -68,7 +69,7 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
     if (currentMailAddress.endsWith(suffix))
     {
       mailAddressIsValid = true;
-      innerDir = currentMailAddress.chopped(suffix.length());
+      PathManager::innerDirectory = currentMailAddress.chopped(suffix.length());
       break;
     }
   }
@@ -100,29 +101,17 @@ void Login::on_manageBookingsButton_pressed()
   }
 }
 
-static void item_select_cb(void* data, calldata_t* cd) {
-  // obs_source_t* scene = (obs_source_t*)calldata_ptr(cd, "scene");
-  obs_sceneitem_t* item = (obs_sceneitem_t*)calldata_ptr(cd, "item");
-
-  // actual useful code...
-
-
-  obs_source_t* source = obs_sceneitem_get_source(item);
-
-  PTZControls::getInstance()->currCameraName = QString(obs_source_get_name(source));
-
-  // OkDialog::instance(QString(obs_source_get_name(source)));
-}
-
 void Login::on_toPTZControlsButton_pressed()
 {
   if (!verifyMailAddress()) return;
 
-  hide();
-  PTZControls::getInstance()->setFloating(false);
-  PTZControls::getInstance()->show();
+  PTZControls* ptzControls = PTZControls::getInstance();
 
-  obs_source_t* scene_source = obs_frontend_get_current_scene();
-  signal_handler_t *sh = obs_source_get_signal_handler(scene_source);
-  signal_handler_connect(sh, "item_select", item_select_cb, NULL);
+  if (!ptzControls) return;
+
+  hide();
+
+  ptzControls->setFloating(false);
+  ptzControls->show();
+  ptzControls->connectSignalItemSelect();
 }
