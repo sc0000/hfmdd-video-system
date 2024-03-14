@@ -95,7 +95,6 @@ void PasswordDialog::on_cancelButton_pressed()
   hide();
 }
 
-
 PresetDialog::PresetDialog(Booking* booking, QWidget* parent)
   : QDialog(parent),
     ui(new Ui::PresetDialog)
@@ -133,6 +132,7 @@ void PresetDialog::on_okButton_pressed()
 
   ptzControls->setNewPresetName(presetNameLineEdit->text());
   ptzControls->savePreset();
+  hide();
 }
 
 void PresetDialog::on_cancelButton_pressed()

@@ -104,6 +104,9 @@ public:
 	int find(QString key, QVariant value);
 
 	void loadPresets(OBSDataArray preset_array);
+  //----------------------------------------------------
+  void loadUserPresets(OBSDataArray preset_array);
+  //----------------------------------------------------
 	OBSDataArray savePresets() const;
 };
 

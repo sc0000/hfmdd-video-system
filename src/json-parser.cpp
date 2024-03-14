@@ -10,6 +10,7 @@
 #include <QJsonObject>
 
 // QString JsonParser::BOOKINGS_PATH = "V:/sb-terminal-test/bookings.json";
+QString JsonParser::PRESETS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
 QString JsonParser::BOOKINGS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
 
 void JsonParser::addBooking(const Booking& booking)
@@ -47,7 +48,8 @@ void JsonParser::updateBooking(const Booking& booking)
   for (qsizetype i = 0; i < arr.size(); ++i) {
     const QJsonValue& val = arr[i];
 
-    if (!val.isObject()) continue;
+    if (!val.isObject())
+      continue;
 
     QJsonObject obj = val.toObject();
 
@@ -178,18 +180,116 @@ int JsonParser::availableIndex()
     occupiedIndices.append(obj.value("Index").toVariant().toInt());
   }
 
-  // QString toPrint = "";
-
-  // for (int i : occupiedIndices)
-  //   toPrint.append(QString::number(i) + " ");
-
   while (occupiedIndices.contains(index))
     ++index;
 
-  // toPrint.append("Available index: " + QString::number(index));
-  // OkDialog::instance(toPrint);
-
   return index;  
+}
+
+void JsonParser::addPreset(const QString& email, const int preset)
+{
+  QJsonArray arr = readJsonArrayFromFile(PRESETS_PATH);
+
+  for (qsizetype i = 0; i < arr.size(); ++i) {
+    const QJsonValue& val = arr[i];
+
+    if (!val.isObject())
+      continue;
+
+    QJsonObject obj = val.toObject();
+
+    if (!obj.contains("Email") || obj.value("Email").toString() != email)
+      continue;
+
+    QJsonArray presetsArray = obj.value("Presets").toArray();
+    
+    presetsArray.append(preset);
+    // sort...
+    obj["Presets"] = presetsArray;
+
+    arr[i] = obj;
+
+    writeJsonArrayToFile(arr, PRESETS_PATH);
+
+    return;
+  }
+
+  QJsonArray presetsArray = {preset};
+  QJsonObject presetObj;
+  presetObj.insert("Email", email);
+  presetObj.insert("Presets", presetsArray);
+
+  arr.append(presetObj);
+
+  writeJsonArrayToFile(arr, PRESETS_PATH);
+}
+
+void JsonParser::removePreset(const QString& email, const int preset)
+{
+  QJsonArray arr = readJsonArrayFromFile(PRESETS_PATH);
+
+  if (arr.isEmpty()) return;
+
+  for (qsizetype i = 0; i < arr.size(); ++i) {
+    const QJsonValue& val = arr[i];
+
+    if (!val.isObject())
+      continue;
+
+    QJsonObject obj = val.toObject();
+
+    if (!obj.contains("Email") || obj.value("Email").toString() != email)
+      continue;
+
+    QJsonArray presetsArray = obj.value("Presets").toArray();
+
+    if (presetsArray.isEmpty()) return;
+    
+    for (qsizetype j = 0; j < presetsArray.size(); ++j) {
+      if (presetsArray[j] == preset)
+        presetsArray.removeAt(j);
+    }
+
+    obj["Presets"] = presetsArray;
+
+    arr[i] = obj;
+  }
+
+  writeJsonArrayToFile(arr, PRESETS_PATH);
+}
+
+void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVector)
+{
+  QJsonArray arr = readJsonArrayFromFile(PRESETS_PATH);
+
+  if (arr.isEmpty())
+    return;
+  
+  outVector.clear();
+
+  for (const QJsonValue& val : arr) {
+    if (!val.isObject()) continue;
+
+    QJsonObject obj = val.toObject();
+
+    if ((!obj.contains("Email")) || 
+        (obj.value("Email").toString() != email && 
+          obj.value("Email").toString() != "oliver.fenk@hfmdd.de"))
+      continue;
+
+    QJsonArray presetsArray = obj.value("Presets").toArray();
+
+    for (const QJsonValue& presetVal : presetsArray) {
+      outVector.append(presetVal.toVariant().toInt());
+    }
+  }
+
+  QString presets = email + ": ";
+
+  for (int pr : outVector)
+    presets.append(QString::number(pr) + " ");
+
+  OkDialog::instance(presets);
 }
 
 QJsonArray JsonParser::readJsonArrayFromFile(const QString& path)

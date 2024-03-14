@@ -28,6 +28,7 @@
 #include "message-dialog.hpp"
 #include "ui_preset-dialog.h"
 #include "booking-manager.hpp"
+#include "json-parser.hpp"
 
 void ptz_load_controls(void)
 {
@@ -506,16 +507,11 @@ void PTZControls::SaveConfig()
 void PTZControls::LoadConfig()
 {
 	char *file = obs_module_config_path("config.json");
-	OBSDataArray array;
-
-  //----------------------------------------------------
-  OBSDataArray preset_array;
-  //----------------------------------------------------
-
-	std::string target_mode;
 
 	if (!file)
 		return;
+
+  std::string target_mode;
 
 	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
 	if (!loaddata) {
@@ -557,15 +553,40 @@ void PTZControls::LoadConfig()
 		ui->splitter->restoreState(splitterState);
 	}
 
-	array = obs_data_get_array(loaddata, "devices");
+	OBSDataArray array = obs_data_get_array(loaddata, "devices");
 	obs_data_array_release(array);
 	ptz_devices_set_config(array);
 
   //----------------------------------------------------
-  preset_array = obs_data_get_array(loaddata, "global_presets");
+  OBSDataArray preset_array = obs_data_get_array(loaddata, "global_presets");
   obs_data_array_release(preset_array);
   m_presetsModel.loadPresets(preset_array);
   //----------------------------------------------------
+  ui->presetListView->setModel(presetModel());
+}
+
+void PTZControls::loadUserPresets()
+{
+  char *file = obs_module_config_path("config.json");
+
+  if (!file) return;
+
+  OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
+	if (!loaddata) {
+		/* Try loading from the old configuration path */
+		auto f = QString(file).replace("obs-ptz", "ptz-controls");
+		loaddata = obs_data_create_from_json_file_safe(QT_TO_UTF8(f),
+							       "bak");
+	}
+	bfree(file);
+	if (!loaddata)
+		return;
+	obs_data_release(loaddata);
+
+  OBSDataArray preset_array = obs_data_get_array(loaddata, "global_presets");
+  m_userPresetsModel.loadUserPresets(preset_array);
+
+  ui->presetListView->setModel(userPresetModel());
 }
 
 void PTZControls::setDisableLiveMoves(bool disable)
@@ -810,11 +831,16 @@ void PTZControls::on_loadPresetButton_clicked()
   QModelIndex index = ui->presetListView->currentIndex();
 
   if (!index.isValid()) {
-    OkDialog::instance("Please select the booking you want to delete.", this);
+    OkDialog::instance("Please select the booking you want to load.", this);
     return;
   }
+  
+  QVariant displayNameVariant = userPresetModel()->data(index, Qt::EditRole);
 
-  int id = presetIndexToId(index);
+  int id = userPresetModel()->data(index, Qt::UserRole).toInt();
+
+  OkDialog::instance(displayNameVariant.toString() + " | index: " + QString::number(id));
+
   presetRecallAll(id);
 }
 
@@ -835,8 +861,16 @@ void PTZControls::on_deletePresetButton_clicked()
   
   if (!confirmed) return;
 
-  auto model = ui->presetListView->model();
-	model->removeRows(index.row(), 1);
+  auto model = presetModel();
+
+  // QVariant displayNameVariant = model->data(index, Qt::EditRole);
+  int id = model->data(index, Qt::UserRole).toInt();
+
+  JsonParser::removePreset(
+    BookingManager::getInstance()->getCurrentMailAddress(),
+    id
+  );
+	model->removeRows(id, 1);
 	presetUpdateActions();
 }
 
@@ -852,16 +886,14 @@ bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, vo
 
 void PTZControls::on_recordButton_clicked()
 {
-  if (!obs_frontend_recording_active())
-  {
+  if (!obs_frontend_recording_active()) {
     obs_frontend_recording_start();
 
     QPushButton* recordButton = findChild<QPushButton*>("startRecordingButton");
     recordButton->setText("Stop Recording");
   }
 
-  else 
-  {
+  else {
     obs_frontend_recording_stop();
     QPushButton* recordButton = findChild<QPushButton*>("startRecordingButton");
     recordButton->setText("Start Recording");
@@ -1025,12 +1057,11 @@ void PTZControls::presetRecallAll(int preset_id)
   }
 }
 
-int PTZControls::presetNameToId(const QString& name)
+int PTZControls::presetNameToId(QAbstractListModel* model, const QString& name)
 {
   // TODO: support same preset name at different indeces
   // with ui->presetListView->setModel(ptz->presetModel());
 
-  auto model = ui->presetListView->model();
 	auto rowCount = model->rowCount();
 	
   for (int i = 0; i < rowCount; ++i)
@@ -1047,7 +1078,8 @@ int PTZControls::presetNameToId(const QString& name)
 
 int PTZControls::presetIndexToId(QModelIndex index)
 {
-	auto model = ui->presetListView->model();
+  auto model = ui->presetListView->model();
+	// auto model = presetModel();
 	if (model && index.isValid())
 		return model->data(index, Qt::UserRole).toInt();
 	return -1;
@@ -1060,20 +1092,38 @@ void PTZControls::setNewPresetName(const QString& text)
 
 void PTZControls::savePreset()
 {
-  auto model = ui->presetListView->model();
+  // auto model = ui->presetListView->model();
+
+  auto model = presetModel();
+
 	auto row = model->rowCount();
 	model->insertRows(row, 1);
 	QModelIndex index = model->index(row, 0);
+
+  QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(index));
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
 		model->setData(index, newPresetName, Qt::EditRole);
+    userPresetModel()->setData(index, newPresetName, Qt::EditRole);
+    JsonParser::addPreset(
+      BookingManager::getInstance()->getCurrentMailAddress(), 
+      model->data(index, Qt::UserRole).toInt()
+    );
 	}
 	presetUpdateActions();
   presetSetAll(presetIndexToId(ui->presetListView->currentIndex()));
 
-  delete savePresetDialog;
+  SaveConfig();
+  loadUserPresets();
+  ui->presetListView->setModel(userPresetModel());
 }
 
+void PTZControls::savePresets()
+{
+  //----------------------------------------------------
+}
+
+// ! DEPRECATED !
 void PTZControls::presetUpdateActions()
 {
 	auto index = ui->presetListView->currentIndex();

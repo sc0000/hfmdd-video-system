@@ -29,6 +29,7 @@ private:
 	TouchControl *pantilt_widget;
 
   PTZPresetListModel m_presetsModel;
+  PTZPresetListModel m_userPresetsModel;
 
 	bool live_moves_disabled = false;
 
@@ -73,11 +74,13 @@ private:
 
 	void presetRecall(int id);
   void presetRecallAll(int preset_id);
-  int presetNameToId(const QString& name);
+  int presetNameToId(QAbstractListModel* model, const QString& name);
 
   void onNewSelectedItem(obs_scene_t* scene, obs_sceneitem_t* item);
 
 	void setAutofocusEnabled(bool autofocus_on);
+
+  void savePresets();
 
 private:
 	PTZDevice *currCamera();
@@ -176,13 +179,15 @@ protected slots:
 #endif /* ENABLE_JOYSTICK */
 
 public:
-	PTZControls(QWidget *parent = nullptr);
+	PTZControls(QWidget* parent = nullptr);
 	~PTZControls();
 	void setDisableLiveMoves(bool enable);
 	bool liveMovesDisabled() { return live_moves_disabled; };
-	static PTZControls *getInstance() { return instance; };
-  virtual QAbstractListModel *presetModel() { return &m_presetsModel; }
+	static PTZControls* getInstance() { return instance; };
+  virtual QAbstractListModel* presetModel() { return &m_presetsModel; }
+  QAbstractListModel* userPresetModel() { return &m_userPresetsModel; } 
 
+  void loadUserPresets();
   void connectSignalItemSelect();
 
   QString currCameraName = "Birddog1";

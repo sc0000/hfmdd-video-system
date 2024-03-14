@@ -13,6 +13,8 @@
 #include "ptz.h"
 #include "protocol-helpers.hpp"
 #include "message-dialog.hpp"
+#include "json-parser.hpp"
+#include "booking-manager.hpp"
 
 #if defined(ENABLE_SERIALPORT)
 #include "ptz-visca-uart.hpp"
@@ -424,14 +426,55 @@ void PTZPresetListModel::loadPresets(OBSDataArray preset_array)
 {
 	if (!preset_array)
 		return;
+
 	beginResetModel();
 	m_presets.clear();
 	m_displayOrder.clear();
+
 	for (size_t i = 0; i < obs_data_array_count(preset_array); i++) {
 		OBSDataAutoRelease item = obs_data_array_item(preset_array, i);
 		auto id = obs_data_get_int(item, "id");
+
 		if (m_displayOrder.contains(id))
 			continue;
+
+		QVariantMap preset = OBSDataToVariantMap(item.Get());
+		m_presets[id] = preset;
+		sanitize(id);
+	}
+	endResetModel();
+}
+
+void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
+{
+  if (!preset_array)
+		return;
+
+	beginResetModel();
+	m_presets.clear();
+	m_displayOrder.clear();
+
+  QVector<int> currentUserPresets;
+
+  BookingManager* bookingManager = BookingManager::getInstance();
+
+  if (!bookingManager) return;
+
+  JsonParser::getPresetsForEmail(
+    BookingManager::getInstance()->getCurrentMailAddress(),
+    currentUserPresets
+  );
+
+	for (size_t i = 0; i < obs_data_array_count(preset_array); i++) {
+		OBSDataAutoRelease item = obs_data_array_item(preset_array, i);
+		auto id = obs_data_get_int(item, "id");
+
+    if (!currentUserPresets.contains(id))
+      continue;
+
+		if (m_displayOrder.contains(id))
+			continue;
+
 		QVariantMap preset = OBSDataToVariantMap(item.Get());
 		m_presets[id] = preset;
 		sanitize(id);

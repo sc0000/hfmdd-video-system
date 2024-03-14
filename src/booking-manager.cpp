@@ -185,8 +185,13 @@ void BookingManager::on_toPTZControlsButton_pressed()
   hide();
 
   Login::getInstance()->hide();
-  PTZControls::getInstance()->setFloating(false);
-  PTZControls::getInstance()->show();
 
-  PTZControls::getInstance()->connectSignalItemSelect();
+  PTZControls* ptzControls = PTZControls::getInstance();
+
+  if (!ptzControls) return;
+
+  ptzControls->connectSignalItemSelect();
+  ptzControls->loadUserPresets();
+  ptzControls->setFloating(false);
+  ptzControls->show();
 }
