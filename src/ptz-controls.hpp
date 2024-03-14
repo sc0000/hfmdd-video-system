@@ -60,7 +60,7 @@ private:
 	void setFocus(double speed);
 
 	void setCurrent(unsigned int index);
-	int presetIndexToId(QModelIndex index);
+	int presetIndexToId(PTZPresetListModel* model, QModelIndex index);
 
   QString currentMailAddress();
 

@@ -12,7 +12,7 @@
 // QString JsonParser::BOOKINGS_PATH = "V:/sb-terminal-test/bookings.json";
 QString JsonParser::PRESETS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
 QString JsonParser::BOOKINGS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
-QString JsonParser::OLIVERS_EMAIL = "oliver.fenk@hfmdd.de";
+const QString JsonParser::OLIVERS_EMAIL = "oliver.fenk@hfmdd.de";
 
 void JsonParser::addBooking(const Booking& booking)
 {

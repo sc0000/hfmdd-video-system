@@ -845,7 +845,10 @@ void PTZControls::on_loadPresetButton_clicked()
   }
   
   // int id = userPresetModel()->data(index, Qt::UserRole).toInt();
-  int id = presetIndexToId(index);
+  PTZPresetListModel* model = static_cast<PTZPresetListModel*>(ui->presetListView->model());
+  if (!model) return;
+
+  int id = presetIndexToId(model, index);
 
   presetRecallAll(id);
 }
@@ -860,7 +863,7 @@ void PTZControls::on_deletePresetButton_clicked()
   }
 
   PTZPresetListModel* model = presetModel();
-  int id = model->data(index, Qt::UserRole).toInt();
+  int id = presetIndexToId(model, index);
 
   QVector<int> oliversPresets;
   JsonParser::getPresetsForEmail("oliver.fenk@hfmdd.de", oliversPresets);
@@ -1093,10 +1096,8 @@ int PTZControls::presetNameToId(QAbstractListModel* model, const QString& name)
   return -1;
 }
 
-int PTZControls::presetIndexToId(QModelIndex index)
+int PTZControls::presetIndexToId(PTZPresetListModel* model, QModelIndex index)
 {
-  auto model = ui->presetListView->model();
-	// auto model = presetModel();
 	if (model && index.isValid())
 		return model->data(index, Qt::UserRole).toInt();
 	return -1;
@@ -1116,8 +1117,9 @@ void PTZControls::savePreset()
 	auto row = model->rowCount();
 	model->insertRows(row, 1);
 	QModelIndex index = model->index(row, 0);
+  int id = presetIndexToId(model, index);
 
-  QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(model->data(index, Qt::UserRole).toInt());
+  QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(model, index));
   OkDialog::instance(deb, this);
 
 	if (index.isValid()) {
@@ -1127,12 +1129,12 @@ void PTZControls::savePreset()
 
     JsonParser::addPreset(
       currentMailAddress(), 
-      model->data(index, Qt::UserRole).toInt()
+      id
     );
 	}
 
 	// presetUpdateActions();
-  presetSetAll(model->data(index, Qt::UserRole).toInt());
+  presetSetAll(id);
 
   SaveConfig();
   loadUserPresets();
@@ -1169,7 +1171,10 @@ QString PTZControls::currentMailAddress()
 
 void PTZControls::on_presetListView_activated(QModelIndex index)
 {
-	presetRecall(presetIndexToId(index));
+  PTZPresetListModel* model = static_cast<PTZPresetListModel*>(ui->presetListView->model());
+  if (!model) return;
+
+	presetRecall(presetIndexToId(model, index));
 }
 
 void PTZControls::on_presetListView_customContextMenuRequested(const QPoint &pos)
