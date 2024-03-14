@@ -1,7 +1,3 @@
-#include "message-dialog.hpp"
-#include "booking-manager.hpp"
-#include "json-parser.hpp"
-
 #include <QVector>
 #include <QDate>
 #include <QFile>
@@ -9,15 +5,19 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-// QString JsonParser::BOOKINGS_PATH = "V:/sb-terminal-test/bookings.json";
-QString JsonParser::PRESETS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
-QString JsonParser::BOOKINGS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
-const QString JsonParser::OLIVERS_EMAIL = "oliver.fenk@hfmdd.de";
+#include "message-dialog.hpp"
+#include "booking-manager.hpp"
+#include "globals.hpp"
+#include "json-parser.hpp"
+
+// QString JsonParser::bookingsPath = "V:/sb-terminal-test/bookings.json";
+QString JsonParser::presetsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
+QString JsonParser::bookingsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
 
 void JsonParser::addBooking(const Booking& booking)
 {
   QJsonArray arr = 
-    readJsonArrayFromFile(BOOKINGS_PATH);
+    readJsonArrayFromFile(bookingsPath);
 
   QJsonObject bookingObj;
   bookingObj.insert("Email", booking.email);
@@ -29,13 +29,13 @@ void JsonParser::addBooking(const Booking& booking)
   bookingObj.insert("Index", QString::number(booking.index));
 
   arr.append(bookingObj);
-  writeJsonArrayToFile(arr, BOOKINGS_PATH);
+  writeJsonArrayToFile(arr, bookingsPath);
 }
 
 void JsonParser::updateBooking(const Booking& booking)
 {
   QJsonArray arr = 
-    readJsonArrayFromFile(BOOKINGS_PATH);
+    readJsonArrayFromFile(bookingsPath);
 
   QJsonObject bookingObj;
   bookingObj.insert("Email", booking.email);
@@ -58,14 +58,14 @@ void JsonParser::updateBooking(const Booking& booking)
       arr[i] = bookingObj;
   }
 
-  writeJsonArrayToFile(arr, BOOKINGS_PATH);
+  writeJsonArrayToFile(arr, bookingsPath);
 }
 
 void JsonParser::getBookingsOnDate(const QDate& date, QVector<Booking>& outVector)
 {
   outVector.clear();
 
-  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(bookingsPath);
 
   for (const QJsonValue& val : arr) {
     if (!val.isObject()) continue;
@@ -93,7 +93,7 @@ void JsonParser::getBookingsForEmail(const QString& mailAddress, QVector<Booking
 {
   outVector.clear();
 
-  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(bookingsPath);
 
   if (arr.isEmpty()) return;
 
@@ -123,7 +123,7 @@ void JsonParser::getAllBookings(QVector<Booking>& outVector)
 {
   outVector.clear();
 
-  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(bookingsPath);
 
   if (arr.isEmpty()) return;
 
@@ -150,7 +150,7 @@ void JsonParser::removeBooking(const Booking& booking)
 {
   // TODO: Just use index!
 
-  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(bookingsPath);
 
   for (qsizetype i = arr.size() - 1; i >= 0; --i) {
     QJsonValue val = arr[i];
@@ -163,7 +163,7 @@ void JsonParser::removeBooking(const Booking& booking)
       arr.removeAt(i);
   }
 
-  writeJsonArrayToFile(arr, BOOKINGS_PATH); 
+  writeJsonArrayToFile(arr, bookingsPath); 
 }
 
 int JsonParser::availableIndex()
@@ -171,7 +171,7 @@ int JsonParser::availableIndex()
   int index = 0;
   QVector<int> occupiedIndices;
 
-  QJsonArray arr = readJsonArrayFromFile(BOOKINGS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(bookingsPath);
 
   for (const QJsonValue& val : arr) {
     if (!val.isObject()) continue;
@@ -189,7 +189,7 @@ int JsonParser::availableIndex()
 
 void JsonParser::addPreset(const QString& email, const int preset)
 {
-  QJsonArray arr = readJsonArrayFromFile(PRESETS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(presetsPath);
 
   for (qsizetype i = 0; i < arr.size(); ++i) {
     const QJsonValue& val = arr[i];
@@ -225,7 +225,7 @@ void JsonParser::addPreset(const QString& email, const int preset)
 
     arr[i] = obj;
 
-    writeJsonArrayToFile(arr, PRESETS_PATH);
+    writeJsonArrayToFile(arr, presetsPath);
 
     return;
   }
@@ -237,12 +237,12 @@ void JsonParser::addPreset(const QString& email, const int preset)
 
   arr.append(presetObj);
 
-  writeJsonArrayToFile(arr, PRESETS_PATH);
+  writeJsonArrayToFile(arr, presetsPath);
 }
 
 void JsonParser::removePreset(const QString& email, const int preset)
 {
-  QJsonArray arr = readJsonArrayFromFile(PRESETS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(presetsPath);
 
   if (arr.isEmpty()) return;
 
@@ -254,8 +254,8 @@ void JsonParser::removePreset(const QString& email, const int preset)
 
     QJsonObject obj = val.toObject();
 
-    if (obj.value("Email").toString() == OLIVERS_EMAIL && 
-        email != OLIVERS_EMAIL)
+    if (obj.value("Email").toString() == Globals::oliversEmail && 
+        email != Globals::oliversEmail)
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
@@ -272,12 +272,12 @@ void JsonParser::removePreset(const QString& email, const int preset)
     arr[i] = obj;
   }
 
-  writeJsonArrayToFile(arr, PRESETS_PATH);
+  writeJsonArrayToFile(arr, presetsPath);
 }
 
 void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVector)
 {
-  QJsonArray arr = readJsonArrayFromFile(PRESETS_PATH);
+  QJsonArray arr = readJsonArrayFromFile(presetsPath);
 
   if (arr.isEmpty())
     return;
@@ -291,7 +291,7 @@ void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVecto
 
     if ((!obj.contains("Email")) || 
         (obj.value("Email").toString() != email && 
-          obj.value("Email").toString() != OLIVERS_EMAIL))
+          obj.value("Email").toString() != Globals::oliversEmail))
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();

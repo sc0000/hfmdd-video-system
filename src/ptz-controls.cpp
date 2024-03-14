@@ -21,7 +21,6 @@
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"
 #include "ui_ptz-controls.h"
-#include "ptz-controls.hpp"
 #include "settings.hpp"
 #include "ptz.h"
 #include "login.hpp"
@@ -29,6 +28,8 @@
 #include "ui_preset-dialog.h"
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
+#include "globals.hpp"
+#include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
 {
@@ -567,7 +568,7 @@ void PTZControls::LoadConfig()
 
 void PTZControls::loadUserPresets()
 {
-  if (currentMailAddress() == "oliver.fenk@hfmdd.de") {
+  if (Globals::currentEmail == Globals::oliversEmail) {
     ui->presetListView->setModel(presetModel());
     return;
   }
@@ -806,33 +807,7 @@ void PTZControls::on_focusButton_onetouch_clicked()
 
 void PTZControls::on_savePresetButton_clicked()
 {
-  // TODO: Move to own class, use .ui paradigm!
-
   PresetDialog::instance(BookingManager::getInstance()->selectedBooking, this);
-
-  // savePresetDialog = new QDialog(this);
-  // QHBoxLayout* savePresetLayout = new QHBoxLayout();
-
-  // QLineEdit* savePresetLineEdit = new QLineEdit();
-  // savePresetLineEdit->setPlaceholderText("New Preset Name");
-
-  // QPushButton* confirmSavePresetButton = new QPushButton();
-  // confirmSavePresetButton->setText("Confirm");
-
-  // savePresetLayout->addWidget(savePresetLineEdit);
-  // savePresetLayout->addWidget(confirmSavePresetButton);
-
-  // savePresetDialog->setLayout(savePresetLayout);
-
-  // QObject::connect(savePresetLineEdit, 
-  //   &QLineEdit::textEdited, this,
-  //   &PTZControls::setNewPresetName);
-
-  // QObject::connect(confirmSavePresetButton, 
-  //   &QPushButton::clicked, this,
-  //   &PTZControls::savePreset);
-
-  // savePresetDialog->show();
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -866,9 +841,9 @@ void PTZControls::on_deletePresetButton_clicked()
   int id = presetIndexToId(model, index);
 
   QVector<int> oliversPresets;
-  JsonParser::getPresetsForEmail("oliver.fenk@hfmdd.de", oliversPresets);
+  JsonParser::getPresetsForEmail(Globals::oliversEmail, oliversPresets);
 
-  if (currentMailAddress() != "oliver.fenk@hfmdd.de" && oliversPresets.contains(id)) {
+  if (Globals::currentEmail != Globals::oliversEmail && oliversPresets.contains(id)) {
     OkDialog::instance("You don't have permission to delete this preset", this);
     return;
   }
@@ -882,13 +857,13 @@ void PTZControls::on_deletePresetButton_clicked()
   if (!confirmed) return;
 
   JsonParser::removePreset(
-    currentMailAddress(),
+    Globals::currentEmail,
     id
   );
 
 	model->removePresetWithId(id);
 
-  if (currentMailAddress() == "oliver.fenk@hfmdd.de") return;
+  if (Globals::currentEmail == Globals::oliversEmail) return;
 
   PTZPresetListModel* userModel = userPresetModel();
   userModel->removePresetWithId(id);
@@ -1119,8 +1094,8 @@ void PTZControls::savePreset()
 	QModelIndex index = model->index(row, 0);
   int id = presetIndexToId(model, index);
 
-  QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(model, index));
-  OkDialog::instance(deb, this);
+  // QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(model, index));
+  // OkDialog::instance(deb, this);
 
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
@@ -1128,7 +1103,7 @@ void PTZControls::savePreset()
     userPresetModel()->setData(index, newPresetName, Qt::EditRole);
 
     JsonParser::addPreset(
-      currentMailAddress(), 
+      Globals::currentEmail, 
       id
     );
 	}
@@ -1160,14 +1135,6 @@ void PTZControls::presetUpdateActions()
 	// 				     index.row() < count - 1);
 }
 
-QString PTZControls::currentMailAddress()
-{
-  BookingManager* bookingManager = BookingManager::getInstance();
-
-  if (!bookingManager) return "";
-
-  return bookingManager->getCurrentMailAddress();
-}
 
 void PTZControls::on_presetListView_activated(QModelIndex index)
 {

@@ -27,7 +27,7 @@ private:
   Ui::Login* ui;
 
 private:
-  QString currentMailAddress;
+  // QString currentMailAddress;
   bool mailAddressIsValid;
 
   bool verifyMailAddress();
@@ -42,6 +42,6 @@ public:
   ~Login();
 
   static inline Login* getInstance() { return instance; }
-  inline const QString& getCurrentMailAddress() { return currentMailAddress; }
+  // inline const QString& getCurrentMailAddress() { return currentMailAddress; }
 };
 

@@ -6,15 +6,16 @@
  */
 
 #include <obs.hpp>
-#include "ptz-device.hpp"
+#include "protocol-helpers.hpp"
+#include "message-dialog.hpp"
+#include "json-parser.hpp"
+#include "globals.hpp"
+#include "booking-manager.hpp"
 #include "ptz-visca-udp.hpp"
 #include "ptz-visca-tcp.hpp"
 #include "ptz-onvif.hpp"
 #include "ptz.h"
-#include "protocol-helpers.hpp"
-#include "message-dialog.hpp"
-#include "json-parser.hpp"
-#include "booking-manager.hpp"
+#include "ptz-device.hpp"
 
 #if defined(ENABLE_SERIALPORT)
 #include "ptz-visca-uart.hpp"
@@ -461,7 +462,7 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
   if (!bookingManager) return;
 
   JsonParser::getPresetsForEmail(
-    BookingManager::getInstance()->getCurrentMailAddress(),
+    Globals::currentEmail,
     currentUserPresets
   );
 

@@ -21,12 +21,11 @@ public:
   static QJsonArray readJsonArrayFromFile(const QString& path);
   static void writeJsonArrayToFile(const QJsonArray& arr, const QString& path);
 
-  inline static void setBookingsPath(const QString& newPath) { BOOKINGS_PATH = newPath + "bookings.json"; }
-  inline static void setPresetsPath(const QString& newPath) { BOOKINGS_PATH = newPath + "bookings.json"; }
+  inline static void setBookingsPath(const QString& newPath) { bookingsPath = newPath + "bookings.json"; }
+  inline static void setPresetsPath(const QString& newPath) { presetsPath = newPath + "bookings.json"; }
 
 private:
 
-  static QString BOOKINGS_PATH;
-  static QString PRESETS_PATH;
-  const static QString OLIVERS_EMAIL;
+  static QString bookingsPath;
+  static QString presetsPath;
 };

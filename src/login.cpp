@@ -1,12 +1,14 @@
 #include <obs-module.h>
 #include <obs-frontend-api.h>
-#include "login.hpp"
-#include "ui_login.h"
+
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "path-manager.hpp"
+#include "globals.hpp"
+#include "ui_login.h"
+#include "login.hpp"
 
 Login* Login::instance = NULL;
 
@@ -59,22 +61,22 @@ bool Login::verifyMailAddress()
 
 void Login::on_mailAddressLineEdit_textEdited(const QString& text)
 {
-  currentMailAddress = text;
+  Globals::currentEmail = text;
   mailAddressIsValid = false;
 
   const QString mailSuffices[] = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" }; // TODO: Remove gmx
 
   for (const QString& suffix : mailSuffices)
   {
-    if (currentMailAddress.endsWith(suffix))
+    if (Globals::currentEmail.endsWith(suffix))
     {
       mailAddressIsValid = true;
-      PathManager::innerDirectory = currentMailAddress.chopped(suffix.length());
+      PathManager::innerDirectory = Globals::currentEmail.chopped(suffix.length());
       break;
     }
   }
 
-  if (currentMailAddress == "oliver.fenk@hfmdd.de")
+  if (Globals::currentEmail == Globals::oliversEmail)
     PasswordDialog::instance(mailAddressIsValid, this);
 
   verifyMailAddress();

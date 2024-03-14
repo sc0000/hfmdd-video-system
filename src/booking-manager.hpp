@@ -23,7 +23,7 @@ private:
   QListWidget* bookingsList;
 
   // props
-  QString currentMailAddress;
+  // QString currentMailAddress;
   QVector<Booking> bookings;
 
   // methods
@@ -41,7 +41,7 @@ public:
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
   inline QListWidget* getBookingsList() { return bookingsList; }
-  inline const QString& getCurrentMailAddress() { return currentMailAddress; }
+  // inline const QString& getCurrentMailAddress() { return currentMailAddress; }
 
   void loadBookings();
   void addBooking(const Booking& booking);

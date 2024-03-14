@@ -1,12 +1,14 @@
 #include <QLabel>
+
 #include "login.hpp"
 #include "message-dialog.hpp"
 #include "booking-editor.hpp"
-#include "ui_booking-manager.h"
-#include "booking-manager.hpp"
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
 #include "path-manager.hpp"
+#include "globals.hpp"
+#include "ui_booking-manager.h"
+#include "booking-manager.hpp"
 
 
 BookingManager* BookingManager::instance = nullptr;
@@ -31,15 +33,15 @@ BookingManager::~BookingManager()
 
 void BookingManager::loadBookings()
 {
-  currentMailAddress = Login::getInstance()->getCurrentMailAddress();
+  // currentMailAddress = Login::getInstance()->getCurrentMailAddress();
     
   QVector<Booking> tmp;
 
-  if (currentMailAddress == "oliver.fenk@hfmdd.de")
+  if (Globals::currentEmail == Globals::oliversEmail)
     JsonParser::getAllBookings(tmp);
 
   else   
-    JsonParser::getBookingsForEmail(currentMailAddress, tmp);
+    JsonParser::getBookingsForEmail(Globals::currentEmail, tmp);
 
   bookings.clear();  
 

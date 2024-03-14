@@ -1,5 +1,6 @@
 #include <QLabel>
 #include "json-parser.hpp"
+#include "globals.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
@@ -45,7 +46,7 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
     stopTimeEdit->setTime(stopTimeEdit->minimumTime());
     eventTypeLineEdit->setText("");
 
-    booking.email = BookingManager::getInstance() ? BookingManager::getInstance()->getCurrentMailAddress() : "";
+    booking.email = Globals::currentEmail;
     booking.index = JsonParser::availableIndex();
   }
 

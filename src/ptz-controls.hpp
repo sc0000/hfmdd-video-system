@@ -62,8 +62,6 @@ private:
 	void setCurrent(unsigned int index);
 	int presetIndexToId(PTZPresetListModel* model, QModelIndex index);
 
-  QString currentMailAddress();
-
 // TODO: Tidy up!
 public:
   void setNewPresetName(const QString& text);
