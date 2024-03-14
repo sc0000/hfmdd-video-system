@@ -62,6 +62,7 @@ private:
 	void setCurrent(unsigned int index);
 	int presetIndexToId(QModelIndex index);
 
+  QString currentMailAddress();
 
 // TODO: Tidy up!
 public:
@@ -184,8 +185,8 @@ public:
 	void setDisableLiveMoves(bool enable);
 	bool liveMovesDisabled() { return live_moves_disabled; };
 	static PTZControls* getInstance() { return instance; };
-  virtual QAbstractListModel* presetModel() { return &m_presetsModel; }
-  QAbstractListModel* userPresetModel() { return &m_userPresetsModel; } 
+  virtual PTZPresetListModel* presetModel() { return &m_presetsModel; }
+  PTZPresetListModel* userPresetModel() { return &m_userPresetsModel; } 
 
   void loadUserPresets();
   void connectSignalItemSelect();

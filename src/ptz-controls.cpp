@@ -1,6 +1,6 @@
 /* Pan Tilt Zoom camera controls
  *
- * Copyright 2020 Grant Likely <grant.likely@secretlab.ca>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>, extending work by Grant Likely (2020) <grant.likely@secretlab.ca>
  *
  * SPDX-License-Identifier: GPLv2
  */
@@ -567,21 +567,30 @@ void PTZControls::LoadConfig()
 
 void PTZControls::loadUserPresets()
 {
+  if (currentMailAddress() == "oliver.fenk@hfmdd.de") {
+    ui->presetListView->setModel(presetModel());
+    return;
+  }
+
   char *file = obs_module_config_path("config.json");
 
   if (!file) return;
 
   OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
-	if (!loaddata) {
+	
+  if (!loaddata) {
 		/* Try loading from the old configuration path */
 		auto f = QString(file).replace("obs-ptz", "ptz-controls");
 		loaddata = obs_data_create_from_json_file_safe(QT_TO_UTF8(f),
 							       "bak");
 	}
+
 	bfree(file);
-	if (!loaddata)
+	
+  if (!loaddata)
 		return;
-	obs_data_release(loaddata);
+	
+  obs_data_release(loaddata);
 
   OBSDataArray preset_array = obs_data_get_array(loaddata, "global_presets");
   m_userPresetsModel.loadUserPresets(preset_array);
@@ -835,11 +844,8 @@ void PTZControls::on_loadPresetButton_clicked()
     return;
   }
   
-  QVariant displayNameVariant = userPresetModel()->data(index, Qt::EditRole);
-
-  int id = userPresetModel()->data(index, Qt::UserRole).toInt();
-
-  OkDialog::instance(displayNameVariant.toString() + " | index: " + QString::number(id));
+  // int id = userPresetModel()->data(index, Qt::UserRole).toInt();
+  int id = presetIndexToId(index);
 
   presetRecallAll(id);
 }
@@ -853,6 +859,17 @@ void PTZControls::on_deletePresetButton_clicked()
     return;
   }
 
+  PTZPresetListModel* model = presetModel();
+  int id = model->data(index, Qt::UserRole).toInt();
+
+  QVector<int> oliversPresets;
+  JsonParser::getPresetsForEmail("oliver.fenk@hfmdd.de", oliversPresets);
+
+  if (currentMailAddress() != "oliver.fenk@hfmdd.de" && oliversPresets.contains(id)) {
+    OkDialog::instance("You don't have permission to delete this preset", this);
+    return;
+  }
+
   bool confirmed;
   OkCancelDialog::instance(
     "Do you really want to delete the selected preset? This cannot be undone.", 
@@ -861,17 +878,17 @@ void PTZControls::on_deletePresetButton_clicked()
   
   if (!confirmed) return;
 
-  auto model = presetModel();
-
-  // QVariant displayNameVariant = model->data(index, Qt::EditRole);
-  int id = model->data(index, Qt::UserRole).toInt();
-
   JsonParser::removePreset(
-    BookingManager::getInstance()->getCurrentMailAddress(),
+    currentMailAddress(),
     id
   );
-	model->removeRows(id, 1);
-	presetUpdateActions();
+
+	model->removePresetWithId(id);
+
+  if (currentMailAddress() == "oliver.fenk@hfmdd.de") return;
+
+  PTZPresetListModel* userModel = userPresetModel();
+  userModel->removePresetWithId(id);
 }
 
 bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*)
@@ -1049,10 +1066,10 @@ void PTZControls::presetRecall(int preset_id)
 
 void PTZControls::presetRecallAll(int preset_id)
 {
-  for (PTZDevice* ptz : allCameras())
-  {
+  for (PTZDevice* ptz : allCameras()) {
     if (!ptz)
       continue;
+
     ptz->memory_recall(preset_id);
   }
 }
@@ -1094,28 +1111,32 @@ void PTZControls::savePreset()
 {
   // auto model = ui->presetListView->model();
 
-  auto model = presetModel();
+  PTZPresetListModel* model = presetModel();
 
 	auto row = model->rowCount();
 	model->insertRows(row, 1);
 	QModelIndex index = model->index(row, 0);
 
-  QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(index));
+  QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(model->data(index, Qt::UserRole).toInt());
+  OkDialog::instance(deb, this);
+
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
 		model->setData(index, newPresetName, Qt::EditRole);
     userPresetModel()->setData(index, newPresetName, Qt::EditRole);
+
     JsonParser::addPreset(
-      BookingManager::getInstance()->getCurrentMailAddress(), 
+      currentMailAddress(), 
       model->data(index, Qt::UserRole).toInt()
     );
 	}
-	presetUpdateActions();
-  presetSetAll(presetIndexToId(ui->presetListView->currentIndex()));
+
+	// presetUpdateActions();
+  presetSetAll(model->data(index, Qt::UserRole).toInt());
 
   SaveConfig();
   loadUserPresets();
-  ui->presetListView->setModel(userPresetModel());
+  // ui->presetListView->setModel(userPresetModel());
 }
 
 void PTZControls::savePresets()
@@ -1135,6 +1156,15 @@ void PTZControls::presetUpdateActions()
 	// 				   index.row() > 0);
 	// ui->actionPresetMoveDown->setEnabled(index.isValid() && count > 1 &&
 	// 				     index.row() < count - 1);
+}
+
+QString PTZControls::currentMailAddress()
+{
+  BookingManager* bookingManager = BookingManager::getInstance();
+
+  if (!bookingManager) return "";
+
+  return bookingManager->getCurrentMailAddress();
 }
 
 void PTZControls::on_presetListView_activated(QModelIndex index)

@@ -108,6 +108,8 @@ public:
   void loadUserPresets(OBSDataArray preset_array);
   //----------------------------------------------------
 	OBSDataArray savePresets() const;
+  
+  void removePresetWithId(int id);
 };
 
 class PTZDevice : public QObject {

@@ -12,6 +12,7 @@
 // QString JsonParser::BOOKINGS_PATH = "V:/sb-terminal-test/bookings.json";
 QString JsonParser::PRESETS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
 QString JsonParser::BOOKINGS_PATH = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
+QString JsonParser::OLIVERS_EMAIL = "oliver.fenk@hfmdd.de";
 
 void JsonParser::addBooking(const Booking& booking)
 {
@@ -202,10 +203,25 @@ void JsonParser::addPreset(const QString& email, const int preset)
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
+
+    if (presetsArray.contains(QJsonValue(preset))) return;
     
-    presetsArray.append(preset);
+    presetsArray.append(QJsonValue(preset));
+    
     // sort...
-    obj["Presets"] = presetsArray;
+    QVector<int> presetsVector;
+    
+    for (const QJsonValue& val : presetsArray)
+      presetsVector.append(val.toVariant().toInt());
+
+    std::sort(presetsVector.begin(), presetsVector.end());
+
+    QJsonArray sortedPresetsArray;
+
+    for (int p : presetsVector)
+      sortedPresetsArray.append(QJsonValue(p));
+    
+    obj["Presets"] = sortedPresetsArray;
 
     arr[i] = obj;
 
@@ -238,12 +254,13 @@ void JsonParser::removePreset(const QString& email, const int preset)
 
     QJsonObject obj = val.toObject();
 
-    if (!obj.contains("Email") || obj.value("Email").toString() != email)
+    if (obj.value("Email").toString() == OLIVERS_EMAIL && 
+        email != OLIVERS_EMAIL)
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
 
-    if (presetsArray.isEmpty()) return;
+    if (presetsArray.isEmpty()) continue;
     
     for (qsizetype j = 0; j < presetsArray.size(); ++j) {
       if (presetsArray[j] == preset)
@@ -274,7 +291,7 @@ void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVecto
 
     if ((!obj.contains("Email")) || 
         (obj.value("Email").toString() != email && 
-          obj.value("Email").toString() != "oliver.fenk@hfmdd.de"))
+          obj.value("Email").toString() != OLIVERS_EMAIL))
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
@@ -288,8 +305,6 @@ void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVecto
 
   for (int pr : outVector)
     presets.append(QString::number(pr) + " ");
-
-  OkDialog::instance(presets);
 }
 
 QJsonArray JsonParser::readJsonArrayFromFile(const QString& path)

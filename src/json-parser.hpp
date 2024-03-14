@@ -28,4 +28,5 @@ private:
 
   static QString BOOKINGS_PATH;
   static QString PRESETS_PATH;
+  static QString OLIVERS_EMAIL;
 };

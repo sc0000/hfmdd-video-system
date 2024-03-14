@@ -493,6 +493,17 @@ OBSDataArray PTZPresetListModel::savePresets() const
 	return preset_array.Get();
 }
 
+void PTZPresetListModel::removePresetWithId(int id)
+{
+  for (qsizetype i = 0; i < rowCount(); ++i) {
+    QModelIndex iterIndex = index(i, 0);
+    if (data(iterIndex, Qt::UserRole).toInt() == id) {
+      removeRow(i);
+      return;
+    }
+  }
+}
+
 PTZDevice::PTZDevice(OBSData config) : QObject()
 {
 	setObjectName(obs_data_get_string(config, "name"));
