@@ -152,6 +152,62 @@ void PTZControls::connectSignalItemSelect()
   signal_handler_connect(sh, "item_select", item_select_cb, NULL);
 }
 
+void PTZControls::startRecording()
+{
+  BookingManager* bookingManager = BookingManager::getInstance();
+  if (!bookingManager) return;
+
+  Booking* selectedBooking = bookingManager->selectedBooking;
+  if (!selectedBooking) return;
+  
+  if (selectedBooking->date != QDate::currentDate()) {
+      OkDialog::instance(
+        "The selected booking does not have today's date.", 
+        this
+      );
+
+      return;
+    }
+
+    QTime currentTime = QTime::currentTime();
+
+    if (currentTime < selectedBooking->startTime.addSecs(-15 * 60)  ||
+        currentTime > selectedBooking->startTime.addSecs(30 * 60)) {
+      OkDialog::instance(
+        "You can start a booked recording 15 minutes\n"
+        "before the specified start time at the earliest,\n"
+        "and 30 minutes after that time at the latest.",
+        this
+      );
+
+      return;
+    }
+
+    obs_frontend_recording_start();
+
+    // TODO: Set proper threshold, 15 minutes after specified stop time!
+    QDateTime threshold(selectedBooking->date, selectedBooking->stopTime);
+    m_timeObserver = nullptr;
+    m_timeObserver = new TimeObserver(threshold, &timeOut, this);
+
+    ui->recordButton->setStyleSheet(
+      "QPushButton { font-size: 8pt; background-color: green; }"
+    );
+
+    ui->recordButton->setText("Stop Recording");
+}
+
+void PTZControls::stopRecording()
+{
+  obs_frontend_recording_stop();
+
+    ui->recordButton->setStyleSheet(
+      "QPushButton { font-size: 8pt; background-color: red; }"
+    );
+
+    ui->recordButton->setText("Start Recording");
+}
+
 PTZControls::PTZControls(QWidget *parent)
 	: QDockWidget(parent), ui(new Ui::PTZControls)
 {
@@ -884,56 +940,18 @@ bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, vo
   return true;
 }
 
+void timeOut()
+{
+  PTZControls::getInstance()->stopRecording();
+}
+
 void PTZControls::on_recordButton_clicked()
 {
-  BookingManager* bookingManager = BookingManager::getInstance();
-  if (!bookingManager) return;
-
-  Booking* selectedBooking = bookingManager->selectedBooking;
-  if (!selectedBooking) return;
-
-  if (!obs_frontend_recording_active()) {
-    if (selectedBooking->date != QDate::currentDate()) {
-      OkDialog::instance(
-        "The selected booking does not have today's date.", 
-        this
-      );
-
-      return;
-    }
-
-    QTime currentTime = QTime::currentTime();
-
-    if (currentTime < selectedBooking->startTime.addSecs(-15 * 60)  ||
-        currentTime > selectedBooking->startTime.addSecs(30 * 60)) {
-      OkDialog::instance(
-        "You can start a booked recording 15 minutes\n"
-        "before the specified start time at the earliest,\n"
-        "and 30 minutes after that time at the latest.",
-        this
-      );
-
-      return;
-    }
-
-    obs_frontend_recording_start();
-
-    ui->recordButton->setStyleSheet(
-      "QPushButton { font-size: 8pt; background-color: green; }"
-    );
-
-    ui->recordButton->setText("Stop Recording");
-  }
-
-  else {
-    obs_frontend_recording_stop();
-
-    ui->recordButton->setStyleSheet(
-      "QPushButton { font-size: 8pt; background-color: red; }"
-    );
-
-    ui->recordButton->setText("Start Recording");
-  }
+  if (!obs_frontend_recording_active()) 
+    startRecording();
+  
+  else 
+    stopRecording();
 }
 
 void PTZControls::on_logoutButton_clicked()

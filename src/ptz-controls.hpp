@@ -6,11 +6,13 @@
  */
 #pragma once
 
-#include "ptz.h"
 #include <QTimer>
 #include <QList>
 #include <obs.hpp>
 #include <QDockWidget>
+
+#include "time-observer.hpp"
+#include "ptz.h"
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"
 #include "ptz-device.hpp"
@@ -30,6 +32,8 @@ private:
 
   PTZPresetListModel m_presetsModel;
   PTZPresetListModel m_userPresetsModel;
+
+  TimeObserver* m_timeObserver;
 
 	bool live_moves_disabled = false;
 
@@ -188,6 +192,9 @@ public:
 
   void loadUserPresets();
   void connectSignalItemSelect();
+  void startRecording();
+  void stopRecording();
+  // void loginTimeOut();
 
   QString currCameraName = "Birddog1";
 };
