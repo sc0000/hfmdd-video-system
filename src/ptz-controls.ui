@@ -691,10 +691,11 @@
             <property name="font">
              <font>
               <pointsize>8</pointsize>
+              <bold>true</bold>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">font-size: 8pt;</string>
+             <string notr="true">font-size: 8pt; background-color: red;</string>
             </property>
             <property name="text">
              <string>Start Recording</string>

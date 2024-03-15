@@ -336,6 +336,12 @@ PTZControls::PTZControls(QWidget *parent)
 					this);
 		preset_hotkey_map[hotkey] = i;
 	}
+
+  //----------------------------------------------------
+  // ui->recordButton->setStyleSheet(
+  //   "QPushButton { font-size: 8pt; background-color: red; }"
+  // );
+  //----------------------------------------------------
 }
 
 PTZControls::~PTZControls()
@@ -819,7 +825,6 @@ void PTZControls::on_loadPresetButton_clicked()
     return;
   }
   
-  // int id = userPresetModel()->data(index, Qt::UserRole).toInt();
   PTZPresetListModel* model = static_cast<PTZPresetListModel*>(ui->presetListView->model());
   if (!model) return;
 
@@ -881,17 +886,53 @@ bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, vo
 
 void PTZControls::on_recordButton_clicked()
 {
+  BookingManager* bookingManager = BookingManager::getInstance();
+  if (!bookingManager) return;
+
+  Booking* selectedBooking = bookingManager->selectedBooking;
+  if (!selectedBooking) return;
+
   if (!obs_frontend_recording_active()) {
+    if (selectedBooking->date != QDate::currentDate()) {
+      OkDialog::instance(
+        "The selected booking does not have today's date.", 
+        this
+      );
+
+      return;
+    }
+
+    QTime currentTime = QTime::currentTime();
+
+    if (currentTime < selectedBooking->startTime.addSecs(-15 * 60)  ||
+        currentTime > selectedBooking->startTime.addSecs(30 * 60)) {
+      OkDialog::instance(
+        "You can start a booked recording 15 minutes\n"
+        "before the specified start time at the earliest,\n"
+        "and 30 minutes after that time at the latest.",
+        this
+      );
+
+      return;
+    }
+
     obs_frontend_recording_start();
 
-    QPushButton* recordButton = findChild<QPushButton*>("startRecordingButton");
-    recordButton->setText("Stop Recording");
+    ui->recordButton->setStyleSheet(
+      "QPushButton { font-size: 8pt; background-color: green; }"
+    );
+
+    ui->recordButton->setText("Stop Recording");
   }
 
   else {
     obs_frontend_recording_stop();
-    QPushButton* recordButton = findChild<QPushButton*>("startRecordingButton");
-    recordButton->setText("Start Recording");
+
+    ui->recordButton->setStyleSheet(
+      "QPushButton { font-size: 8pt; background-color: red; }"
+    );
+
+    ui->recordButton->setText("Start Recording");
   }
 }
 
