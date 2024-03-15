@@ -107,25 +107,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Manage Bookings</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="toPTZControlsButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>To Camera Controls</string>
+        <string>Confirm</string>
        </property>
       </widget>
      </item>

@@ -32,8 +32,7 @@ Login::Login(QWidget *parent)
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   setTitleBarWidget(new QWidget());
 
-  QLabel* reminderLabel = findChild<QLabel*>("reminderLabel");
-  reminderLabel->setMinimumHeight(reminderLabel->fontMetrics().lineSpacing() * 2);
+  ui->reminderLabel->setMinimumHeight(ui->reminderLabel->fontMetrics().lineSpacing() * 2);
 
   show();
 }
@@ -46,14 +45,14 @@ Login::~Login()
 bool Login::verifyMailAddress()
 {
   if (!mailAddressIsValid) {
-    findChild<QLabel*>("reminderLabel")->setText("Please enter a valid HfMDD email address");
-    findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet("QLineEdit { border: 2px solid #FF5952 }");
+    ui->reminderLabel->setText("Please enter a valid HfMDD email address");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF5952 }");
     return false;
   }
 
   else {
-    findChild<QLabel*>("reminderLabel")->setText(" ");
-    findChild<QLineEdit*>("mailAddressLineEdit")->setStyleSheet("QLineEdit { border: 2px solid #48FF8B }");
+    ui->reminderLabel->setText(" ");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #48FF8B }");
   }
 
   return true;
@@ -101,19 +100,4 @@ void Login::on_manageBookingsButton_pressed()
 
     bookingManager->exec();
   }
-}
-
-void Login::on_toPTZControlsButton_pressed()
-{
-  if (!verifyMailAddress()) return;
-
-  PTZControls* ptzControls = PTZControls::getInstance();
-
-  if (!ptzControls) return;
-
-  hide();
-
-  ptzControls->setFloating(false);
-  ptzControls->show();
-  ptzControls->connectSignalItemSelect();
 }

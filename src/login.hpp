@@ -35,7 +35,6 @@ private:
 private slots:
   void on_mailAddressLineEdit_textEdited(const QString& text);
   void on_manageBookingsButton_pressed();
-  void on_toPTZControlsButton_pressed();
     
 public:
   Login(QWidget *parent = nullptr);
