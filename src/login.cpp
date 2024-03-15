@@ -28,6 +28,8 @@ Login::Login(QWidget *parent)
 {
   instance = this;
   ui->setupUi(this);
+  mailAddressLineEdit = ui->mailAddressLineEdit;
+  
   setAllowedAreas(Qt::RightDockWidgetArea);
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   setTitleBarWidget(new QWidget());

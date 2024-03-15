@@ -14,22 +14,11 @@ class BookingEditor : public QDialog
 private:
   Ui::BookingEditor* ui;
 
-  // children
-  class QCalendarWidget* calendarWidget;
-  class QLabel* bookingsOnSelectedDateLabel;
-  class QTimeEdit* startTimeEdit;
-  class QTimeEdit* stopTimeEdit;
-  class QLineEdit* eventTypeLineEdit;
-
-  // props
   QVector<Booking> bookingsOnSelectedDate;
-  // QTime startTime;
-  // QTime stopTime;
-  // QString eventType;
   Booking booking;
   bool isEditing;
 
-  // methods
+private:
   void updateExistingBookingsLabel(QDate date);
   void updateConflictingBookings(const QDate& date);
   bool bookingsAreConflicting(const Booking& booking0, const Booking& booking1);

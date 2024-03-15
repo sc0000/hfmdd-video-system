@@ -15,21 +15,15 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle("Booking Editor");
   
-  calendarWidget = findChild<QCalendarWidget*>("calendarWidget");
-  bookingsOnSelectedDateLabel = findChild<QLabel*>("bookingsOnSelectedDateLabel");
-  startTimeEdit = findChild<QTimeEdit*>("startTimeEdit");
-  stopTimeEdit = findChild<QTimeEdit*>("stopTimeEdit");
-  eventTypeLineEdit = findChild<QLineEdit*>("eventTypeLineEdit");
-
   if (bookingToEdit) {
     isEditing = true;
 
-    calendarWidget->setSelectedDate(bookingToEdit->date);
+    ui->calendarWidget->setSelectedDate(bookingToEdit->date);
     updateExistingBookingsLabel(bookingToEdit->date);
 
-    startTimeEdit->setTime(bookingToEdit->startTime);
-    stopTimeEdit->setTime(bookingToEdit->stopTime);
-    eventTypeLineEdit->setText(bookingToEdit->event);
+    ui->startTimeEdit->setTime(bookingToEdit->startTime);
+    ui->stopTimeEdit->setTime(bookingToEdit->stopTime);
+    ui->eventTypeLineEdit->setText(bookingToEdit->event);
 
     booking.email = bookingToEdit->email;
     booking.index = bookingToEdit->index;
@@ -40,22 +34,22 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
 
     QDate currentDate = QDate::currentDate();
 
-    calendarWidget->setSelectedDate(currentDate);
+    ui->calendarWidget->setSelectedDate(currentDate);
     updateExistingBookingsLabel(currentDate);
-    startTimeEdit->setTime(startTimeEdit->minimumTime());
-    stopTimeEdit->setTime(stopTimeEdit->minimumTime());
-    eventTypeLineEdit->setText("");
+    ui->startTimeEdit->setTime(ui->startTimeEdit->minimumTime());
+    ui->stopTimeEdit->setTime(ui->stopTimeEdit->minimumTime());
+    ui->eventTypeLineEdit->setText("");
 
     booking.email = Globals::currentEmail;
     booking.index = JsonParser::availableIndex();
   }
 
-  booking.date = calendarWidget->selectedDate();
-  booking.startTime = startTimeEdit->time();
-  booking.stopTime = stopTimeEdit->time();
-  booking.event = eventTypeLineEdit->text();
+  booking.date = ui->calendarWidget->selectedDate();
+  booking.startTime = ui->startTimeEdit->time();
+  booking.stopTime = ui->stopTimeEdit->time();
+  booking.event = ui->eventTypeLineEdit->text();
 
-  bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
+  ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
 
   updateExistingBookingsLabel(booking.date);
 }
@@ -79,7 +73,7 @@ void BookingEditor::updateExistingBookingsLabel(QDate date)
 
   if (bookingsOnSelectedDate.isEmpty() ||
      (bookingsOnSelectedDate.size() == 1 && bookingsOnSelectedDate[0].index == booking.index)) {
-        bookingsOnSelectedDateLabel->setText("There are no bookings yet on " + date.toString() + ".");
+        ui->bookingsOnSelectedDateLabel->setText("There are no bookings yet on " + date.toString() + ".");
         return;
   }
 
@@ -108,8 +102,8 @@ void BookingEditor::updateExistingBookingsLabel(QDate date)
 
   str += "</body></html>";
 
-  bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
-  bookingsOnSelectedDateLabel->setText(str);
+  ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
+  ui->bookingsOnSelectedDateLabel->setText(str);
 }
 
 void BookingEditor::updateConflictingBookings(const QDate& date)
@@ -149,7 +143,7 @@ void BookingEditor::on_calendarWidget_clicked(QDate date)
 {
   booking.date = date;
 
-  if (!bookingsOnSelectedDateLabel) return;
+  if (!ui->bookingsOnSelectedDateLabel) return;
 
   updateExistingBookingsLabel(date);
 }
@@ -159,7 +153,7 @@ void BookingEditor::on_startTimeEdit_timeChanged(QTime time)
   booking.startTime = time;
 
   if (time > booking.stopTime) 
-    stopTimeEdit->setTime(time);
+    ui->stopTimeEdit->setTime(time);
 
   updateExistingBookingsLabel(booking.date);
 }
@@ -169,7 +163,7 @@ void BookingEditor::on_stopTimeEdit_timeChanged(QTime time)
   booking.stopTime = time;
 
   if (time < booking.startTime) 
-    startTimeEdit->setTime(time);
+    ui->startTimeEdit->setTime(time);
 
   updateExistingBookingsLabel(booking.date);
 }
@@ -191,7 +185,7 @@ void BookingEditor::on_saveButton_pressed()
     return;
   }
 
-  if (startTimeEdit->time() == stopTimeEdit->time()) {
+  if (ui->startTimeEdit->time() == ui->stopTimeEdit->time()) {
     OkDialog::instance("Start and stop time are identical. Please select a time frame!");
     return;
   }

@@ -898,6 +898,7 @@ void PTZControls::on_recordButton_clicked()
 void PTZControls::on_logoutButton_clicked()
 {
   hide();
+  Login::getInstance()->getMailAddressLineEdit()->clear();
   Login::getInstance()->show();
 }
 

@@ -21,7 +21,6 @@ BookingManager::BookingManager(QWidget* parent)
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);
-  bookingsList = findChild<QListWidget*>("bookingsList");
   
   loadBookings();
 }
@@ -32,9 +31,7 @@ BookingManager::~BookingManager()
 }
 
 void BookingManager::loadBookings()
-{
-  // currentMailAddress = Login::getInstance()->getCurrentMailAddress();
-    
+{   
   QVector<Booking> tmp;
 
   if (Globals::currentEmail == Globals::oliversEmail)
@@ -51,12 +48,9 @@ void BookingManager::loadBookings()
 
   sortBookings();
 
-  if (!bookingsList) return;
+  if (!ui->bookingsList) return;
 
-  bookingsList->clear();
-    
-  // for (const Booking& b : bookings)
-  //   bookingsList->addItem(makeEntry(b));
+  ui->bookingsList->clear();
 
   for (qsizetype i = 0; i < bookings.size(); ++i) {
     QString entryText = makeEntry(bookings[i]);
@@ -65,7 +59,7 @@ void BookingManager::loadBookings()
     if (bookings[i].isConflicting)
       item->setBackground(Qt::red);
 
-    bookingsList->addItem(item);
+    ui->bookingsList->addItem(item);
   }
 }
 
@@ -109,18 +103,6 @@ QString BookingManager::makeEntry(const Booking& booking)
   return entry;
 }
 
-// ! DEPRECATED
-void BookingManager::addBooking(const Booking& booking)
-{
-  JsonParser::addBooking(booking);
-}
-
-// ! DEPRECATED
-void BookingManager::updateBooking(const Booking& booking)
-{
-  JsonParser::updateBooking(booking);
-}
-
 void BookingManager::on_newBookingButton_pressed()
 {
   BookingEditor::instance(nullptr, this);
@@ -128,22 +110,22 @@ void BookingManager::on_newBookingButton_pressed()
 
 void BookingManager::on_editBookingButton_pressed()
 {
-   if (bookingsList->selectedItems().isEmpty()) {
+   if (ui->bookingsList->selectedItems().isEmpty()) {
     OkDialog::instance("Please select the booking you want to edit.", this);
     return;
   }
 
-  else if (bookingsList->selectedItems().size() > 1) {
+  else if (ui->bookingsList->selectedItems().size() > 1) {
     OkDialog::instance("Please select only one booking to edit.", this);
     return;
   }
 
-  BookingEditor::instance(&bookings[bookingsList->currentRow()], this);
+  BookingEditor::instance(&bookings[ui->bookingsList->currentRow()], this);
 }
 
 void BookingManager::on_deleteBookingButton_pressed()
 {
-  if (bookingsList->selectedItems().isEmpty()) {
+  if (ui->bookingsList->selectedItems().isEmpty()) {
     OkDialog::instance("Please select the booking you want to delete.", this);
     return;
   }
@@ -158,27 +140,27 @@ void BookingManager::on_deleteBookingButton_pressed()
 
   if (!confirmed) return;
 
-  int rowIndex = bookingsList->currentRow();
+  int rowIndex = ui->bookingsList->currentRow();
   const Booking& selectedBooking = bookings[rowIndex];
   JsonParser::removeBooking(selectedBooking);
   bookings.removeAt(rowIndex);
-  QListWidgetItem* item = bookingsList->takeItem(rowIndex);
+  QListWidgetItem* item = ui->bookingsList->takeItem(rowIndex);
   if (item) delete item;
 }
 
 void BookingManager::on_toPTZControlsButton_pressed()
 {
-   if (bookingsList->selectedItems().isEmpty()) {
+   if (ui->bookingsList->selectedItems().isEmpty()) {
     OkDialog::instance("Please select a booking to continue.", this);
     return;
   }
 
-  else if (bookingsList->selectedItems().size() > 1) {
+  else if (ui->bookingsList->selectedItems().size() > 1) {
     OkDialog::instance("Please select only one booking to continue.", this);
     return;
   }
 
-  selectedBooking = &bookings[bookingsList->currentRow()];
+  selectedBooking = &bookings[ui->bookingsList->currentRow()];
   PathManager::outerDirectory = selectedBooking->date.toString(Qt::ISODate) + "/";
 
   // TODO: Check: always reset or update, and setup option to reset manually?

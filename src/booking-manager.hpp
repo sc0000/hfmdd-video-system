@@ -19,14 +19,9 @@ private:
   static BookingManager* instance;
   Ui::BookingManager* ui;
 
-  // children
-  QListWidget* bookingsList;
-
-  // props
-  // QString currentMailAddress;
   QVector<Booking> bookings;
 
-  // methods
+private:
   void sortBookings();
   QString makeEntry(const Booking& booking);
   
@@ -40,12 +35,8 @@ public:
   BookingManager(QWidget* parent = nullptr);
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
-  inline QListWidget* getBookingsList() { return bookingsList; }
-  // inline const QString& getCurrentMailAddress() { return currentMailAddress; }
-
+  
   void loadBookings();
-  void addBooking(const Booking& booking);
-  void updateBooking(const Booking& booking);
 
   Booking* selectedBooking;
 };

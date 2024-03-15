@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QDockWidget>
+#include <QLineEdit>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,7 +28,7 @@ private:
   Ui::Login* ui;
 
 private:
-  // QString currentMailAddress;
+  QLineEdit* mailAddressLineEdit;
   bool mailAddressIsValid;
 
   bool verifyMailAddress();
@@ -41,6 +42,6 @@ public:
   ~Login();
 
   static inline Login* getInstance() { return instance; }
-  // inline const QString& getCurrentMailAddress() { return currentMailAddress; }
+  inline QLineEdit* getMailAddressLineEdit() { return mailAddressLineEdit; }
 };
 

@@ -19,7 +19,7 @@ OkDialog::OkDialog(const QString& message, QWidget* parent)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
-  findChild<QLabel*>("messageLabel")->setText(message);
+  ui->messageLabel->setText(message);
 }
 
 void OkDialog::instance(const QString& message, QWidget* parent)
@@ -40,7 +40,7 @@ OkCancelDialog::OkCancelDialog(const QString& message, bool& out, QWidget* paren
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
-  findChild<QLabel*>("messageLabel")->setText(message);
+  ui->messageLabel->setText(message);
 }
 
 void OkCancelDialog::instance(const QString& message, bool& out, QWidget* parent)
@@ -78,7 +78,7 @@ void PasswordDialog::instance(bool& out, QWidget* parent)
 
 void PasswordDialog::on_okButton_pressed()
 {
-  if (findChild<QLineEdit*>("passwordLineEdit")->text() == "pw") {
+  if (ui->passwordLineEdit->text() == "pw") {
     valid = true;
     hide();
   }
@@ -102,10 +102,8 @@ PresetDialog::PresetDialog(Booking* booking, QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  presetNameLineEdit = findChild<QLineEdit*>("presetNameLineEdit");
-
   if (booking) {
-    presetNameLineEdit->setText(
+    ui->presetNameLineEdit->setText(
       booking->date.toString() + ", " +
       booking->startTime.toString("HH:mm") + " - " +
       booking->event
@@ -113,7 +111,7 @@ PresetDialog::PresetDialog(Booking* booking, QWidget* parent)
   }
 
   else {
-    presetNameLineEdit->setPlaceholderText("New Preset Name");
+    ui->presetNameLineEdit->setPlaceholderText("New Preset Name");
   }
 }
 
