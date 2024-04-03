@@ -35,6 +35,8 @@ private:
 
   TimeObserver* m_timeObserver;
 
+  bool showOverview = false;
+
 	bool live_moves_disabled = false;
 
 	// Current status
@@ -78,7 +80,8 @@ private:
 	void presetRecall(int id);
   void presetRecallAll(int preset_id);
   int presetNameToId(QAbstractListModel* model, const QString& name);
-
+  
+  // TODO: Remove!
   void onNewSelectedItem(obs_scene_t* scene, obs_sceneitem_t* item);
 
 	void setAutofocusEnabled(bool autofocus_on);
@@ -125,6 +128,10 @@ private slots:
 	void on_focusButton_far_pressed();
 	void on_focusButton_far_released();
 	void on_focusButton_onetouch_clicked();
+
+  void on_previousCamButton_clicked();
+  void on_nextCamButton_clicked();
+  void on_overviewButton_clicked();
 
   void on_savePresetButton_clicked();
   void on_loadPresetButton_clicked();
@@ -190,6 +197,8 @@ public:
   virtual PTZPresetListModel* presetModel() { return &m_presetsModel; }
   PTZPresetListModel* userPresetModel() { return &m_userPresetsModel; } 
 
+  void setViewportMode();
+  void selectCamera();
   void loadUserPresets();
   void connectSignalItemSelect();
   void startRecording();

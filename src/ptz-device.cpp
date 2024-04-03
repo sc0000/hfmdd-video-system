@@ -124,6 +124,7 @@ PTZDevice *PTZListModel::getDeviceByName(const QString &name) const
 		if (name == ptz->objectName())
 			return ptz;
 	}
+  
 	return NULL;
 }
 

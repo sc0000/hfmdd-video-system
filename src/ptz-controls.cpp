@@ -142,7 +142,12 @@ static void item_select_cb(void* data, calldata_t* cd) {
   obs_sceneitem_t* item = (obs_sceneitem_t*)calldata_ptr(cd, "item");
   obs_source_t* source = obs_sceneitem_get_source(item);
 
-  PTZControls::getInstance()->currCameraName = QString(obs_source_get_name(source));
+  PTZControls* ptzControls = PTZControls::getInstance();
+  if (!ptzControls) return;
+
+  // ptzControls->setViewportMode();
+  ptzControls->currCameraName = QString(obs_source_get_name(source));
+  ptzControls->selectCamera();
 }
 
 void PTZControls::connectSignalItemSelect()
@@ -150,6 +155,11 @@ void PTZControls::connectSignalItemSelect()
   obs_source_t* scene_source = obs_frontend_get_current_scene();
   signal_handler_t *sh = obs_source_get_signal_handler(scene_source);
   signal_handler_connect(sh, "item_select", item_select_cb, NULL);
+}
+
+void timeOut()
+{
+  PTZControls::getInstance()->stopRecording();
 }
 
 void PTZControls::startRecording()
@@ -209,7 +219,8 @@ void PTZControls::stopRecording()
 }
 
 PTZControls::PTZControls(QWidget *parent)
-	: QDockWidget(parent), ui(new Ui::PTZControls)
+	: QDockWidget(parent), 
+    ui(new Ui::PTZControls)
 {
 	instance = this;
 	ui->setupUi(this);
@@ -231,6 +242,9 @@ PTZControls::PTZControls(QWidget *parent)
 	LoadConfig();
 
   //----------------------------------------------------
+  // setViewportMode();
+  // selectCamera();
+
   ui->presetListView->setModel(presetModel());
   presetUpdateActions();
   updateMoveControls();
@@ -505,6 +519,59 @@ void PTZControls::joystickButtonEvent(const QJoystickButtonEvent evt)
 	}
 }
 #endif /* ENABLE_JOYSTICK */
+
+void PTZControls::setViewportMode()
+{
+  vec2 viewportSize = { 1920.f, 1080.f };
+
+  obs_source_t* scene_source = obs_frontend_get_current_scene();
+  obs_scene_t* scene = obs_scene_from_source(scene_source);
+
+  // TODO: Better layout for three and more cameras!
+  if (showOverview) {
+    ui->overviewButton->setText("Single Camera View");
+    // ui->previousCamButton->setDisabled(true);
+    // ui->nextCamButton->setDisabled(true);
+
+    for (qsizetype i = 0; i < allCameras().size(); ++i) {
+      QString name = "Birddog" + QString::number(i + 1);
+      obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
+      
+      if (name != currCameraName) 
+        obs_sceneitem_select(item, false);
+
+      else
+        obs_sceneitem_select(item, true);
+
+      vec2 pos = { viewportSize.x - viewportSize.x / (i + 1.f), 0.f};
+      vec2 bounds = { viewportSize.x / 2.f, viewportSize.y };
+
+      obs_sceneitem_set_pos(item, &pos);
+      obs_sceneitem_set_bounds_type(item, OBS_BOUNDS_SCALE_INNER);
+      obs_sceneitem_set_bounds(item, &bounds);
+    }
+  }
+
+  else {
+    ui->overviewButton->setText("Camera Overview");
+    // ui->previousCamButton->setDisabled(false);
+    // ui->nextCamButton->setDisabled(false);
+
+    vec2 pos = { 0.f, 0.f };
+    vec2 scale = { 1.f, 1.f };
+
+    for (qsizetype i = 0; i < allCameras().size(); ++i) {
+      QString name = "Birddog" + QString::number(i + 1);
+      obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
+
+      obs_sceneitem_set_pos(item, &pos);
+      obs_sceneitem_set_scale(item, &scale);
+      obs_sceneitem_set_bounds(item, &viewportSize);
+    }
+
+    selectCamera();
+  }
+}
 
 void PTZControls::copyActionsDynamicProperties()
 {
@@ -867,6 +934,37 @@ void PTZControls::on_focusButton_onetouch_clicked()
 		ptz->focus_onetouch();
 }
 
+void PTZControls::on_previousCamButton_clicked()
+{
+   uint previousIndex = currCameraName.last(1).toUInt() - 1;
+
+  if (previousIndex < 1)
+    return;
+
+  currCameraName = "Birddog" + QString::number(previousIndex);
+  
+  selectCamera();
+}
+
+void PTZControls::on_nextCamButton_clicked()
+{
+  uint nextIndex = currCameraName.last(1).toUInt() + 1;
+
+  if (nextIndex > allCameras().size()) 
+    return;
+  
+  currCameraName = "Birddog" + QString::number(nextIndex);
+
+  selectCamera();
+}
+
+void PTZControls::on_overviewButton_clicked()
+{
+  showOverview = !showOverview;
+
+  setViewportMode();
+}
+
 void PTZControls::on_savePresetButton_clicked()
 {
   PresetDialog::instance(BookingManager::getInstance()->selectedBooking, this);
@@ -938,11 +1036,6 @@ bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, vo
     QMessageBox::information(nullptr, "INFO", QString(obs_source_get_name(source)));
 
   return true;
-}
-
-void timeOut()
-{
-  PTZControls::getInstance()->stopRecording();
 }
 
 void PTZControls::on_recordButton_clicked()
@@ -1193,6 +1286,29 @@ void PTZControls::presetUpdateActions()
 	// 				   index.row() > 0);
 	// ui->actionPresetMoveDown->setEnabled(index.isValid() && count > 1 &&
 	// 				     index.row() < count - 1);
+}
+
+void PTZControls::selectCamera()
+{
+  ui->currentCameraLabel->setText(currCameraName);
+
+  obs_source_t* scene_source = obs_frontend_get_current_scene();
+  obs_scene_t* scene = obs_scene_from_source(scene_source);
+  // obs_sceneitem_t* item = obs_scene_find_source(scene, currCameraName.toUtf8().constData());
+
+  for (qsizetype i = 0; i < allCameras().size(); ++i) {
+      QString name = "Birddog" + QString::number(i + 1);
+      obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
+      
+      if (name != currCameraName) 
+        obs_sceneitem_select(item, false);
+
+      else {
+        obs_sceneitem_set_order(item, OBS_ORDER_MOVE_UP);
+        // obs_sceneitem_set_order_position(item, 0);
+        obs_sceneitem_select(item, true);
+      }
+  }
 }
 
 

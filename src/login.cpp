@@ -18,7 +18,7 @@ void login_load(void)
     (QWidget*)obs_frontend_get_main_window();
   auto* tmp = new Login(main_window);
   obs_frontend_add_dock(tmp);
-  tmp->setFloating(false);
+  tmp->setFloating(true);
 }
 
 Login::Login(QWidget *parent)
@@ -30,9 +30,9 @@ Login::Login(QWidget *parent)
   ui->setupUi(this);
   mailAddressLineEdit = ui->mailAddressLineEdit;
   
-  setAllowedAreas(Qt::RightDockWidgetArea);
-  setFeatures(QDockWidget::NoDockWidgetFeatures);
-  setTitleBarWidget(new QWidget());
+  // setAllowedAreas(Qt::RightDockWidgetArea);
+  // setFeatures(QDockWidget::NoDockWidgetFeatures);
+  // setTitleBarWidget(new QWidget());
 
   ui->reminderLabel->setMinimumHeight(ui->reminderLabel->fontMetrics().lineSpacing() * 2);
 

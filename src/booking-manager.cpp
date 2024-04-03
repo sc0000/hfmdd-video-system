@@ -176,6 +176,8 @@ void BookingManager::on_toPTZControlsButton_pressed()
 
   ptzControls->connectSignalItemSelect();
   ptzControls->loadUserPresets();
+  ptzControls->setViewportMode();
+  ptzControls->selectCamera();
   ptzControls->setFloating(false);
   ptzControls->show();
 }

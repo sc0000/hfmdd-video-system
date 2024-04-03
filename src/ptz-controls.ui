@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>208</width>
-    <height>435</height>
+    <height>544</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -21,6 +21,9 @@
   </property>
   <property name="floating">
    <bool>false</bool>
+  </property>
+  <property name="features">
+   <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
   </property>
   <property name="windowTitle">
    <string>PTZ Controls</string>
@@ -76,6 +79,78 @@
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="cameraSelectionLayout">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="currentCameraLabel">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <italic>true</italic>
+              <underline>false</underline>
+             </font>
+            </property>
+            <property name="text">
+             <string>Birddog1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="previousCamButton">
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Previous
+Camera</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="nextCamButton">
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Next
+Camera</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="overviewButton">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Camera Overview</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QWidget" name="movementControlsWidget" native="true">
@@ -536,7 +611,7 @@
          </layout>
         </item>
         <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -743,6 +818,7 @@
         <height>16</height>
        </size>
       </property>
+      <addaction name="actionSettings"/>
       <addaction name="actionDisableLiveMoves"/>
       <addaction name="actionPTZProperties"/>
       <addaction name="actionFollowPreview"/>
@@ -773,16 +849,22 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>:/res/images/unlocked.svg</normaloff>
-     <normalon>:/res/images/locked.svg</normalon>:/res/images/unlocked.svg</iconset>
-   </property>
    <property name="text">
     <string>Unlock Controls</string>
    </property>
    <property name="toolTip">
     <string>Block changes to live cameras</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>OBS Settings</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
   <actiongroup name="actionGroupFollowMode">
