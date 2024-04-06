@@ -29,6 +29,7 @@ private slots:
   void on_newBookingButton_pressed();
   void on_editBookingButton_pressed();
   void on_deleteBookingButton_pressed();
+  void on_logoutButton_pressed();
   void on_toPTZControlsButton_pressed();  
 
 public:

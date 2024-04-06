@@ -1,6 +1,7 @@
 #include <QLabel>
 
 #include "login.hpp"
+#include "login-dialog.hpp"
 #include "message-dialog.hpp"
 #include "booking-editor.hpp"
 #include "json-parser.hpp"
@@ -17,11 +18,13 @@ BookingManager::BookingManager(QWidget* parent)
   : QDialog(parent), 
     ui(new Ui::BookingManager)
 {
-  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+  
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);
-  
+  ui->verticalWidget->move(geometry().center() - ui->verticalWidget->geometry().center());
+  showFullScreen();
   loadBookings();
 }
 
@@ -148,6 +151,17 @@ void BookingManager::on_deleteBookingButton_pressed()
   if (item) delete item;
 }
 
+void BookingManager::on_logoutButton_pressed()
+{
+  LoginDialog* loginDialog = LoginDialog::getInstance();
+  
+  if (!loginDialog) return;
+
+  loginDialog->getMailAddressLineEdit()->clear();
+  loginDialog->show();
+  hide();
+}
+
 void BookingManager::on_toPTZControlsButton_pressed()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
@@ -169,6 +183,7 @@ void BookingManager::on_toPTZControlsButton_pressed()
   hide();
 
   Login::getInstance()->hide();
+  LoginDialog::getInstance()->hide();
 
   PTZControls* ptzControls = PTZControls::getInstance();
 

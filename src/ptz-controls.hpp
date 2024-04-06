@@ -35,7 +35,7 @@ private:
 
   TimeObserver* m_timeObserver;
 
-  bool showOverview = false;
+  bool showOverview = true;
 
 	bool live_moves_disabled = false;
 
@@ -138,6 +138,7 @@ private slots:
   void on_deletePresetButton_clicked();
   
   void on_recordButton_clicked();
+  void on_toBookingManagerButton_clicked();
   void on_logoutButton_clicked();
 
 	void on_actionFollowPreview_toggled(bool checked);

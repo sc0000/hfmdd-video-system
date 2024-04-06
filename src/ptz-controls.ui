@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>208</width>
-    <height>544</height>
+    <height>625</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -751,50 +751,30 @@ Camera</string>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="startRecordingHorizontalLayout">
-          <property name="spacing">
-           <number>4</number>
-          </property>
+         <layout class="QVBoxLayout" name="recordButtonLayout">
           <item>
            <widget class="QPushButton" name="recordButton">
-            <property name="minimumSize">
-             <size>
-              <width>22</width>
-              <height>20</height>
-             </size>
-            </property>
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
               <bold>true</bold>
              </font>
             </property>
-            <property name="styleSheet">
-             <string notr="true">font-size: 8pt; background-color: red;</string>
-            </property>
             <property name="text">
-             <string>Start Recording</string>
+             <string>Record</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="toBookingManagerButton">
+            <property name="text">
+             <string>To Booking Manager</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="logoutButton">
-            <property name="minimumSize">
-             <size>
-              <width>22</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font-size: 8pt;</string>
-            </property>
             <property name="text">
-             <string>Log Out</string>
+             <string>Logout</string>
             </property>
            </widget>
           </item>

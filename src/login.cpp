@@ -7,6 +7,7 @@
 #include "booking-manager.hpp"
 #include "path-manager.hpp"
 #include "globals.hpp"
+#include "login-dialog.hpp"
 #include "ui_login.h"
 #include "login.hpp"
 
@@ -35,6 +36,8 @@ Login::Login(QWidget *parent)
   // setTitleBarWidget(new QWidget());
 
   ui->reminderLabel->setMinimumHeight(ui->reminderLabel->fontMetrics().lineSpacing() * 2);
+  ui->mailAddressLineEdit->hide();
+  ui->manageBookingsButton->setText("Start System");
 
   show();
 }
@@ -85,21 +88,24 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
 
 void Login::on_manageBookingsButton_pressed()
 {
-  if (!verifyMailAddress()) return;
+  LoginDialog* loginDialog = new LoginDialog(this);
+  loginDialog->exec();
 
-  BookingManager* bookingManager = BookingManager::getInstance();
+  // if (!verifyMailAddress()) return;
 
-  if (bookingManager) {
-    bookingManager->loadBookings();
-    bookingManager->show();
-  }
+  // BookingManager* bookingManager = BookingManager::getInstance();
+
+  // if (bookingManager) {
+  //   bookingManager->loadBookings();
+  //   bookingManager->show();
+  // }
 
 
-  else {
-    bookingManager = new BookingManager(this);
+  // else {
+  //   bookingManager = new BookingManager(this);
 
-    if (!bookingManager) return;
+  //   if (!bookingManager) return;
 
-    bookingManager->exec();
-  }
+  //   bookingManager->exec();
+  // }
 }

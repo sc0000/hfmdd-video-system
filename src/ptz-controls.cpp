@@ -24,6 +24,7 @@
 #include "settings.hpp"
 #include "ptz.h"
 #include "login.hpp"
+#include "login-dialog.hpp"
 #include "message-dialog.hpp"
 #include "ui_preset-dialog.h"
 #include "booking-manager.hpp"
@@ -242,8 +243,9 @@ PTZControls::PTZControls(QWidget *parent)
 	LoadConfig();
 
   //----------------------------------------------------
-  // setViewportMode();
-  // selectCamera();
+  showOverview = true;
+  setViewportMode();
+  selectCamera();
 
   ui->presetListView->setModel(presetModel());
   presetUpdateActions();
@@ -549,6 +551,7 @@ void PTZControls::setViewportMode()
       obs_sceneitem_set_pos(item, &pos);
       obs_sceneitem_set_bounds_type(item, OBS_BOUNDS_SCALE_INNER);
       obs_sceneitem_set_bounds(item, &bounds);
+      obs_sceneitem_set_locked(item, true);
     }
   }
 
@@ -567,6 +570,7 @@ void PTZControls::setViewportMode()
       obs_sceneitem_set_pos(item, &pos);
       obs_sceneitem_set_scale(item, &scale);
       obs_sceneitem_set_bounds(item, &viewportSize);
+      obs_sceneitem_set_locked(item, true);
     }
 
     selectCamera();
@@ -1047,11 +1051,20 @@ void PTZControls::on_recordButton_clicked()
     stopRecording();
 }
 
+void PTZControls::on_toBookingManagerButton_clicked()
+{
+  BookingManager* bookingManager = BookingManager::getInstance();
+
+  if (!bookingManager) return;
+
+  bookingManager->show();
+}
+
 void PTZControls::on_logoutButton_clicked()
 {
   hide();
-  Login::getInstance()->getMailAddressLineEdit()->clear();
-  Login::getInstance()->show();
+  LoginDialog::getInstance()->getMailAddressLineEdit()->clear();
+  LoginDialog::getInstance()->show();
 }
 
 void PTZControls::setCurrent(uint32_t device_id)

@@ -49,9 +49,11 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-editor.cpp
   src/booking-manager.cpp
   src/login.cpp
+  src/login-dialog.cpp
   src/time-observer.cpp
   src/source-record.c
   src/login.ui
+  src/login-dialog.ui
   src/booking-editor.ui
   src/booking-manager.ui
   src/ptz-controls.ui
@@ -80,6 +82,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # src/ptz.h
   src/globals.hpp
   src/login.hpp
+  src/login-dialog.hpp
   src/time-observer.hpp
   src/message-dialog.hpp
   src/booking-editor.hpp
