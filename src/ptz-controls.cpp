@@ -1057,14 +1057,17 @@ void PTZControls::on_toBookingManagerButton_clicked()
 
   if (!bookingManager) return;
 
-  bookingManager->show();
+  bookingManager->reload();
 }
 
 void PTZControls::on_logoutButton_clicked()
 {
   hide();
-  LoginDialog::getInstance()->getMailAddressLineEdit()->clear();
-  LoginDialog::getInstance()->show();
+  LoginDialog* loginDialog = LoginDialog::getInstance();
+
+  if (!loginDialog) return;
+
+  loginDialog->reload();
 }
 
 void PTZControls::setCurrent(uint32_t device_id)

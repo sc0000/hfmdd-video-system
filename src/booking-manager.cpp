@@ -1,4 +1,5 @@
 #include <QLabel>
+#include <QScreen>
 
 #include "login.hpp"
 #include "login-dialog.hpp"
@@ -23,14 +24,42 @@ BookingManager::BookingManager(QWidget* parent)
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);
-  ui->verticalWidget->move(geometry().center() - ui->verticalWidget->geometry().center());
+  repositionMasterWidget();
+
   showFullScreen();
+  
   loadBookings();
 }
 
 BookingManager::~BookingManager()
 {
   delete ui;
+}
+
+void BookingManager::reload()
+{
+  repositionMasterWidget();
+  show();
+}
+
+void BookingManager::repositionMasterWidget()
+{
+  QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
+
+  if (!mainWindow) return;
+
+  QRect screenGeometry = mainWindow->screen()->geometry();
+
+  int screenWidth = screenGeometry.width();
+  int screenHeight = screenGeometry.height();
+
+  QPoint centerPoint(screenWidth / 2, screenHeight / 2);
+
+  int masterWidgetX = centerPoint.x() - (ui->masterWidget->width() / 2);
+  int masterWidgetY = centerPoint.y() - (ui->masterWidget->height() / 2);
+
+  move(mainWindow->pos());
+  ui->masterWidget->move(masterWidgetX, masterWidgetY);
 }
 
 void BookingManager::loadBookings()
@@ -157,8 +186,7 @@ void BookingManager::on_logoutButton_pressed()
   
   if (!loginDialog) return;
 
-  loginDialog->getMailAddressLineEdit()->clear();
-  loginDialog->show();
+  loginDialog->reload();
   hide();
 }
 

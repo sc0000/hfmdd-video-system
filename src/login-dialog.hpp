@@ -31,6 +31,7 @@ private:
   QLineEdit* mailAddressLineEdit;
   bool mailAddressIsValid;
 
+  void repositionMasterWidget();
   bool verifyMailAddress();
 
 private slots:
@@ -43,5 +44,6 @@ public:
 
   static inline LoginDialog* getInstance() { return instance; }
   inline QLineEdit* getMailAddressLineEdit() { return mailAddressLineEdit; }
+  void reload();
 };
 

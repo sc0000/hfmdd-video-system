@@ -27,7 +27,7 @@
     <pointsize>12</pointsize>
    </font>
   </property>
-  <widget class="QWidget" name="verticalWidget" native="true">
+  <widget class="QWidget" name="masterWidget" native="true">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -40,19 +40,6 @@
     <property name="sizeConstraint">
      <enum>QLayout::SetMaximumSize</enum>
     </property>
-    <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item>
      <widget class="QListWidget" name="bookingsList">
       <property name="sizePolicy">
@@ -146,19 +133,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>

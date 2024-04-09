@@ -22,6 +22,7 @@ private:
   QVector<Booking> bookings;
 
 private:
+  void repositionMasterWidget();
   void sortBookings();
   QString makeEntry(const Booking& booking);
   
@@ -37,7 +38,9 @@ public:
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
   
-  void loadBookings();
+  void reload();
 
+  void loadBookings();
+  
   Booking* selectedBooking;
 };

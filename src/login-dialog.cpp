@@ -1,6 +1,8 @@
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 
+#include <QScreen>
+
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
@@ -32,22 +34,44 @@ LoginDialog::LoginDialog(QWidget *parent)
   instance = this;
   ui->setupUi(this);
   mailAddressLineEdit = ui->mailAddressLineEdit;
-  ui->masterWidget->move(geometry().center() - ui->masterWidget->geometry().center());
-  // ui->manageBookingsButton->setStyleSheet("QPushButton { border: 1px solid #C8C8C8 }");
-  showFullScreen();
   
-  // setAllowedAreas(Qt::RightDockWidgetArea);
-  // setFeatures(QDockWidget::NoDockWidgetFeatures);
-  // setTitleBarWidget(new QWidget());
+  // ui->manageBookingsButton->setStyleSheet("QPushButton { border: 1px solid #C8C8C8 }");
 
-  // ui->reminderLabel->setMinimumHeight(ui->reminderLabel->fontMetrics().lineSpacing() * 2);
+  repositionMasterWidget();
 
-  // show();
+  showFullScreen();
+
 }
 
 LoginDialog::~LoginDialog()
 {
     delete ui;
+}
+
+void LoginDialog::reload()
+{
+  repositionMasterWidget();
+  ui->mailAddressLineEdit->clear();
+  show();
+}
+
+void LoginDialog::repositionMasterWidget()
+{
+  QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
+
+  if (!mainWindow) return;
+
+  QRect screenGeometry = mainWindow->screen()->geometry();
+
+  int screenWidth = screenGeometry.width();
+  int screenHeight = screenGeometry.height();
+
+  QPoint centerPoint(screenWidth / 2, screenHeight / 2);
+
+  int masterWidgetX = centerPoint.x() - (ui->masterWidget->width() / 2);
+  int masterWidgetY = centerPoint.y() - (ui->masterWidget->height() / 2);
+
+  ui->masterWidget->move(masterWidgetX, masterWidgetY);
 }
 
 bool LoginDialog::verifyMailAddress()
