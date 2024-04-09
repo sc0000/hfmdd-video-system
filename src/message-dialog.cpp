@@ -126,9 +126,9 @@ void PresetDialog::on_okButton_pressed()
 {
   PTZControls* ptzControls = PTZControls::getInstance();
 
-  if (!ptzControls || !presetNameLineEdit) return;
+  if (!ptzControls) return;
 
-  ptzControls->setNewPresetName(presetNameLineEdit->text());
+  ptzControls->setNewPresetName(ui->presetNameLineEdit->text());
   ptzControls->savePreset();
   hide();
 }

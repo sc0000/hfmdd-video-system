@@ -83,8 +83,6 @@ class PresetDialog : public QDialog
 private:
   Ui::PresetDialog* ui;
 
-  QLineEdit* presetNameLineEdit;
-
 public:
   explicit PresetDialog(struct Booking* booking = nullptr, QWidget* parent = nullptr);
   static void instance(Booking* booking = nullptr, QWidget* parent = nullptr);
