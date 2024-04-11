@@ -595,8 +595,8 @@ void PTZControls::copyActionsDynamicProperties()
 void PTZControls::SaveConfig()
 {
 	char *file = obs_module_config_path("config.json");
-	if (!file)
-		return;
+
+	if (!file) return;
 
 	OBSData savedata = obs_data_create();
 	obs_data_release(savedata);
@@ -607,10 +607,13 @@ void PTZControls::SaveConfig()
 	obs_data_set_bool(savedata, "live_moves_disabled", live_moves_disabled);
 	obs_data_set_int(savedata, "debug_log_level", ptz_debug_level);
 	const char *target_mode = "manual";
+
 	if (ui->actionFollowPreview->isChecked())
 		target_mode = "preview";
+
 	if (ui->actionFollowProgram->isChecked())
 		target_mode = "program";
+
 	obs_data_set_string(savedata, "target_mode", target_mode);
 	obs_data_set_bool(savedata, "joystick_enable", m_joystick_enable);
 	obs_data_set_int(savedata, "joystick_id", m_joystick_id);
@@ -629,12 +632,15 @@ void PTZControls::SaveConfig()
 	/* Save data structure to json */
 	if (!obs_data_save_json_safe(savedata, file, "tmp", "bak")) {
 		char *path = obs_module_config_path("");
+
 		if (path) {
 			os_mkdirs(path);
 			bfree(path);
 		}
+
 		obs_data_save_json_safe(savedata, file, "tmp", "bak");
 	}
+
 	bfree(file);
 }
 
@@ -642,21 +648,23 @@ void PTZControls::LoadConfig()
 {
 	char *file = obs_module_config_path("config.json");
 
-	if (!file)
-		return;
+	if (!file) return;
 
   std::string target_mode;
 
 	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
-	if (!loaddata) {
+	
+  if (!loaddata) {
 		/* Try loading from the old configuration path */
 		auto f = QString(file).replace("obs-ptz", "ptz-controls");
 		loaddata = obs_data_create_from_json_file_safe(QT_TO_UTF8(f),
 							       "bak");
 	}
+
 	bfree(file);
-	if (!loaddata)
-		return;
+
+	if (!loaddata) return;
+  
 	obs_data_release(loaddata);
 	obs_data_set_default_int(loaddata, "current_speed", 50);
 	obs_data_set_default_int(loaddata, "debug_log_level", LOG_INFO);

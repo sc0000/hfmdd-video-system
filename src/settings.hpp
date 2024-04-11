@@ -30,6 +30,29 @@ class PTZSettings : public QWidget {
 private:
 	Ui_PTZSettings *ui;
 	OBSData settings;
+
+  QVector<QString> qualityPresets = {
+    "P1: Fastest (Lowest Quality)",
+    "P2: Faster (Lower Quality)",
+    "P3: Fast (Low Quality)",
+    "P4: Medium (Medium Quality)",
+    "P5: Slow (Good Quality)",
+    "P6: Slower (Better Quality)",
+    "P7: Slowest (Best Quality)"
+  };
+
+  QVector<QString> recFormats = {
+    "flv",
+    "mp4",
+    "mov",
+    "mkv",
+    "ts",
+    "m3u8"
+  };
+
+  // QMap<QString, QString> qualityPresets;
+  // void populateQualityPresets();
+
 	OBSPropertiesView *propertiesView = nullptr;
 	void current_device_changed();
 
@@ -60,12 +83,16 @@ public slots:
 	void on_livemoveCheckBox_stateChanged(int state);
 	void on_enableDebugLogCheckBox_stateChanged(int state);
 
+  void on_saveButton_pressed();
+
 	void currentChanged(const QModelIndex &current,
 			    const QModelIndex &previous);
 	void settingsChanged(OBSData settings);
 	obs_properties_t *getProperties(void);
 	void updateProperties(OBSData old_settings, OBSData new_settings);
 	void showDevice(uint32_t device_id);
+  void getAdditionalProperties();
+  void updateAdditionalProperties();
 };
 
 void ptz_settings_show(uint32_t device_id = 0);

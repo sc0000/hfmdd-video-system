@@ -7,11 +7,16 @@
     <x>0</x>
     <y>0</y>
     <width>750</width>
-    <height>500</height>
+    <height>516</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>9</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
-   <string>PTZ Device Settings</string>
+   <string>Custom Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
@@ -35,61 +40,67 @@
       <attribute name="title">
        <string>General</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <item>
-        <widget class="QGroupBox" name="joystickGroupBox">
-         <property name="title">
-          <string>Joystick Control</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0" colspan="2">
-             <widget class="QListView" name="joystickNamesListView"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="joystickSpeedLabel">
-              <property name="text">
-               <string>Speed</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="DoubleSlider" name="joystickSpeedSlider">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="joystickDeadzoneLabel">
-              <property name="text">
-               <string>Deadzone size</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="DoubleSlider" name="joystickDeadzoneSlider">
-              <property name="toolTip">
-               <string>Set this value higher if the camera position drifts when the joysticks are centered</string>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-           </layout>
+      <widget class="QGroupBox" name="joystickGroupBox">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>11</y>
+         <width>724</width>
+         <height>211</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Joystick Control</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0" colspan="2">
+           <widget class="QListView" name="joystickNamesListView"/>
           </item>
-          <item>
-           <widget class="QLabel" name="joystickBindingsLabel">
+          <item row="1" column="0">
+           <widget class="QLabel" name="joystickSpeedLabel">
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Joysitck Bindings:&lt;/p&gt;
+             <string>Speed</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="DoubleSlider" name="joystickSpeedSlider">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="joystickDeadzoneLabel">
+            <property name="text">
+             <string>Deadzone size</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="DoubleSlider" name="joystickDeadzoneSlider">
+            <property name="toolTip">
+             <string>Set this value higher if the camera position drifts when the joysticks are centered</string>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="joystickBindingsLabel">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Joysitck Bindings:&lt;/p&gt;
 &lt;p&gt;
 &lt;table&gt;
 &lt;tr&gt;&lt;th&gt;Control&lt;/th&gt;&lt;th&gt;Action&lt;/th&gt;&lt;/tr&gt;
@@ -101,49 +112,218 @@
 &lt;/table&gt;
 &lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="enableDebugLogCheckBox">
-         <property name="text">
-          <string>Enable debug logging</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="livemoveCheckBox">
-         <property name="toolTip">
-          <string>Disable movement controls for cameras in the currently active program scene. This protects against accidental camera moves on the live stream.</string>
-         </property>
-         <property name="text">
-          <string>Lockout live PTZ moves in studio mode</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QCheckBox" name="enableDebugLogCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>229</y>
+         <width>177</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enable debug logging</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="livemoveCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>262</y>
+         <width>288</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Disable movement controls for cameras in the currently active program scene. This protects against accidental camera moves on the live stream.</string>
+       </property>
+       <property name="text">
+        <string>Lockout live PTZ moves in studio mode</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>11</x>
+         <y>295</y>
+         <width>549</width>
+         <height>171</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="recOptionsLayout">
+        <item row="3" column="1">
+         <widget class="QComboBox" name="qualityComboBox"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="recFormatLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>124</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Recording Format</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="recFormatComboBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="filenameFormattingLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>124</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Filename Formatting</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="filenameFormattingLineEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>124</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Quality Preset</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="baseDirectoryLineEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string notr="true"/>
+          </property>
+          <property name="placeholderText">
+           <string notr="true">Set base directory for all saved videos, bookings, and presets</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="baseDirectoryLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>124</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Base Directory</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="saveButton">
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="camerasTab">
       <attribute name="title">
@@ -298,6 +478,109 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="synologyTab">
+      <attribute name="title">
+       <string>NAS/Mail</string>
+      </attribute>
+      <widget class="QWidget" name="gridLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>721</width>
+         <height>431</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <property name="horizontalSpacing">
+         <number>14</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>21</number>
+        </property>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="nasUserNameLineEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="nasPortLabel">
+          <property name="text">
+           <string>NAS PORT</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="nasIpLabel">
+          <property name="text">
+           <string>NAS IP</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="nasPasswordLabel">
+          <property name="text">
+           <string>NAS Password</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="nasPasswordLineEdit"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="nasIpLineEdit"/>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLineEdit" name="mailUserNameLineEdit"/>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="mailHostLineEdit"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="nasPortLineEdit"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="nasUserNameLabel">
+          <property name="text">
+           <string>NAS User Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="mailServiceLineEdit"/>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLineEdit" name="mailPasswordLineEdit"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="mailServiceLabel">
+          <property name="text">
+           <string>Mail Service</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="mailHostLabel">
+          <property name="text">
+           <string>Mail Host</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="mailUserNameLabel">
+          <property name="text">
+           <string>Mail User Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="mailPasswordLabel">
+          <property name="text">
+           <string>Mail Password</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </widget>
    </item>

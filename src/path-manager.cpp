@@ -1,3 +1,6 @@
+#include <QDir>
+
+#include <obs.hpp>
 #include <util/config-file.h>
 #include "source-record.h"
 #include "message-dialog.hpp"
@@ -6,6 +9,10 @@
 QString PathManager::baseDirectory = "V:/sb-terminal-test/";
 QString PathManager::outerDirectory = "";
 QString PathManager::innerDirectory = "";
+
+QString PathManager::filenameFormatting = "";
+QString PathManager::recFormat = "";
+QString PathManager::qualityPreset = "";
 
 QVector<obs_source_t*> PathManager::sources;
 
@@ -67,9 +74,13 @@ void PathManager::resetFilterSettings()
     return;
   }
 
+  setScenePath();
+
+  config_t* currentProfile = obs_frontend_get_profile_config();
+
   obs_source_t* currentScene = obs_frontend_get_current_scene();
 
-  if (!currentScene) return;
+  if (!currentProfile || !currentScene) return;
   
   obs_scene_t* scene = obs_scene_from_source(currentScene);
 
@@ -81,14 +92,12 @@ void PathManager::resetFilterSettings()
   const char* id = sourceRecordFilterInfo->id;
   QString sourceRecordFilterName = sourceRecordFilterInfo->get_name(unused);
 
-  // pass path as input param?
   QString path = baseDirectory + outerDirectory + innerDirectory;
   QByteArray pathByteArray = path.toLocal8Bit();
   const char* c_path = pathByteArray.data();
 
-  config_t* currentProfile = obs_frontend_get_profile_config();
-  QString filenameFormatting = 
-    config_get_string(currentProfile, "Output", "FilenameFormatting");
+  // QString filenameFormatting = 
+  //   config_get_string(currentProfile, "Output", "FilenameFormatting");
 
   sources.clear();
   obs_scene_enum_items(scene, &scene_enum_callback, NULL);
@@ -103,7 +112,7 @@ void PathManager::resetFilterSettings()
     sourceRecordFilterInfo->get_defaults(settings);
 
     QString sourceName = obs_source_get_name(source);
-    QString newFormatting = filenameFormatting + "-" + sourceName;
+    QString newFormatting = PathManager::filenameFormatting + "-" + sourceName;
 
     QString filterName = sourceRecordFilterName + "-" + sourceName;
 
@@ -113,9 +122,9 @@ void PathManager::resetFilterSettings()
     obs_data_set_int(settings, "record_mode", OUTPUT_MODE_RECORDING);
     obs_data_set_string(settings, "path", c_path);
     obs_data_set_string(settings, "filename_formatting", newFormatting.toUtf8().constData());
-    obs_data_set_string(settings, "rec_format", "mkv");
+    obs_data_set_string(settings, "rec_format", PathManager::recFormat.toUtf8().constData());
     obs_data_set_string(settings, "encoder", "nvenc_hevc");
-    obs_data_set_string(settings, "preset2", "p7");
+    obs_data_set_string(settings, "preset2", PathManager::qualityPreset.toUtf8().constData());
      
     // ! For finding the available encoder props !
     //
@@ -136,4 +145,40 @@ void PathManager::resetFilterSettings()
   
     obs_data_release(settings);
   }
+}
+
+void PathManager::setScenePathFromConfig()
+{
+  char *file = obs_module_config_path("config2.json");
+
+	if (!file) return;
+
+	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
+
+  bfree(file);
+
+	if (!loaddata) return;
+  
+	obs_data_release(loaddata);
+
+  PathManager::baseDirectory = obs_data_get_string(loaddata, "base_directory");
+
+  setScenePath();
+}
+
+void PathManager::setScenePath()
+{
+  config_t* currentProfile = obs_frontend_get_profile_config();
+
+  if (!currentProfile) return;
+
+  QString sceneFilePath = PathManager::baseDirectory + "temp/";
+  QDir tempDir = QDir(sceneFilePath);
+
+  if (!tempDir.exists())
+    tempDir.mkpath(sceneFilePath);
+
+  const char* c_sceneFilePath = sceneFilePath.toUtf8().constData();
+
+  config_set_string(currentProfile, "SimpleOutput", "FilePath", c_sceneFilePath);
 }

@@ -30,6 +30,7 @@
 #include "ptz-controls.hpp"
 #include "settings.hpp"
 #include "ui_settings.h"
+#include "path-manager.hpp"
 
 /* ----------------------------------------------------------------- */
 
@@ -116,7 +117,9 @@ void PTZSettings::updateProperties(OBSData old_settings, OBSData new_settings)
 	Q_UNUSED(old_settings);
 }
 
-PTZSettings::PTZSettings() : QWidget(nullptr), ui(new Ui_PTZSettings)
+PTZSettings::PTZSettings() 
+  : QWidget(nullptr), 
+    ui(new Ui_PTZSettings)
 {
 	settings = obs_data_create();
 	obs_data_release(settings);
@@ -152,6 +155,16 @@ PTZSettings::PTZSettings() : QWidget(nullptr), ui(new Ui_PTZSettings)
 	joystickSetup();
 
 	ui->versionLabel->setText(description_text);
+
+  //----------------------------------------------------
+  for (const QString& preset : qualityPresets) 
+    ui->qualityComboBox->addItem(preset);
+
+  for (const QString& recFormat : recFormats)
+    ui->recFormatComboBox->addItem(recFormat);
+
+  getAdditionalProperties();
+  //----------------------------------------------------
 }
 
 PTZSettings::~PTZSettings()
@@ -312,16 +325,22 @@ void PTZSettings::on_enableDebugLogCheckBox_stateChanged(int state)
 	ptz_debug_level = (state == Qt::Unchecked) ? LOG_DEBUG : LOG_INFO;
 }
 
+void PTZSettings::on_saveButton_pressed()
+{
+  updateAdditionalProperties();
+}
+
 void PTZSettings::currentChanged(const QModelIndex &current,
 				 const QModelIndex &previous)
 {
 	auto ptz = ptzDeviceList.getDevice(previous);
-	if (ptz)
-		ptz->disconnect(this);
+
+	if (ptz) ptz->disconnect(this);
 
 	obs_data_clear(settings);
 
 	ptz = ptzDeviceList.getDevice(current);
+
 	if (ptz) {
 		obs_data_apply(settings, ptz->get_settings());
 
@@ -359,11 +378,85 @@ void PTZSettings::showDevice(uint32_t device_id)
 	if (device_id) {
 		set_selected(device_id);
 		ui->tabWidget->setCurrentWidget(ui->camerasTab);
-	} else {
+	} 
+  
+  else {
 		ui->tabWidget->setCurrentWidget(ui->generalTab);
 	}
+
 	show();
 	raise();
+}
+
+void PTZSettings::getAdditionalProperties()
+{
+  char *file = obs_module_config_path("config2.json");
+
+	if (!file) return;
+
+	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
+
+  bfree(file);
+
+	if (!loaddata) return;
+  
+	obs_data_release(loaddata);
+
+  PathManager::baseDirectory = obs_data_get_string(loaddata, "base_directory");
+  PathManager::filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
+  PathManager::qualityPreset = obs_data_get_string(loaddata, "quality_preset");
+  PathManager::recFormat = obs_data_get_string(loaddata, "rec_format");
+
+  ui->baseDirectoryLineEdit->setText(PathManager::baseDirectory);
+  ui->filenameFormattingLineEdit->setText(PathManager::filenameFormatting);
+  ui->recFormatComboBox->setCurrentText(PathManager::recFormat);
+
+  for (const QString& preset : qualityPresets) {
+    if (preset.contains(PathManager::qualityPreset.toUpper())) {
+      ui->qualityComboBox->setCurrentText(preset);
+      break;
+    }
+  }  
+}
+
+void PTZSettings::updateAdditionalProperties()
+{
+  char* file = obs_module_config_path("config2.json");
+
+	if (!file) return;
+
+	OBSData savedata = obs_data_create();
+	obs_data_release(savedata);
+
+  PathManager::baseDirectory = ui->baseDirectoryLineEdit->text(); // check for trailing slash
+  PathManager::baseDirectory.replace("\\", "/");
+
+  if (PathManager::baseDirectory.last(1) != "/")
+    PathManager::baseDirectory.append("/");
+
+  PathManager::filenameFormatting = ui->filenameFormattingLineEdit->text();
+  PathManager::qualityPreset = ui->qualityComboBox->currentText().first(2).toLower();
+  PathManager::recFormat = ui->recFormatComboBox->currentText();
+
+  PathManager::resetFilterSettings();
+
+  obs_data_set_string(savedata, "base_directory", PathManager::baseDirectory.toUtf8().constData());
+  obs_data_set_string(savedata, "filename_formatting", PathManager::filenameFormatting.toUtf8().constData());
+  obs_data_set_string(savedata, "rec_format", PathManager::recFormat.toUtf8().constData());
+  obs_data_set_string(savedata, "quality_preset", PathManager::qualityPreset.toUtf8().constData());
+
+  if (!obs_data_save_json_safe(savedata, file, "tmp", "bak")) {
+		char *path = obs_module_config_path("");
+
+		if (path) {
+			os_mkdirs(path);
+			bfree(path);
+		}
+
+		obs_data_save_json_safe(savedata, file, "tmp", "bak");
+	}
+
+	bfree(file);
 }
 
 /* ----------------------------------------------------------------- */

@@ -798,7 +798,6 @@ Camera</string>
         <height>16</height>
        </size>
       </property>
-      <addaction name="actionSettings"/>
       <addaction name="actionDisableLiveMoves"/>
       <addaction name="actionPTZProperties"/>
       <addaction name="actionFollowPreview"/>
@@ -834,17 +833,6 @@ Camera</string>
    </property>
    <property name="toolTip">
     <string>Block changes to live cameras</string>
-   </property>
-  </action>
-  <action name="actionSettings">
-   <property name="text">
-    <string>Settings</string>
-   </property>
-   <property name="toolTip">
-    <string>OBS Settings</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
   <actiongroup name="actionGroupFollowMode">
