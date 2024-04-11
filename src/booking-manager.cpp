@@ -125,12 +125,12 @@ void BookingManager::sortBookings()
 QString BookingManager::makeEntry(const Booking& booking)
 {
   QString entry = 
-      booking.date.toString() + ", " +
+      booking.date.toString("ddd MMM dd yyyy") + "\t" +
       booking.startTime.toString("HH:mm") + " - " +
-      booking.stopTime.toString("HH:mm") + ": " +
-      booking.event + 
-      " (" + booking.email + ")" +
-      (booking.isConflicting ? " --CONFLICTING" : "");
+      booking.stopTime.toString("HH:mm") + "\t" +
+      booking.event.leftJustified(20, ' ') + "\t" +
+      booking.email.leftJustified(20, ' ') +
+      (booking.isConflicting ? "\t--CONFLICTING!" : "");
 
   return entry;
 }
