@@ -16,6 +16,7 @@
 #include <QWindow>
 #include <QResizeEvent>
 #include <QLineEdit>
+#include <QDir>
 
 #include "imported/qt-wrappers.hpp"
 #include "imported/qjoysticks/QJoysticks.h"
@@ -30,6 +31,7 @@
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
 #include "globals.hpp"
+#include "path-manager.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -1070,6 +1072,8 @@ void PTZControls::on_toBookingManagerButton_clicked()
 
 void PTZControls::on_logoutButton_clicked()
 {
+  PathManager::deleteTempFiles();
+
   hide();
   LoginDialog* loginDialog = LoginDialog::getInstance();
 

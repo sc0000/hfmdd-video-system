@@ -17,6 +17,7 @@ public:
 
   static void updateFilterSettings(const char* path);
   static void resetFilterSettings();
-  static void setScenePathFromConfig();
-  static void setScenePath();
+  static void load();
+  static void setTempPath();
+  static void deleteTempFiles();
 };

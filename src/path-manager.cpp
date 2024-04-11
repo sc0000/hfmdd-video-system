@@ -74,7 +74,7 @@ void PathManager::resetFilterSettings()
     return;
   }
 
-  setScenePath();
+  setTempPath();
 
   config_t* currentProfile = obs_frontend_get_profile_config();
 
@@ -147,7 +147,7 @@ void PathManager::resetFilterSettings()
   }
 }
 
-void PathManager::setScenePathFromConfig()
+void PathManager::load()
 {
   char *file = obs_module_config_path("config2.json");
 
@@ -162,11 +162,14 @@ void PathManager::setScenePathFromConfig()
 	obs_data_release(loaddata);
 
   PathManager::baseDirectory = obs_data_get_string(loaddata, "base_directory");
+  PathManager::filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
+  PathManager::recFormat = obs_data_get_string(loaddata, "rec_format");
+  PathManager::qualityPreset = obs_data_get_string(loaddata, "quality_preset");
 
-  setScenePath();
+  setTempPath();
 }
 
-void PathManager::setScenePath()
+void PathManager::setTempPath()
 {
   config_t* currentProfile = obs_frontend_get_profile_config();
 
@@ -181,4 +184,14 @@ void PathManager::setScenePath()
   const char* c_sceneFilePath = sceneFilePath.toUtf8().constData();
 
   config_set_string(currentProfile, "SimpleOutput", "FilePath", c_sceneFilePath);
+}
+
+void PathManager::deleteTempFiles()
+{
+  QDir tempDir(PathManager::baseDirectory + "temp/");
+  tempDir.setNameFilters(QStringList() << "*.*");
+  tempDir.setFilter(QDir::Files);
+
+  for (const QString& file : tempDir.entryList())
+    tempDir.remove(file);
 }
