@@ -28,7 +28,6 @@ private:
   Ui::LoginDialog* ui;
 
 private:
-  QLineEdit* mailAddressLineEdit;
   bool mailAddressIsValid;
 
   void repositionMasterWidget();
@@ -43,7 +42,7 @@ public:
   ~LoginDialog();
 
   static inline LoginDialog* getInstance() { return instance; }
-  inline QLineEdit* getMailAddressLineEdit() { return mailAddressLineEdit; }
+  // inline QLineEdit* getMailAddressLineEdit() { return ui->mailAddressLineEdit; }
   void reload();
 };
 

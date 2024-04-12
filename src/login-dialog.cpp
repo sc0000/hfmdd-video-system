@@ -14,15 +14,6 @@
 
 LoginDialog* LoginDialog::instance = NULL;
 
-// void LoginDialog_load(void)
-// {
-//   QWidget* main_window =
-//     (QWidget*)obs_frontend_get_main_window();
-//   auto* tmp = new LoginDialog(main_window);
-//   obs_frontend_add_dock(tmp);
-//   tmp->setFloating(true);
-// }
-
 LoginDialog::LoginDialog(QWidget *parent)
   : QDialog(parent),
     ui(new Ui::LoginDialog),
@@ -33,14 +24,11 @@ LoginDialog::LoginDialog(QWidget *parent)
 
   instance = this;
   ui->setupUi(this);
-  mailAddressLineEdit = ui->mailAddressLineEdit;
-  
-  // ui->manageBookingsButton->setStyleSheet("QPushButton { border: 1px solid #C8C8C8 }");
+  ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF0000 }");
 
   repositionMasterWidget();
 
   showFullScreen();
-
 }
 
 LoginDialog::~LoginDialog()
@@ -52,6 +40,7 @@ void LoginDialog::reload()
 {
   repositionMasterWidget();
   ui->mailAddressLineEdit->clear();
+  ui->passwordLineEdit->clear();
   show();
 }
 
@@ -77,7 +66,8 @@ void LoginDialog::repositionMasterWidget()
 bool LoginDialog::verifyMailAddress()
 {
   if (!mailAddressIsValid) {
-    ui->reminderLabel->setText("Please enter a valid HfMDD email address");
+    ui->reminderLabel->show();
+    ui->reminderLabel->setText("Please enter a valid HfMDD email address! Only admin accounts require a passwords.");
     ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF0000 }");
     return false;
   }
@@ -103,12 +93,20 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
     {
       mailAddressIsValid = true;
       PathManager::innerDirectory = Globals::currentEmail.chopped(suffix.length());
+      ui->reminderLabel->setText(" ");
       break;
     }
   }
 
-  if (Globals::currentEmail == Globals::oliversEmail)
-    PasswordDialog::instance(mailAddressIsValid, this);
+  if (Globals::currentEmail == Globals::oliversEmail) {
+    ui->passwordLineEdit->setDisabled(false);
+    // PasswordDialog::instance(mailAddressIsValid, this);
+  }
+
+  else 
+    ui->passwordLineEdit->setDisabled(true);
+
+ 
 
   verifyMailAddress();
 }
@@ -116,6 +114,11 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 void LoginDialog::on_manageBookingsButton_pressed()
 {
   if (!verifyMailAddress()) return;
+
+  if (ui->passwordLineEdit->isEnabled() && ui->passwordLineEdit->text() != "pw") {
+    OkDialog::instance("Incorrect password", this);
+    return;
+  }
 
   BookingManager* bookingManager = BookingManager::getInstance();
 
