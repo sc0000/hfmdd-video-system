@@ -46,21 +46,7 @@ void LoginDialog::reload()
 
 void LoginDialog::repositionMasterWidget()
 {
-  QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
-
-  if (!mainWindow) return;
-
-  QRect screenGeometry = mainWindow->screen()->geometry();
-
-  int screenWidth = screenGeometry.width();
-  int screenHeight = screenGeometry.height();
-
-  QPoint centerPoint(screenWidth / 2, screenHeight / 2);
-
-  int masterWidgetX = centerPoint.x() - (ui->masterWidget->width() / 2);
-  int masterWidgetY = centerPoint.y() - (ui->masterWidget->height() / 2);
-
-  ui->masterWidget->move(masterWidgetX, masterWidgetY);
+  Globals::centerFullScreenWidget(ui->masterWidget);
 }
 
 bool LoginDialog::verifyMailAddress()

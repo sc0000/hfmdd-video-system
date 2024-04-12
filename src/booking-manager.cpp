@@ -44,22 +44,7 @@ void BookingManager::reload()
 
 void BookingManager::repositionMasterWidget()
 {
-  QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
-
-  if (!mainWindow) return;
-
-  QRect screenGeometry = mainWindow->screen()->geometry();
-
-  int screenWidth = screenGeometry.width();
-  int screenHeight = screenGeometry.height();
-
-  QPoint centerPoint(screenWidth / 2, screenHeight / 2);
-
-  int masterWidgetX = centerPoint.x() - (ui->masterWidget->width() / 2);
-  int masterWidgetY = centerPoint.y() - (ui->masterWidget->height() / 2);
-
-  move(mainWindow->pos());
-  ui->masterWidget->move(masterWidgetX, masterWidgetY);
+  Globals::centerFullScreenWidget(ui->masterWidget);
 }
 
 void BookingManager::loadBookings()
