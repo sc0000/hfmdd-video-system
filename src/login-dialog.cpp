@@ -9,6 +9,7 @@
 #include "booking-manager.hpp"
 #include "path-manager.hpp"
 #include "globals.hpp"
+#include "mode-select.hpp"
 #include "ui_login-dialog.h"
 #include "login-dialog.hpp"
 
@@ -106,21 +107,20 @@ void LoginDialog::on_manageBookingsButton_pressed()
     return;
   }
 
-  BookingManager* bookingManager = BookingManager::getInstance();
+  // TODO: MODE SELECT HERE!
+  ModeSelect* modeSelect = ModeSelect::getInstance();
 
-  if (bookingManager) {
-    bookingManager->loadBookings();
-    bookingManager->show();
+  if (modeSelect) {
+    modeSelect->show();
   }
-
 
   else {
-    bookingManager = new BookingManager(this);
+    modeSelect = new ModeSelect(this);
 
-    if (!bookingManager) return;
+    if (!modeSelect) return;
 
-    bookingManager->exec();
+    modeSelect->exec();
   }
 
-  // hide();
+  hide();
 }

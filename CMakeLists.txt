@@ -48,14 +48,18 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/message-dialog.cpp
   src/booking-editor.cpp
   src/booking-manager.cpp
+  src/quick-record.cpp
   src/login.cpp
   src/login-dialog.cpp
+  src/mode-select.cpp
   src/time-observer.cpp
   src/source-record.c
   src/login.ui
   src/login-dialog.ui
+  src/mode-select.ui
   src/booking-editor.ui
   src/booking-manager.ui
+  src/quick-record.ui
   src/ptz-controls.ui
   src/settings.ui
   src/path-manager.cpp
@@ -83,10 +87,12 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/globals.hpp
   src/login.hpp
   src/login-dialog.hpp
+  src/mode-select.hpp
   src/time-observer.hpp
   src/message-dialog.hpp
   src/booking-editor.hpp
   src/booking-manager.hpp
+  src/quick-record.hpp
   src/path-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp

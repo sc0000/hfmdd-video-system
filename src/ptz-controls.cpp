@@ -29,6 +29,7 @@
 #include "message-dialog.hpp"
 #include "ui_preset-dialog.h"
 #include "booking-manager.hpp"
+#include "quick-record.hpp"
 #include "json-parser.hpp"
 #include "globals.hpp"
 #include "path-manager.hpp"
@@ -167,12 +168,32 @@ void timeOut()
 
 void PTZControls::startRecording()
 {
-  BookingManager* bookingManager = BookingManager::getInstance();
-  if (!bookingManager) return;
+  Booking* selectedBooking = nullptr;
 
-  Booking* selectedBooking = bookingManager->selectedBooking;
-  if (!selectedBooking) return;
-  
+  switch (Globals::mode) {
+    case EMode::BookMode: {
+      BookingManager* bookingManager = BookingManager::getInstance();
+      if (!bookingManager) return;
+      selectedBooking = &bookingManager->selectedBooking;
+      if (!selectedBooking) return;
+    }
+
+    break;
+
+    case EMode::QuickMode: {
+      QuickRecord* quickRecord = QuickRecord::getInstance();
+      if (!quickRecord) return;
+      selectedBooking = &quickRecord->booking;
+      if (!selectedBooking) return;
+    }
+
+    break;
+
+    case EMode::Default: {
+      OkDialog::instance("ERROR: No mode selected", this);
+    }
+  }
+
   if (selectedBooking->date != QDate::currentDate()) {
       OkDialog::instance(
         "The selected booking does not have today's date.", 
@@ -523,6 +544,29 @@ void PTZControls::joystickButtonEvent(const QJoystickButtonEvent evt)
 	}
 }
 #endif /* ENABLE_JOYSTICK */
+
+void PTZControls::prepare()
+{
+  connectSignalItemSelect();
+  loadUserPresets();
+  setViewportMode();
+  selectCamera();
+  setFloating(false);
+
+  switch (Globals::mode) {
+    case EMode::BookMode:
+      ui->toBookingManagerButton->setText("To Booking Manager");
+      break;
+    case EMode::QuickMode:
+      ui->toBookingManagerButton->setText("To Time Slot Setup");
+      break;
+    case EMode::Default:
+      ui->toBookingManagerButton->setText("ERROR");
+      break;
+  }
+
+  show();
+}
 
 void PTZControls::setViewportMode()
 {
@@ -981,7 +1025,7 @@ void PTZControls::on_overviewButton_clicked()
 
 void PTZControls::on_savePresetButton_clicked()
 {
-  PresetDialog::instance(BookingManager::getInstance()->selectedBooking, this);
+  PresetDialog::instance(&BookingManager::getInstance()->selectedBooking, this);
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -1063,11 +1107,28 @@ void PTZControls::on_recordButton_clicked()
 
 void PTZControls::on_toBookingManagerButton_clicked()
 {
-  BookingManager* bookingManager = BookingManager::getInstance();
+  switch (Globals::mode) {
+    case EMode::BookMode: {
+      BookingManager* bookingManager = BookingManager::getInstance();
+      if (!bookingManager) return;
+      bookingManager->reload();
+    }
 
-  if (!bookingManager) return;
-
-  bookingManager->reload();
+    break;
+    
+    case EMode::QuickMode: {
+      QuickRecord* quickRecord = QuickRecord::getInstance();
+      if (!quickRecord) return;
+      quickRecord->reload();
+    }
+    
+    break;
+    
+    case EMode::Default:
+      OkDialog::instance("ERROR: No mode selected", this);
+      return;
+  }
+  
 }
 
 void PTZControls::on_logoutButton_clicked()

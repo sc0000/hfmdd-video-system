@@ -198,6 +198,7 @@ public:
   virtual PTZPresetListModel* presetModel() { return &m_presetsModel; }
   PTZPresetListModel* userPresetModel() { return &m_userPresetsModel; } 
 
+  void prepare();
   void setViewportMode();
   void selectCamera();
   void loadUserPresets();

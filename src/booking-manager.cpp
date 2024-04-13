@@ -9,6 +9,7 @@
 #include "ptz-controls.hpp"
 #include "path-manager.hpp"
 #include "globals.hpp"
+#include "mode-select.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
 
@@ -165,16 +166,6 @@ void BookingManager::on_deleteBookingButton_pressed()
   if (item) delete item;
 }
 
-void BookingManager::on_logoutButton_pressed()
-{
-  LoginDialog* loginDialog = LoginDialog::getInstance();
-  
-  if (!loginDialog) return;
-
-  loginDialog->reload();
-  hide();
-}
-
 void BookingManager::on_toPTZControlsButton_pressed()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
@@ -187,8 +178,8 @@ void BookingManager::on_toPTZControlsButton_pressed()
     return;
   }
 
-  selectedBooking = &bookings[ui->bookingsList->currentRow()];
-  PathManager::outerDirectory = selectedBooking->date.toString(Qt::ISODate) + "/";
+  selectedBooking = bookings[ui->bookingsList->currentRow()];
+  PathManager::outerDirectory = selectedBooking.date.toString(Qt::ISODate) + "/";
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   PathManager::resetFilterSettings();
@@ -202,10 +193,28 @@ void BookingManager::on_toPTZControlsButton_pressed()
 
   if (!ptzControls) return;
 
-  ptzControls->connectSignalItemSelect();
-  ptzControls->loadUserPresets();
-  ptzControls->setViewportMode();
-  ptzControls->selectCamera();
-  ptzControls->setFloating(false);
-  ptzControls->show();
+  // load
+
+  ptzControls->prepare();
 }
+
+void BookingManager::on_toModeSelectButton_pressed()
+{
+  ModeSelect* modeSelect = ModeSelect::getInstance();
+
+  if (!modeSelect) return;
+
+  modeSelect->reload();
+  hide();
+}
+
+void BookingManager::on_logoutButton_pressed()
+{
+  LoginDialog* loginDialog = LoginDialog::getInstance();
+  
+  if (!loginDialog) return;
+
+  loginDialog->reload();
+  hide();
+}
+

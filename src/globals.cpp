@@ -8,6 +8,7 @@
 
 QString Globals::currentEmail = "";
 const QString Globals::oliversEmail = "oliver.fenk@hfmdd.de";
+EMode Globals::mode = EMode::Default;
 
 void Globals::centerFullScreenWidget(QWidget* masterWidget)
 {

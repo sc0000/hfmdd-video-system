@@ -4,16 +4,6 @@
 #include <QDialog>
 #include <QLineEdit>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern void LoginDialog_load(void);
-
-#ifdef __cplusplus
-}
-#endif
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class LoginDialog;
