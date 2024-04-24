@@ -68,6 +68,8 @@ private:
 	void setCurrent(unsigned int index);
 	int presetIndexToId(PTZPresetListModel* model, QModelIndex index);
 
+  // Booking* selectedBooking;
+
 // TODO: Tidy up!
 public:
   void setNewPresetName(const QString& text);
@@ -199,6 +201,10 @@ public:
   PTZPresetListModel* userPresetModel() { return &m_userPresetsModel; } 
 
   void prepare();
+
+  // TODO: Which of these actually need to be public?
+
+  void setSelectedBooking();
   void setViewportMode();
   void selectCamera();
   void loadUserPresets();

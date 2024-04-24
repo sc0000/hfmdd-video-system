@@ -85,7 +85,7 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
     }
   }
 
-  if (Globals::currentEmail == Globals::oliversEmail) {
+  if (Globals::currentEmail == Globals::adminEmail) {
     ui->passwordLineEdit->setDisabled(false);
     // PasswordDialog::instance(mailAddressIsValid, this);
   }
@@ -107,7 +107,6 @@ void LoginDialog::on_manageBookingsButton_pressed()
     return;
   }
 
-  // TODO: MODE SELECT HERE!
   ModeSelect* modeSelect = ModeSelect::getInstance();
 
   if (modeSelect) {

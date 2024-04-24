@@ -167,18 +167,22 @@ SimpleRecordingWidget::SimpleRecordingWidget(QWidget* parent)
 SimpleRecordingWidget::~SimpleRecordingWidget()
 {}
 
-QString SimpleRecordingWidget::sendDownloadLink(const QString& email, const QString& path)
+QString SimpleRecordingWidget::sendDownloadLink(const Booking& booking, const QString& path)
 {
   // TODO: Check how to set up relative paths!
-  QProcess* nodeProcess = new QProcess(this);
-  const QString nodeCommand = "C:/Program Files/nodejs/node.exe";
-  const QStringList nodeArgs = 
-    QStringList() << "C:/dev/obs-plugin-test/obs-plugintemplate/node-scripts/get-url.js";
+  const QString dllFilePath = QCoreApplication::applicationFilePath();
+  const QString dllDir = QFileInfo(dllFilePath).absolutePath();
 
+  const QString nodePath = QDir::toNativeSeparators(dllDir + "../../node.exe");
+  const QString scriptPath = QDir::toNativeSeparators(dllDir + "../../node-scripts/file-sender.js");
+
+  const QStringList nodeArgs = QStringList() << scriptPath;
+
+  QProcess* nodeProcess = new QProcess(this);
   nodeProcess->setEnvironment(QProcess::systemEnvironment());
   nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
 
-  nodeProcess->start(nodeCommand, nodeArgs);
+  nodeProcess->start(nodePath, nodeArgs);
 
   if (!nodeProcess->waitForStarted()) 
     return "Process started with error: " + nodeProcess->errorString();
@@ -191,7 +195,8 @@ QString SimpleRecordingWidget::sendDownloadLink(const QString& email, const QStr
   QJsonObject jsonObj;
   jsonObj["basePath"] = apiBasePath;
   jsonObj["path"] = path;
-  jsonObj["receiver"] = email;
+  jsonObj["receiver"] = booking.email;
+  jsonObj["subject"] = "HfMDD Concert Hall Recordings " + booking.date.toString("ddd MMM dd yyyy");
 
   QJsonDocument jsonDoc(jsonObj);
 
@@ -348,8 +353,8 @@ void SimpleRecordingWidget::onRecordButtonClicked()
     m_recordButton->setText("Start Recording");
 
     // ...
-    QString url = sendDownloadLink(m_email, m_outerDir + m_innerDir);
-    QMessageBox::information(this, "Info", url);
+    // QString url = sendDownloadLink(m_email, m_outerDir + m_innerDir);
+    // QMessageBox::information(this, "Info", url);
   }
 }
 

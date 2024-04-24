@@ -49,6 +49,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-editor.cpp
   src/booking-manager.cpp
   src/quick-record.cpp
+  src/file-sender.cpp
   src/login.cpp
   src/login-dialog.cpp
   src/mode-select.cpp
@@ -93,6 +94,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-editor.hpp
   src/booking-manager.hpp
   src/quick-record.hpp
+  src/file-sender.hpp
   src/path-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp

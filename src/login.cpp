@@ -80,7 +80,7 @@ void Login::on_mailAddressLineEdit_textEdited(const QString& text)
     }
   }
 
-  if (Globals::currentEmail == Globals::oliversEmail)
+  if (Globals::currentEmail == Globals::adminEmail)
     PasswordDialog::instance(mailAddressIsValid, this);
 
   verifyMailAddress();

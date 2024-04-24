@@ -75,7 +75,7 @@ private:
 private:
 
   // ? Should link/mail logic be in its own class ?
-  QString sendDownloadLink(const QString& email, const QString& path);
+  QString sendDownloadLink(const Booking& booking, const QString& path);
 
 private slots:
 

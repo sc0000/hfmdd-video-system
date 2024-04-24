@@ -1,13 +1,12 @@
 #include <QRect>
 #include <QScreen>
 
-// #include <obs-module.h>
 #include <obs-frontend-api.h>
 
 #include "globals.hpp"
 
 QString Globals::currentEmail = "";
-const QString Globals::oliversEmail = "oliver.fenk@hfmdd.de";
+const QString Globals::adminEmail = "oliver.fenk@hfmdd.de";
 EMode Globals::mode = EMode::Default;
 
 void Globals::centerFullScreenWidget(QWidget* masterWidget)

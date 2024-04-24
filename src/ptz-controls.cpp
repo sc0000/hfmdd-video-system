@@ -33,6 +33,7 @@
 #include "json-parser.hpp"
 #include "globals.hpp"
 #include "path-manager.hpp"
+#include "file-sender.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -163,7 +164,11 @@ void PTZControls::connectSignalItemSelect()
 
 void timeOut()
 {
-  PTZControls::getInstance()->stopRecording();
+  PTZControls* ptzControls = PTZControls::getInstance();
+  
+  if (!ptzControls) return;
+
+  ptzControls->stopRecording();
 }
 
 void PTZControls::startRecording()
@@ -240,6 +245,35 @@ void PTZControls::stopRecording()
     );
 
     ui->recordButton->setText("Start Recording");
+
+  Booking* selectedBooking = nullptr;
+
+  switch (Globals::mode) {
+    case EMode::BookMode: {
+      BookingManager* bookingManager = BookingManager::getInstance();
+      if (!bookingManager) return;
+      selectedBooking = &bookingManager->selectedBooking;
+      if (!selectedBooking) return;
+    }
+
+    break;
+
+    case EMode::QuickMode: {
+      QuickRecord* quickRecord = QuickRecord::getInstance();
+      if (!quickRecord) return;
+      selectedBooking = &quickRecord->booking;
+      if (!selectedBooking) return;
+    }
+
+    break;
+
+    case EMode::Default: {
+      OkDialog::instance("ERROR: No mode selected", this);
+    }
+  }
+
+  const QString sendFilesMsg = FileSender::sendFiles(*selectedBooking);
+  OkDialog::instance(sendFilesMsg, this);
 }
 
 PTZControls::PTZControls(QWidget *parent)
@@ -568,6 +602,11 @@ void PTZControls::prepare()
   show();
 }
 
+void PTZControls::setSelectedBooking()
+{
+  // TODO: Fix the booking manager situation!
+}
+
 void PTZControls::setViewportMode()
 {
   vec2 viewportSize = { 1920.f, 1080.f };
@@ -755,7 +794,7 @@ void PTZControls::LoadConfig()
 
 void PTZControls::loadUserPresets()
 {
-  if (Globals::currentEmail == Globals::oliversEmail) {
+  if (Globals::currentEmail == Globals::adminEmail) {
     ui->presetListView->setModel(presetModel());
     return;
   }
@@ -1058,9 +1097,9 @@ void PTZControls::on_deletePresetButton_clicked()
   int id = presetIndexToId(model, index);
 
   QVector<int> oliversPresets;
-  JsonParser::getPresetsForEmail(Globals::oliversEmail, oliversPresets);
+  JsonParser::getPresetsForEmail(Globals::adminEmail, oliversPresets);
 
-  if (Globals::currentEmail != Globals::oliversEmail && oliversPresets.contains(id)) {
+  if (Globals::currentEmail != Globals::adminEmail && oliversPresets.contains(id)) {
     OkDialog::instance("You don't have permission to delete this preset", this);
     return;
   }
@@ -1080,7 +1119,7 @@ void PTZControls::on_deletePresetButton_clicked()
 
 	model->removePresetWithId(id);
 
-  if (Globals::currentEmail == Globals::oliversEmail) return;
+  if (Globals::currentEmail == Globals::adminEmail) return;
 
   PTZPresetListModel* userModel = userPresetModel();
   userModel->removePresetWithId(id);

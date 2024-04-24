@@ -52,7 +52,7 @@ void BookingManager::loadBookings()
 {   
   QVector<Booking> tmp;
 
-  if (Globals::currentEmail == Globals::oliversEmail)
+  if (Globals::currentEmail == Globals::adminEmail)
     JsonParser::getAllBookings(tmp);
 
   else   

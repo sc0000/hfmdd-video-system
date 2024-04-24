@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>302</width>
     <height>120</height>
    </rect>
   </property>
@@ -33,6 +33,11 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QLabel" name="messageLabel">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>TextLabel</string>
       </property>

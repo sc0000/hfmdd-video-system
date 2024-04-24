@@ -255,8 +255,8 @@ void JsonParser::removePreset(const QString& email, const int preset)
 
     QJsonObject obj = val.toObject();
 
-    if (obj.value("Email").toString() == Globals::oliversEmail && 
-        email != Globals::oliversEmail)
+    if (obj.value("Email").toString() == Globals::adminEmail && 
+        email != Globals::adminEmail)
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
@@ -292,7 +292,7 @@ void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVecto
 
     if ((!obj.contains("Email")) || 
         (obj.value("Email").toString() != email && 
-          obj.value("Email").toString() != Globals::oliversEmail))
+          obj.value("Email").toString() != Globals::adminEmail))
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
