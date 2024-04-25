@@ -5,15 +5,16 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "backend.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "globals.hpp"
 #include "json-parser.hpp"
 
-// QString JsonParser::bookingsPath = "V:/sb-terminal-test/bookings.json";
-// QString JsonParser::presetsPath = "V:/sb-terminal-test/presets.json";
-QString JsonParser::presetsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
-QString JsonParser::bookingsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
+QString JsonParser::bookingsPath = "V:/sb-terminal-test/bookings.json";
+QString JsonParser::presetsPath = "V:/sb-terminal-test/presets.json";
+// QString JsonParser::presetsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
+// QString JsonParser::bookingsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
 
 void JsonParser::addBooking(const Booking& booking)
 {
@@ -255,8 +256,8 @@ void JsonParser::removePreset(const QString& email, const int preset)
 
     QJsonObject obj = val.toObject();
 
-    if (obj.value("Email").toString() == Globals::adminEmail && 
-        email != Globals::adminEmail)
+    if (obj.value("Email").toString() == Backend::adminEmail && 
+        email != Backend::adminEmail)
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
@@ -292,7 +293,7 @@ void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVecto
 
     if ((!obj.contains("Email")) || 
         (obj.value("Email").toString() != email && 
-          obj.value("Email").toString() != Globals::adminEmail))
+          obj.value("Email").toString() != Backend::adminEmail))
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();

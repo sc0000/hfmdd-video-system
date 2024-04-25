@@ -5,9 +5,9 @@
 
 #include "globals.hpp"
 
-QString Globals::currentEmail = "";
-const QString Globals::adminEmail = "oliver.fenk@hfmdd.de";
-EMode Globals::mode = EMode::Default;
+// QString Globals::currentEmail = "";
+// const QString Globals::adminEmail = "oliver.fenk@hfmdd.de";
+// EMode Globals::mode = EMode::Default;
 
 void Globals::centerFullScreenWidget(QWidget* masterWidget)
 {

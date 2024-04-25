@@ -27,21 +27,13 @@ private:
   static Login* instance;
   Ui::Login* ui;
 
-private:
-  QLineEdit* mailAddressLineEdit;
-  bool mailAddressIsValid;
-
-  bool verifyMailAddress();
-
 private slots:
-  void on_mailAddressLineEdit_textEdited(const QString& text);
-  void on_manageBookingsButton_pressed();
+  void on_startButton_pressed();
     
 public:
   Login(QWidget *parent = nullptr);
   ~Login();
 
   static inline Login* getInstance() { return instance; }
-  inline QLineEdit* getMailAddressLineEdit() { return mailAddressLineEdit; }
 };
 

@@ -41,7 +41,8 @@ if(ENABLE_QT)
 endif()
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE 
-  src/plugin-main.cpp 
+  src/plugin-main.cpp
+  src/backend.cpp
   src/simple-recording.cpp
   src/globals.cpp
   src/json-parser.cpp
@@ -49,7 +50,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-editor.cpp
   src/booking-manager.cpp
   src/quick-record.cpp
-  src/file-sender.cpp
   src/login.cpp
   src/login-dialog.cpp
   src/mode-select.cpp
@@ -85,6 +85,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/imported/slider-ignorewheel.cpp
   src/imported/spinbox-ignorewheel.cpp
   # src/ptz.h
+  src/backend.hpp
   src/globals.hpp
   src/login.hpp
   src/login-dialog.hpp
@@ -94,7 +95,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-editor.hpp
   src/booking-manager.hpp
   src/quick-record.hpp
-  src/file-sender.hpp
   src/path-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp

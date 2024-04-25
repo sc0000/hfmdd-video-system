@@ -31,6 +31,7 @@ private:
 	Ui_PTZSettings *ui;
 	OBSData settings;
 
+  // ! MOVE TO SETTINGSMANAGER
   QVector<QString> qualityPresets = {
     "P1: Fastest (Lowest Quality)",
     "P2: Faster (Lower Quality)",

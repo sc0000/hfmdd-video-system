@@ -3,19 +3,12 @@
 #include <QWidget>
 #include <QString>
 
-enum class EMode
-{
-  QuickMode,
-  BookMode,
-  Default
-};
-
 class Globals
 {
 public:
-  static QString currentEmail;
-  const static QString adminEmail;
-  static EMode mode;
+  // static QString currentEmail;
+  // const static QString adminEmail;
+  // static EMode mode;
 
   static void centerFullScreenWidget(QWidget* masterWidget);
 };

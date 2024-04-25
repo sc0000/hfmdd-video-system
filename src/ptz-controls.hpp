@@ -12,6 +12,7 @@
 #include <QDockWidget>
 
 #include "time-observer.hpp"
+#include "booking.h"
 #include "ptz.h"
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"
@@ -68,7 +69,7 @@ private:
 	void setCurrent(unsigned int index);
 	int presetIndexToId(PTZPresetListModel* model, QModelIndex index);
 
-  // Booking* selectedBooking;
+  Booking& booking;
 
 // TODO: Tidy up!
 public:

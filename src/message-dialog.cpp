@@ -2,12 +2,14 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include "booking.h"
+#include "backend.hpp"
+#include "ptz-controls.hpp"
 #include "ui_ok-dialog.h"
 #include "ui_ok-cancel-dialog.h"
 #include "ui_password-dialog.h"
 #include "ui_preset-dialog.h"
-#include "booking.h"
-#include "ptz-controls.hpp"
+
 #include "message-dialog.hpp"
 
 
@@ -78,7 +80,7 @@ void PasswordDialog::instance(bool& out, QWidget* parent)
 
 void PasswordDialog::on_okButton_pressed()
 {
-  if (ui->passwordLineEdit->text() == "pw") {
+  if (ui->passwordLineEdit->text() == Backend::adminPassword) {
     valid = true;
     hide();
   }

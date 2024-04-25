@@ -1,6 +1,7 @@
 #include <QLabel>
 #include <QScreen>
 
+#include "backend.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "message-dialog.hpp"
@@ -18,7 +19,8 @@ BookingManager* BookingManager::instance = nullptr;
 
 BookingManager::BookingManager(QWidget* parent)
   : QDialog(parent), 
-    ui(new Ui::BookingManager)
+    ui(new Ui::BookingManager),
+    bookings(Backend::loadedBookings)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   
@@ -50,21 +52,7 @@ void BookingManager::repositionMasterWidget()
 
 void BookingManager::loadBookings()
 {   
-  QVector<Booking> tmp;
-
-  if (Globals::currentEmail == Globals::adminEmail)
-    JsonParser::getAllBookings(tmp);
-
-  else   
-    JsonParser::getBookingsForEmail(Globals::currentEmail, tmp);
-
-  bookings.clear();  
-
-  for (const Booking& b : tmp) {
-   bookings.append(b);
-  }
-
-  sortBookings();
+  Backend::loadBookings();
 
   if (!ui->bookingsList) return;
 
@@ -78,33 +66,6 @@ void BookingManager::loadBookings()
       item->setBackground(Qt::red);
 
     ui->bookingsList->addItem(item);
-  }
-}
-
-void BookingManager::sortBookings()
-{
-  qsizetype size = bookings.size();
-
-  for (qsizetype i = 0; i < size; ++i) {
-    bool flag = false;
-
-    for (qsizetype j = 0; j < size - 1 - i; ++j) {
-      QString dateTime0 = bookings[j].date.toString(Qt::ISODate) + "_" +
-        bookings[j].startTime.toString("HH:mm");
-
-      QString dateTime1 = bookings[j + 1].date.toString(Qt::ISODate) + "_" +
-        bookings[j + 1].startTime.toString("HH:mm");
-
-      if (dateTime0 > dateTime1) {
-        Booking tmp = bookings[j];
-        bookings[j] = bookings[j + 1];
-        bookings[j + 1] = tmp;
-
-        flag = true;
-      }
-    }
-
-    if (flag == 0) break;
   }
 }
 
@@ -178,8 +139,8 @@ void BookingManager::on_toPTZControlsButton_pressed()
     return;
   }
 
-  selectedBooking = bookings[ui->bookingsList->currentRow()];
-  PathManager::outerDirectory = selectedBooking.date.toString(Qt::ISODate) + "/";
+  Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
+  PathManager::outerDirectory = Backend::currentBooking.date.toString(Qt::ISODate) + "/";
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   PathManager::resetFilterSettings();

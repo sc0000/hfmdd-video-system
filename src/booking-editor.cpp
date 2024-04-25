@@ -1,6 +1,7 @@
 #include <QLabel>
 #include "json-parser.hpp"
 #include "globals.hpp"
+#include "backend.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
@@ -8,7 +9,8 @@
 
 BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
   : QDialog(parent),
-    ui(new Ui::BookingEditor)
+    ui(new Ui::BookingEditor),
+    booking(Backend::currentBooking)
 {
   ui->setupUi(this);
   
@@ -17,7 +19,7 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
   
   if (bookingToEdit) {
     isEditing = true;
-
+    
     ui->calendarWidget->setSelectedDate(bookingToEdit->date);
     updateExistingBookingsLabel(bookingToEdit->date);
 
@@ -40,7 +42,7 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
     ui->stopTimeEdit->setTime(ui->stopTimeEdit->minimumTime());
     ui->eventTypeLineEdit->setText("");
 
-    booking.email = Globals::currentEmail;
+    booking.email = Backend::currentEmail;
     booking.index = JsonParser::availableIndex();
   }
 
@@ -65,14 +67,15 @@ void BookingEditor::instance(Booking* bookingToEdit, QWidget* parent)
   bookingEditor->exec();
 }
 
-void BookingEditor::updateExistingBookingsLabel(QDate date)
+void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 {
-  bookingsOnSelectedDate.clear();
-  
-  JsonParser::getBookingsOnDate(date, bookingsOnSelectedDate);
+  Backend::updateBookingsOnSelectedDate(date);
 
-  if (bookingsOnSelectedDate.isEmpty() ||
-     (bookingsOnSelectedDate.size() == 1 && bookingsOnSelectedDate[0].index == booking.index)) {
+  const Booking& booking = Backend::currentBooking;
+  const QVector<Booking>& bosd = Backend::bookingsOnSelectedDate;
+
+  if (bosd.isEmpty() ||
+     (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText("There are no bookings yet on " + date.toString() + ".");
         return;
   }
@@ -81,12 +84,12 @@ void BookingEditor::updateExistingBookingsLabel(QDate date)
 
   str += "<html><head/><body>";
 
-  for (Booking& b : bookingsOnSelectedDate) {
+  for (const Booking& b : bosd) {
     if (b.index == booking.index) continue;
 
     bool isConflicting = false;
     
-    if (bookingsAreConflicting(booking, b)) 
+    if (Backend::bookingsAreConflicting(booking, b)) 
       isConflicting = true; 
           
     if (isConflicting)
@@ -104,39 +107,6 @@ void BookingEditor::updateExistingBookingsLabel(QDate date)
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
   ui->bookingsOnSelectedDateLabel->setText(str);
-}
-
-void BookingEditor::updateConflictingBookings(const QDate& date)
-{
-  QVector<Booking> bookingsOnDate;
-
-  JsonParser::getBookingsOnDate(date, bookingsOnDate);
-
-  for (Booking& b : bookingsOnDate) {
-    if (bookingsAreConflicting(booking, b)) {
-      booking.isConflicting = true;
-      b.isConflicting = true;
-    }
-
-    else {
-      b.isConflicting = false;
-    }
-
-    b.date = date;
-
-    JsonParser::updateBooking(b);
-  }
-}
-
-bool BookingEditor::bookingsAreConflicting(const Booking& booking0, const Booking& booking1)
-{
-  if (booking0.index == booking1.index) return false;
-
-  if ((booking0.startTime >= booking1.startTime && booking0.startTime < booking1.stopTime) ||
-      (booking0.stopTime > booking1.startTime && booking0.stopTime <= booking1.stopTime))
-    return true;
-
-  return false; 
 }
 
 void BookingEditor::on_calendarWidget_clicked(QDate date)
@@ -190,7 +160,7 @@ void BookingEditor::on_saveButton_pressed()
     return;
   }
   
-  updateConflictingBookings(booking.date);
+  Backend::updateConflictingBookings(booking.date);
 
   if (isEditing) 
     JsonParser::updateBooking(booking);

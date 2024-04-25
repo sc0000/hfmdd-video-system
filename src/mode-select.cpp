@@ -3,6 +3,7 @@
 
 #include <QScreen>
 
+#include "backend.hpp"
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
@@ -57,7 +58,7 @@ void ModeSelect::on_quickModeButton_pressed()
   //   bookingManager->hide();
   // }
 
-  Globals::mode = EMode::QuickMode;
+  Backend::mode = EMode::QuickMode;
 
   QuickRecord* quickRecord = QuickRecord::getInstance();
 
@@ -80,15 +81,16 @@ void ModeSelect::on_quickModeButton_pressed()
 
 void ModeSelect::on_bookModeButton_pressed()
 {
-  Globals::mode = EMode::BookMode;
+  Backend::mode = EMode::BookMode;
+  OkDialog::instance("BookMode!", this);
 
   BookingManager* bookingManager = BookingManager::getInstance();
 
   if (bookingManager) {
+    
     bookingManager->loadBookings();
     bookingManager->show();
   }
-
 
   else {
     bookingManager = new BookingManager(this);

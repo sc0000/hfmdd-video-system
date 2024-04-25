@@ -19,11 +19,10 @@ private:
   static BookingManager* instance;
   Ui::BookingManager* ui;
 
-  QVector<Booking> bookings;
+  QVector<Booking>& bookings;
 
 private:
   void repositionMasterWidget();
-  void sortBookings();
   QString makeEntry(const Booking& booking);
   
 private slots:
@@ -43,5 +42,5 @@ public:
 
   void loadBookings();
   
-  Booking selectedBooking;
+  // Booking selectedBooking;
 };

@@ -14,14 +14,11 @@ class BookingEditor : public QDialog
 private:
   Ui::BookingEditor* ui;
 
-  QVector<Booking> bookingsOnSelectedDate;
-  Booking booking;
+  Booking& booking;
   bool isEditing;
 
 private:
-  void updateExistingBookingsLabel(QDate date);
-  void updateConflictingBookings(const QDate& date);
-  bool bookingsAreConflicting(const Booking& booking0, const Booking& booking1);
+  void updateExistingBookingsLabel(const QDate& date);
  
 private slots:
   void on_calendarWidget_clicked(QDate date);

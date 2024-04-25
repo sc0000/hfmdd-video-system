@@ -407,6 +407,8 @@ void PTZSettings::getAdditionalProperties()
   PathManager::qualityPreset = obs_data_get_string(loaddata, "quality_preset");
   PathManager::recFormat = obs_data_get_string(loaddata, "rec_format");
 
+  // ! ABOVE: FUNCTION IN SETTINGSMANAGER, BELOW: STAYS HERE
+
   ui->baseDirectoryLineEdit->setText(PathManager::baseDirectory);
   ui->filenameFormattingLineEdit->setText(PathManager::filenameFormatting);
   ui->recFormatComboBox->setCurrentText(PathManager::recFormat);
@@ -421,14 +423,10 @@ void PTZSettings::getAdditionalProperties()
 
 void PTZSettings::updateAdditionalProperties()
 {
-  char* file = obs_module_config_path("config2.json");
-
-	if (!file) return;
-
 	OBSData savedata = obs_data_create();
 	obs_data_release(savedata);
 
-  PathManager::baseDirectory = ui->baseDirectoryLineEdit->text(); // check for trailing slash
+  PathManager::baseDirectory = ui->baseDirectoryLineEdit->text();
   PathManager::baseDirectory.replace("\\", "/");
 
   if (PathManager::baseDirectory.last(1) != "/")
@@ -439,6 +437,12 @@ void PTZSettings::updateAdditionalProperties()
   PathManager::recFormat = ui->recFormatComboBox->currentText();
 
   PathManager::resetFilterSettings();
+
+  // ! ABOVE: STAYS HERE BELOW: TO SETTINGSMANAGER
+
+  char* file = obs_module_config_path("config2.json");
+
+	if (!file) return;
 
   obs_data_set_string(savedata, "base_directory", PathManager::baseDirectory.toUtf8().constData());
   obs_data_set_string(savedata, "filename_formatting", PathManager::filenameFormatting.toUtf8().constData());

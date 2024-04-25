@@ -3,6 +3,7 @@
 
 #include <QScreen>
 
+#include "backend.hpp"
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
@@ -69,23 +70,23 @@ bool LoginDialog::verifyMailAddress()
 
 void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 {
-  Globals::currentEmail = text;
+  Backend::currentEmail = text;
   mailAddressIsValid = false;
 
   const QString mailSuffices[] = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" }; // TODO: Remove gmx
 
   for (const QString& suffix : mailSuffices)
   {
-    if (Globals::currentEmail.endsWith(suffix))
+    if (Backend::currentEmail.endsWith(suffix))
     {
       mailAddressIsValid = true;
-      PathManager::innerDirectory = Globals::currentEmail.chopped(suffix.length());
+      PathManager::innerDirectory = Backend::currentEmail.chopped(suffix.length());
       ui->reminderLabel->setText(" ");
       break;
     }
   }
 
-  if (Globals::currentEmail == Globals::adminEmail) {
+  if (Backend::currentEmail == Backend::adminEmail) {
     ui->passwordLineEdit->setDisabled(false);
     // PasswordDialog::instance(mailAddressIsValid, this);
   }

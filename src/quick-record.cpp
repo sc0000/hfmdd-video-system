@@ -1,6 +1,7 @@
 #include <QLabel>
 #include <QScreen>
 
+#include "backend.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "message-dialog.hpp"
@@ -35,7 +36,7 @@ QuickRecord::QuickRecord(QWidget* parent)
   booking.date = QDate::currentDate();
   booking.startTime = QTime::currentTime();
   booking.stopTime = booking.startTime.addSecs(60 * 60);
-  booking.email = Globals::currentEmail;
+  booking.email = Backend::currentEmail;
   booking.index = JsonParser::availableIndex();
   booking.event = "Quick Record";
 
@@ -64,11 +65,11 @@ void QuickRecord::loadBookings()
 {   
   QVector<Booking> tmp;
 
-  if (Globals::currentEmail == Globals::adminEmail)
+  if (Backend::currentEmail == Backend::adminEmail)
     JsonParser::getAllBookings(tmp);
 
   else   
-    JsonParser::getBookingsForEmail(Globals::currentEmail, tmp);
+    JsonParser::getBookingsForEmail(Backend::currentEmail, tmp);
 
   bookings.clear();  
 

@@ -22,6 +22,7 @@
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"
 #include "ui_ptz-controls.h"
+#include "backend.hpp"
 #include "settings.hpp"
 #include "ptz.h"
 #include "login.hpp"
@@ -33,7 +34,6 @@
 #include "json-parser.hpp"
 #include "globals.hpp"
 #include "path-manager.hpp"
-#include "file-sender.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -173,33 +173,7 @@ void timeOut()
 
 void PTZControls::startRecording()
 {
-  Booking* selectedBooking = nullptr;
-
-  switch (Globals::mode) {
-    case EMode::BookMode: {
-      BookingManager* bookingManager = BookingManager::getInstance();
-      if (!bookingManager) return;
-      selectedBooking = &bookingManager->selectedBooking;
-      if (!selectedBooking) return;
-    }
-
-    break;
-
-    case EMode::QuickMode: {
-      QuickRecord* quickRecord = QuickRecord::getInstance();
-      if (!quickRecord) return;
-      selectedBooking = &quickRecord->booking;
-      if (!selectedBooking) return;
-    }
-
-    break;
-
-    case EMode::Default: {
-      OkDialog::instance("ERROR: No mode selected", this);
-    }
-  }
-
-  if (selectedBooking->date != QDate::currentDate()) {
+  if (booking.date != QDate::currentDate()) {
       OkDialog::instance(
         "The selected booking does not have today's date.", 
         this
@@ -210,8 +184,8 @@ void PTZControls::startRecording()
 
     QTime currentTime = QTime::currentTime();
 
-    if (currentTime < selectedBooking->startTime.addSecs(-15 * 60)  ||
-        currentTime > selectedBooking->startTime.addSecs(30 * 60)) {
+    if (currentTime < booking.startTime.addSecs(-15 * 60)  ||
+        currentTime > booking.startTime.addSecs(30 * 60)) {
       OkDialog::instance(
         "You can start a booked recording 15 minutes\n"
         "before the specified start time at the earliest,\n"
@@ -225,7 +199,7 @@ void PTZControls::startRecording()
     obs_frontend_recording_start();
 
     // TODO: Set proper threshold, 15 minutes after specified stop time!
-    QDateTime threshold(selectedBooking->date, selectedBooking->stopTime);
+    QDateTime threshold(booking.date, booking.stopTime);
     m_timeObserver = nullptr;
     m_timeObserver = new TimeObserver(threshold, &timeOut, this);
 
@@ -246,39 +220,14 @@ void PTZControls::stopRecording()
 
     ui->recordButton->setText("Start Recording");
 
-  Booking* selectedBooking = nullptr;
-
-  switch (Globals::mode) {
-    case EMode::BookMode: {
-      BookingManager* bookingManager = BookingManager::getInstance();
-      if (!bookingManager) return;
-      selectedBooking = &bookingManager->selectedBooking;
-      if (!selectedBooking) return;
-    }
-
-    break;
-
-    case EMode::QuickMode: {
-      QuickRecord* quickRecord = QuickRecord::getInstance();
-      if (!quickRecord) return;
-      selectedBooking = &quickRecord->booking;
-      if (!selectedBooking) return;
-    }
-
-    break;
-
-    case EMode::Default: {
-      OkDialog::instance("ERROR: No mode selected", this);
-    }
-  }
-
-  const QString sendFilesMsg = FileSender::sendFiles(*selectedBooking);
+  const QString sendFilesMsg = Backend::sendFiles(booking);
   OkDialog::instance(sendFilesMsg, this);
 }
 
 PTZControls::PTZControls(QWidget *parent)
 	: QDockWidget(parent), 
-    ui(new Ui::PTZControls)
+    ui(new Ui::PTZControls),
+    booking(Backend::currentBooking)
 {
 	instance = this;
 	ui->setupUi(this);
@@ -587,7 +536,7 @@ void PTZControls::prepare()
   selectCamera();
   setFloating(false);
 
-  switch (Globals::mode) {
+  switch (Backend::mode) {
     case EMode::BookMode:
       ui->toBookingManagerButton->setText("To Booking Manager");
       break;
@@ -794,7 +743,7 @@ void PTZControls::LoadConfig()
 
 void PTZControls::loadUserPresets()
 {
-  if (Globals::currentEmail == Globals::adminEmail) {
+  if (Backend::currentEmail == Backend::adminEmail) {
     ui->presetListView->setModel(presetModel());
     return;
   }
@@ -1064,7 +1013,7 @@ void PTZControls::on_overviewButton_clicked()
 
 void PTZControls::on_savePresetButton_clicked()
 {
-  PresetDialog::instance(&BookingManager::getInstance()->selectedBooking, this);
+  PresetDialog::instance(&Backend::currentBooking, this);
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -1097,9 +1046,9 @@ void PTZControls::on_deletePresetButton_clicked()
   int id = presetIndexToId(model, index);
 
   QVector<int> oliversPresets;
-  JsonParser::getPresetsForEmail(Globals::adminEmail, oliversPresets);
+  JsonParser::getPresetsForEmail(Backend::adminEmail, oliversPresets);
 
-  if (Globals::currentEmail != Globals::adminEmail && oliversPresets.contains(id)) {
+  if (Backend::currentEmail != Backend::adminEmail && oliversPresets.contains(id)) {
     OkDialog::instance("You don't have permission to delete this preset", this);
     return;
   }
@@ -1113,13 +1062,13 @@ void PTZControls::on_deletePresetButton_clicked()
   if (!confirmed) return;
 
   JsonParser::removePreset(
-    Globals::currentEmail,
+    Backend::currentEmail,
     id
   );
 
 	model->removePresetWithId(id);
 
-  if (Globals::currentEmail == Globals::adminEmail) return;
+  if (Backend::currentEmail == Backend::adminEmail) return;
 
   PTZPresetListModel* userModel = userPresetModel();
   userModel->removePresetWithId(id);
@@ -1146,7 +1095,7 @@ void PTZControls::on_recordButton_clicked()
 
 void PTZControls::on_toBookingManagerButton_clicked()
 {
-  switch (Globals::mode) {
+  switch (Backend::mode) {
     case EMode::BookMode: {
       BookingManager* bookingManager = BookingManager::getInstance();
       if (!bookingManager) return;
@@ -1384,7 +1333,7 @@ void PTZControls::savePreset()
     userPresetModel()->setData(index, newPresetName, Qt::EditRole);
 
     JsonParser::addPreset(
-      Globals::currentEmail, 
+      Backend::currentEmail, 
       id
     );
 	}

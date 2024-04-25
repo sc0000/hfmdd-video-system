@@ -3,6 +3,7 @@
 #include <obs.hpp>
 #include <util/config-file.h>
 #include "source-record.h"
+#include "json-parser.hpp"
 #include "message-dialog.hpp"
 #include "path-manager.hpp"
 
@@ -165,6 +166,9 @@ void PathManager::load()
   PathManager::filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
   PathManager::recFormat = obs_data_get_string(loaddata, "rec_format");
   PathManager::qualityPreset = obs_data_get_string(loaddata, "quality_preset");
+
+  // JsonParser::bookingsPath = baseDirectory + "bookings.json";
+  // JsonParser::presetsPath = baseDirectory + "presets.json";
 
   setTempPath();
 }

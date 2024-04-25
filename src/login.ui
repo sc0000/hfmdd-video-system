@@ -62,31 +62,6 @@
       </spacer>
      </item>
      <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="mailAddressLineEdit">
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="placeholderText">
-        <string>Enter Mail Address</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="reminderLabel">
        <property name="font">
         <font>
@@ -103,29 +78,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="manageBookingsButton">
+      <widget class="QPushButton" name="startButton">
        <property name="font">
         <font>
          <pointsize>8</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Confirm</string>
+        <string>Restart System</string>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </widget>
