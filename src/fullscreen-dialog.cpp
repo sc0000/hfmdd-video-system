@@ -22,7 +22,7 @@ void FullScreenDialog::loadAnims()
   fadeInAnim->setStartValue(0.f);
   fadeInAnim->setEndValue(1.f);
 
-  fadeOutAnim->setDuration(30);
+  fadeOutAnim->setDuration(200);
   fadeOutAnim->setStartValue(1.f);
   fadeOutAnim->setEndValue(0.f);
 }
@@ -48,24 +48,12 @@ void FullScreenDialog::center(QWidget* masterWidget)
 
 void FullScreenDialog::fade(FullScreenDialog* next)
 {
-  // next->reload();
-  
-  // fadeOutAnim->setTargetObject(this);
-  // fadeInAnim->setTargetObject(next);
-
-  // connect(fadeInAnim, &QPropertyAnimation::finished, next, [this, next](){
-  //   // next->reload();
-  //   // this->hide();
-  //   FullScreenDialog::fadeOutAnim->start();
-  // });
-
-  // connect(fadeOutAnim, &QPropertyAnimation::finished, this, [this, next](){
-  //   next->reload();
-  //   this->hide();
-  // });
-
-  // fadeInAnim->start();
-  // fadeOutAnim->start();
-
   next->reload();
+  raise();
+  
+  fadeOutAnim->setTargetObject(this);
+  fadeInAnim->setTargetObject(next);
+
+  fadeInAnim->start();
+  fadeOutAnim->start();
 }
