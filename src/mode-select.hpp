@@ -28,7 +28,6 @@ public:
   ~ModeSelect();
 
   static inline ModeSelect* getInstance() { return instance; }
-  // inline QLineEdit* getMailAddressLineEdit() { return ui->mailAddressLineEdit; }
   virtual void reload() override;
 };
 

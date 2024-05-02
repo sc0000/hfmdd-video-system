@@ -40,10 +40,7 @@ ModeSelect::~ModeSelect()
 void ModeSelect::reload()
 {
   raise();
-  // Widgets::fullScreenDialogStack->setCurrentWidget(Widgets::modeSelect);
-  // Widgets::loginDialog->hide();
   center(ui->masterWidget);
-  // showFullScreen();
 }
 
 void ModeSelect::on_quickModeButton_pressed()

@@ -1,6 +1,8 @@
 #include <QLabel>
-#include "json-parser.hpp"
+
 #include "backend.hpp"
+#include "widgets.hpp"
+#include "json-parser.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
@@ -138,12 +140,12 @@ void BookingEditor::on_saveButton_pressed()
     return;
 
   if (booking.event == "") {
-    OkDialog::instance("Please specify the type of event!");
+    Widgets::okDialog->display("Please specify the type of event!");
     return;
   }
 
   if (ui->startTimeEdit->time() == ui->stopTimeEdit->time()) {
-    OkDialog::instance("Start and stop time are identical. Please select a time frame!");
+    Widgets::okDialog->display("Start and stop time are identical. Please select a time frame!");
     return;
   }
   

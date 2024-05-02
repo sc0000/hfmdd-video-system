@@ -31,7 +31,7 @@ with this program. If not, see <https://www.gnu.org/licenses/>
 #include "settings-manager.hpp"
 
 OBS_DECLARE_MODULE()
-OBS_MODULE_AUTHOR("Sebastian Cyliax <sebastiancyliax@gmx.net");
+OBS_MODULE_AUTHOR("Sebastian Cyliax <sebastiancyliax@gmx.net>");
 OBS_MODULE_USE_DEFAULT_LOCALE(PLUGIN_NAME, "en-US")
 
 bool obs_module_load(void)
@@ -42,10 +42,7 @@ bool obs_module_load(void)
   
   ptz_load_devices();
 	ptz_load_action_source();
-	// ptz_load_controls();
 	ptz_load_settings();
-
-  // login_load();
 
   Widgets::load();
   FullScreenDialog::loadAnims();

@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include "booking.h"
 #include "backend.hpp"
+#include "widgets.hpp"
 #include "ptz-controls.hpp"
 #include "ui_ok-dialog.h"
 #include "ui_ok-cancel-dialog.h"
@@ -31,11 +32,6 @@ void OkDialog::display(const QString& message)
   show();
 }
 
-void OkDialog::instance(const QString& message, QWidget* parent)
-{
-  // std::unique_ptr<OkDialog> messageBox = std::make_unique<OkDialog>(message, parent);
-}
-
 void OkDialog::on_okButton_pressed()
 {
   hide();
@@ -58,12 +54,6 @@ void OkCancelDialog::display(const QString& message, bool& out)
   decision = out;
 }
 
-void OkCancelDialog::instance(const QString& message, bool& out, QWidget* parent)
-{
-  // std::unique_ptr<OkCancelDialog> messageBox = std::make_unique<OkCancelDialog>(message, out, parent);
-  // messageBox->exec();
-}
-
 void OkCancelDialog::on_okButton_pressed()
 {
   decision = true;
@@ -78,25 +68,18 @@ void OkCancelDialog::on_cancelButton_pressed()
 
 PasswordDialog::PasswordDialog(QWidget* parent)
   : QDialog(parent),
-    ui(new Ui::PasswordDialog),
-    valid(false)
+    ui(new Ui::PasswordDialog)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
-  setModal(true);
+  // setModal(true);
   hide();
 }
 
-void PasswordDialog::display(bool& out)
+void PasswordDialog::display()
 {
-  valid = out;
-  show();
-}
-
-void PasswordDialog::instance(bool& out, QWidget* parent)
-{
-  // std::unique_ptr<PasswordDialog> messageBox = std::make_unique<PasswordDialog>(out, parent);
-  // messageBox->exec();
+  valid = false;
+  exec();
 }
 
 void PasswordDialog::on_okButton_pressed()
@@ -107,7 +90,7 @@ void PasswordDialog::on_okButton_pressed()
   }
 
   else {
-    OkDialog::instance("Invalid password.", this);
+    Widgets::okDialog->display("Invalid password.");
     valid = false;
   }
 }
@@ -144,13 +127,6 @@ void PresetDialog::display(Booking* booking)
 
   show();
 }
-
-void PresetDialog::instance(Booking* booking, QWidget* parent)
-{
-  // std::unique_ptr<PresetDialog> messageBox = std::make_unique<PresetDialog>(booking, parent);
-  // messageBox->exec();
-}
-
 
 void PresetDialog::on_okButton_pressed()
 {

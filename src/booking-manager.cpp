@@ -22,7 +22,11 @@ BookingManager::BookingManager(QWidget* parent)
     ui(new Ui::BookingManager),
     bookings(Backend::loadedBookings)
 {
-  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+  setWindowFlags(
+    windowFlags() | 
+    Qt::MSWindowsFixedSizeDialogHint | 
+    Qt::FramelessWindowHint
+  );
   
   setWindowTitle("Booking Manager");
   instance = this;
@@ -89,12 +93,12 @@ void BookingManager::on_newBookingButton_pressed()
 void BookingManager::on_editBookingButton_pressed()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
-    OkDialog::instance("Please select the booking you want to edit.", this);
+    Widgets::okDialog->display("Please select the booking you want to edit.");
     return;
   }
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
-    OkDialog::instance("Please select only one booking to edit.", this);
+    Widgets::okDialog->display("Please select only one booking to edit.");
     return;
   }
 
@@ -104,16 +108,16 @@ void BookingManager::on_editBookingButton_pressed()
 void BookingManager::on_deleteBookingButton_pressed()
 {
   if (ui->bookingsList->selectedItems().isEmpty()) {
-    OkDialog::instance("Please select the booking you want to delete.", this);
+    Widgets::okDialog->display("Please select the booking you want to delete.");
     return;
   }
 
   // TODO: Select more than one booking for deletion?
 
   bool confirmed;
-  OkCancelDialog::instance(
+  Widgets::okCancelDialog->display(
     "Do you really want to delete the selected booking? This cannot be undone.", 
-    confirmed, this
+    confirmed
   );
 
   if (!confirmed) return;
@@ -129,12 +133,12 @@ void BookingManager::on_deleteBookingButton_pressed()
 void BookingManager::on_toPTZControlsButton_pressed()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
-    OkDialog::instance("Please select a booking to continue.", this);
+    Widgets::okDialog->display("Please select a booking to continue.");
     return;
   }
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
-    OkDialog::instance("Please select only one booking to continue.", this);
+    Widgets::okDialog->display("Please select only one booking to continue.");
     return;
   }
 

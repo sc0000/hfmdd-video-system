@@ -3,6 +3,7 @@
 #include <obs.hpp>
 #include <util/config-file.h>
 #include "source-record.h"
+#include "widgets.hpp"
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
 #include "settings-manager.hpp"
@@ -71,7 +72,7 @@ void SettingsManager::updateFilterSettings(const char* path)
 void SettingsManager::resetFilterSettings()
 {
   if (baseDirectory == "" || outerDirectory == "" || innerDirectory == "") {
-    OkDialog::instance("ERROR: Unspecified directory");
+    Widgets::okDialog->display("ERROR: Unspecified directory");
     return;
   }
 

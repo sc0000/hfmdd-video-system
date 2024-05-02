@@ -15,7 +15,6 @@
 #include "ui_quick-record.h"
 #include "quick-record.hpp"
 
-
 QuickRecord* QuickRecord::instance = nullptr;
 
 QuickRecord::QuickRecord(QWidget* parent)
@@ -196,12 +195,12 @@ void QuickRecord::on_decreaseTimeBy20Button_pressed()
   QTime newStopTime = booking.stopTime.addSecs(60 * -20);
 
   if (newStopTime <= booking.startTime) {
-    OkDialog::instance("Invalid time", this);
+    Widgets::okDialog->display("Invalid time");
     return;
   }
 
   if (newStopTime > QTime(23, 0)) {
-    OkDialog::instance("Recordings can't extend beyond 23:00", this);
+    Widgets::okDialog->display("Recordings can't extend beyond 23:00");
     return;
   }
 
@@ -215,12 +214,12 @@ void QuickRecord::on_decreaseTimeBy05Button_pressed()
   QTime newStopTime = booking.stopTime.addSecs(60 * -5);
 
   if (newStopTime <= booking.startTime) {
-    OkDialog::instance("Invalid time", this);
+    Widgets::okDialog->display("Invalid time");
     return;
   }
 
   if (newStopTime > QTime(23, 0)) {
-    OkDialog::instance("Recordings can't extend beyond 23:00", this);
+    Widgets::okDialog->display("Recordings can't extend beyond 23:00");
     return;
   }
 
@@ -248,7 +247,7 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
   QTime newStopTime = booking.stopTime.addSecs(60 * 20);
 
   if (newStopTime > QTime(23, 0)) {
-    OkDialog::instance("Recordings can't extend beyond 23:00", this);
+    Widgets::okDialog->display("Recordings can't extend beyond 23:00");
     return;
   }
 
@@ -266,7 +265,6 @@ void QuickRecord::on_toPTZControlsButton_pressed()
   SettingsManager::resetFilterSettings();
 
   Widgets::ptzControls->reload();
-  // Widgets::login->hide();
   Widgets::showFullScreenDialogs(false);
 }
 

@@ -22,7 +22,6 @@ private:
 
 public:
   explicit OkDialog(QWidget* parent = nullptr);
-  static void instance(const QString& message, QWidget* parent = nullptr);
   void display(const QString& message);
 
 private slots:
@@ -45,7 +44,6 @@ private:
 
 public:
   explicit OkCancelDialog(QWidget* parent = nullptr);
-  static void instance(const QString& message, bool& out, QWidget* parent = nullptr);
   void display(const QString& message, bool& out);
 
 private slots:
@@ -69,8 +67,8 @@ private:
 
 public:
   explicit PasswordDialog(QWidget* parent = nullptr);
-  static void instance(bool& out, QWidget* parent = nullptr);
-  void display(bool& out);
+  void display();
+  inline bool isValid() { return valid; }
 
 private slots:
   void on_okButton_pressed();
@@ -92,7 +90,6 @@ private:
 
 public:
   explicit PresetDialog(QWidget* parent = nullptr);
-  static void instance(Booking* booking = nullptr, QWidget* parent = nullptr);
   void display(Booking* booking = nullptr);
 
 private slots:

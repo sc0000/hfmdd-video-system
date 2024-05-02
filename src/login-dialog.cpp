@@ -43,9 +43,7 @@ LoginDialog::~LoginDialog()
 void LoginDialog::reload()
 {
   raise();
-  // Widgets::fullScreenDialogStack->setCurrentWidget(Widgets::loginDialog);
   center(ui->masterWidget);
-  // showFullScreen();
   
   ui->mailAddressLineEdit->clear();
   ui->passwordLineEdit->clear();

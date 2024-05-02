@@ -174,9 +174,8 @@ void timeOut()
 void PTZControls::startRecording()
 {
   if (booking.date != QDate::currentDate()) {
-      OkDialog::instance(
-        "The selected booking does not have today's date.", 
-        this
+      Widgets::okDialog->display(
+        "The selected booking does not have today's date."
       );
 
       return;
@@ -186,11 +185,10 @@ void PTZControls::startRecording()
 
     if (currentTime < booking.startTime.addSecs(-15 * 60)  ||
         currentTime > booking.startTime.addSecs(30 * 60)) {
-      OkDialog::instance(
+      Widgets::okDialog->display(
         "You can start a booked recording 15 minutes\n"
         "before the specified start time at the earliest,\n"
-        "and 30 minutes after that time at the latest.",
-        this
+        "and 30 minutes after that time at the latest."
       );
 
       return;
@@ -221,7 +219,7 @@ void PTZControls::stopRecording()
     ui->recordButton->setText("Start Recording");
 
   const QString sendFilesMsg = Backend::sendFiles(booking);
-  OkDialog::instance(sendFilesMsg, this);
+  Widgets::okDialog->display(sendFilesMsg);
 }
 
 PTZControls::PTZControls(QWidget *parent)
@@ -423,7 +421,7 @@ PTZControls::PTZControls(QWidget *parent)
   setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   obs_frontend_add_dock(this);
-  setFloating(true); // Do after add_dock() to keep hidden at startup
+  setFloating(true);
 }
 
 PTZControls::~PTZControls()
@@ -786,8 +784,6 @@ void PTZControls::setDisableLiveMoves(bool disable)
 
 PTZDevice *PTZControls::currCamera()
 {
-	// return ptzDeviceList.getDevice(ui->cameraList->currentIndex());
-
   return ptzDeviceList.getDeviceByName(currCameraName);
 }
 
@@ -1017,7 +1013,7 @@ void PTZControls::on_overviewButton_clicked()
 
 void PTZControls::on_savePresetButton_clicked()
 {
-  PresetDialog::instance(&Backend::currentBooking, this);
+  Widgets::presetDialog->display(&Backend::currentBooking);
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -1025,7 +1021,7 @@ void PTZControls::on_loadPresetButton_clicked()
   QModelIndex index = ui->presetListView->currentIndex();
 
   if (!index.isValid()) {
-    OkDialog::instance("Please select the booking you want to load.", this);
+    Widgets::okDialog->display("Please select the booking you want to load.");
     return;
   }
   
@@ -1042,7 +1038,7 @@ void PTZControls::on_deletePresetButton_clicked()
   QModelIndex index = ui->presetListView->currentIndex();
 
   if (!index.isValid()) {
-    OkDialog::instance("Please select the booking you want to delete.", this);
+    Widgets::okDialog->display("Please select the booking you want to delete.");
     return;
   }
 
@@ -1053,14 +1049,14 @@ void PTZControls::on_deletePresetButton_clicked()
   JsonParser::getPresetsForEmail(Backend::adminEmail, oliversPresets);
 
   if (Backend::currentEmail != Backend::adminEmail && oliversPresets.contains(id)) {
-    OkDialog::instance("You don't have permission to delete this preset", this);
+    Widgets::okDialog->display("You don't have permission to delete this preset");
     return;
   }
 
   bool confirmed;
-  OkCancelDialog::instance(
+  Widgets::okCancelDialog->display(
     "Do you really want to delete the selected preset? This cannot be undone.", 
-    confirmed, this
+    confirmed
   );
   
   if (!confirmed) return;
@@ -1115,7 +1111,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
     break;
     
     case EMode::Default:
-      OkDialog::instance("ERROR: No mode selected", this);
+      Widgets::okDialog->display("ERROR: No mode selected");
       return;
   }
 }
@@ -1123,6 +1119,8 @@ void PTZControls::on_toBookingManagerButton_clicked()
 void PTZControls::on_logoutButton_clicked()
 {
   SettingsManager::deleteTempFiles();
+
+  Widgets::showFullScreenDialogs(true);
   Widgets::loginDialog->reload();
   hide();
 }
@@ -1321,7 +1319,7 @@ void PTZControls::savePreset()
   int id = presetIndexToId(model, index);
 
   // QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(model, index));
-  // OkDialog::instance(deb, this);
+  // Widgets::okDialog->display(deb, this);
 
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
@@ -1461,11 +1459,13 @@ void PTZControls::on_cameraList_customContextMenuRequested(const QPoint &pos)
 
 void PTZControls::on_actionPTZProperties_triggered()
 {
-  bool passwordIsValid;
+  // Widgets::passwordDialog->display();
+  // if (!Widgets::passwordDialog->isValid()) return;
 
-  PasswordDialog::instance(passwordIsValid, this);
-
-  if (!passwordIsValid) return;
+  if (Backend::currentEmail != Backend::adminEmail) {
+    Widgets::okDialog->display("You don't have permission to access the settings menu.");
+    return;
+  }
 
 	ptz_settings_show(
 		ptzDeviceList.getDeviceId(ui->cameraList->currentIndex()));
