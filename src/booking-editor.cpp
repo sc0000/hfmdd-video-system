@@ -48,6 +48,9 @@ void BookingEditor::reload(Booking* bookingToEdit)
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
 
   updateExistingBookingsLabel(booking.date);
+
+  exec();
+  raise();
 }
 
 void BookingEditor::instance(QWidget* parent)
