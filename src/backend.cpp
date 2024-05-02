@@ -6,7 +6,7 @@
 #include <QJsonDocument>
 
 #include "json-parser.hpp"
-#include "path-manager.hpp" // TODO: Rename!
+#include "settings-manager.hpp" // TODO: Rename!
 #include "backend.hpp"
 
 QString Backend::currentEmail = "";
@@ -95,6 +95,24 @@ void Backend::sortBookings()
   }
 }
 
+void Backend::reevaluateConflicts()
+{
+  // load all bookings (locally)
+  QVector<Booking> allBookings;
+  JsonParser::getAllBookings(allBookings);
+
+  for (qsizetype i = 0; i < allBookings.size(); ++i) {
+    bool isConflicting = false;
+
+    for (qsizetype j = 0; j < allBookings.size(); ++j) {
+      if (bookingsAreConflicting(allBookings[i], allBookings[j])) 
+        isConflicting = true; 
+    }
+
+    allBookings[i].isConflicting = isConflicting;
+  }
+}
+
 QString Backend::sendFiles(const Booking& booking)
 {
   const QString dllFilePath = QCoreApplication::applicationFilePath();
@@ -113,14 +131,14 @@ QString Backend::sendFiles(const Booking& booking)
   if (!nodeProcess->waitForStarted()) 
     return "Process started with error: " + nodeProcess->errorString();
 
-  const QString& baseDir = PathManager::baseDirectory;
+  const QString& baseDir = SettingsManager::baseDirectory;
 
   const QString apiBasePath = 
     QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
 
   QJsonObject jsonObj;
   jsonObj["basePath"] = apiBasePath;
-  jsonObj["path"] = PathManager::outerDirectory + PathManager::innerDirectory;
+  jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
   jsonObj["receiver"] = booking.email;
   jsonObj["subject"] = "HfMDD Concert Hall Recordings " + booking.date.toString("ddd MMM dd yyyy");
 

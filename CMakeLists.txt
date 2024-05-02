@@ -43,9 +43,10 @@ endif()
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE 
   src/plugin-main.cpp
   src/backend.cpp
-  src/simple-recording.cpp
-  src/globals.cpp
+  # src/simple-recording.cpp
+  # src/globals.cpp
   src/json-parser.cpp
+  src/fullscreen-dialog.cpp
   src/message-dialog.cpp
   src/booking-editor.cpp
   src/booking-manager.cpp
@@ -63,7 +64,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/quick-record.ui
   src/ptz-controls.ui
   src/settings.ui
-  src/path-manager.cpp
+  src/settings-manager.cpp
   src/ptz-controls.qrc
   # src/ptz.c
   src/ptz-controls.cpp
@@ -77,6 +78,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/ptz-action-source.c
   src/circularlistview.cpp
   src/touch-control.cpp
+  src/widgets.cpp
   src/imported/qt-wrappers.cpp
   src/imported/obs-app.cpp
   src/imported/properties-view.cpp
@@ -86,16 +88,17 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/imported/spinbox-ignorewheel.cpp
   # src/ptz.h
   src/backend.hpp
-  src/globals.hpp
+  # src/globals.hpp
   src/login.hpp
   src/login-dialog.hpp
   src/mode-select.hpp
   src/time-observer.hpp
+  src/fullscreen-dialog.hpp
   src/message-dialog.hpp
   src/booking-editor.hpp
   src/booking-manager.hpp
   src/quick-record.hpp
-  src/path-manager.hpp
+  src/settings-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp
   src/ptz-device.hpp
@@ -107,6 +110,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/protocol-helpers.hpp
   src/circularlistview.hpp
   src/touch-control.hpp
+  src/widgets.hpp
   src/imported/qt-wrappers.hpp
   src/imported/obs-app.hpp
   src/imported/properties-view.hpp

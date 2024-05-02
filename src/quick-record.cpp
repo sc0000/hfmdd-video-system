@@ -2,15 +2,15 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "widgets.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "message-dialog.hpp"
 #include "booking-editor.hpp"
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
-#include "path-manager.hpp"
+#include "settings-manager.hpp"
 #include "booking-manager.hpp"
-#include "globals.hpp"
 #include "mode-select.hpp"
 #include "ui_quick-record.h"
 #include "quick-record.hpp"
@@ -19,7 +19,7 @@
 QuickRecord* QuickRecord::instance = nullptr;
 
 QuickRecord::QuickRecord(QWidget* parent)
-  : QDialog(parent), 
+  : FullScreenDialog(parent), 
     ui(new Ui::QuickRecord)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
@@ -27,12 +27,29 @@ QuickRecord::QuickRecord(QWidget* parent)
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);
-  repositionMasterWidget();
+  center(ui->masterWidget);
 
-  showFullScreen();
+  setModal(false);
+  hide();
   
   loadBookings();
+}
 
+QuickRecord::~QuickRecord()
+{
+  delete ui;
+}
+
+void QuickRecord::reload()
+{
+  raise();
+  // Widgets::fullScreenDialogStack->setCurrentWidget(Widgets::quickRecord);
+  center(ui->masterWidget);
+  // show();
+
+  Backend::reevaluateConflicts();
+
+  loadBookings();
   booking.date = QDate::currentDate();
   booking.startTime = QTime::currentTime();
   booking.stopTime = booking.startTime.addSecs(60 * 60);
@@ -45,53 +62,15 @@ QuickRecord::QuickRecord(QWidget* parent)
   updateExistingBookingsLabel(booking.date);
 }
 
-QuickRecord::~QuickRecord()
-{
-  delete ui;
-}
-
-void QuickRecord::reload()
-{
-  repositionMasterWidget();
-  show();
-}
-
-void QuickRecord::repositionMasterWidget()
-{
-  Globals::centerFullScreenWidget(ui->masterWidget);
-}
-
 void QuickRecord::loadBookings()
 {   
-  QVector<Booking> tmp;
-
   if (Backend::currentEmail == Backend::adminEmail)
-    JsonParser::getAllBookings(tmp);
+    JsonParser::getAllBookings(bookings);
 
   else   
-    JsonParser::getBookingsForEmail(Backend::currentEmail, tmp);
-
-  bookings.clear();  
-
-  for (const Booking& b : tmp) {
-   bookings.append(b);
-  }
+    JsonParser::getBookingsForEmail(Backend::currentEmail, bookings);
 
   sortBookings();
-
-  // if (!ui->bookingsList) return;
-
-  // ui->bookingsList->clear();
-
-  // for (qsizetype i = 0; i < bookings.size(); ++i) {
-  //   QString entryText = makeEntry(bookings[i]);
-  //   QListWidgetItem* item = new QListWidgetItem(entryText);
-    
-  //   if (bookings[i].isConflicting)
-  //     item->setBackground(Qt::red);
-
-  //   ui->bookingsList->addItem(item);
-  // }
 }
 
 void QuickRecord::sortBookings()
@@ -156,13 +135,15 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
     bool isConflicting = false;
     
-    if (bookingsAreConflicting(booking, b)) 
+    if (Backend::bookingsAreConflicting(booking, b)) 
       isConflicting = true; 
           
     if (isConflicting)
       str += "<span style=\"background-color:red;\">";
 
-    str += b.startTime.toString("HH:mm") + "-" + b.stopTime.toString("HH:mm") + ": " + b.event + " (" + b.email + ")";
+    str += b.startTime.toString("HH:mm") + "-" + 
+      b.stopTime.toString("HH:mm") + ": " + 
+      b.event + " (" + b.email + ")";
 
     if (isConflicting)
       str += " CONFLICTING!</span>";
@@ -179,17 +160,6 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 void QuickRecord::updateConflictingBookings(const QDate& date)
 {
 
-}
-
-bool QuickRecord::bookingsAreConflicting(const Booking& booking0, const Booking& booking1)
-{
-  if (booking0.index == booking1.index) return false;
-
-  if ((booking0.startTime >= booking1.startTime && booking0.startTime < booking1.stopTime) ||
-      (booking0.stopTime > booking1.startTime && booking0.stopTime <= booking1.stopTime))
-    return true;
-
-  return false; 
 }
 
 void QuickRecord::roundTime(QTime& time)
@@ -230,6 +200,11 @@ void QuickRecord::on_decreaseTimeBy20Button_pressed()
     return;
   }
 
+  if (newStopTime > QTime(23, 0)) {
+    OkDialog::instance("Recordings can't extend beyond 23:00", this);
+    return;
+  }
+
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
@@ -244,6 +219,11 @@ void QuickRecord::on_decreaseTimeBy05Button_pressed()
     return;
   }
 
+  if (newStopTime > QTime(23, 0)) {
+    OkDialog::instance("Recordings can't extend beyond 23:00", this);
+    return;
+  }
+
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
@@ -254,7 +234,7 @@ void QuickRecord::on_increaseTimeBy05Button_pressed()
   QTime newStopTime = booking.stopTime.addSecs(60 * 5);
 
   if (newStopTime > QTime(23, 0)) {
-    OkDialog::instance("Recording can't extend beyond 23:00", this);
+    Widgets::okDialog->display("Recording can't extend beyond 23:00");
     return;
   }
 
@@ -280,39 +260,22 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 
 void QuickRecord::on_toPTZControlsButton_pressed()
 {
-  PathManager::outerDirectory = booking.date.toString(Qt::ISODate) + "/";
+  SettingsManager::outerDirectory = booking.date.toString(Qt::ISODate) + "/";
   
   // TODO: Check: always reset or update, and setup option to reset manually?
-  PathManager::resetFilterSettings();
+  SettingsManager::resetFilterSettings();
 
-  hide();
-
-  Login::getInstance()->hide();
-  LoginDialog::getInstance()->hide();
-
-  PTZControls* ptzControls = PTZControls::getInstance();
-
-  if (!ptzControls) return;
-
-  ptzControls->prepare();
+  Widgets::ptzControls->reload();
+  // Widgets::login->hide();
+  Widgets::showFullScreenDialogs(false);
 }
 
 void QuickRecord::on_toModeSelectButton_pressed()
 {
-  ModeSelect* modeSelect = ModeSelect::getInstance();
-
-  if (!modeSelect) return;
-
-  modeSelect->reload();
-  hide();
+  fade(Widgets::modeSelect);
 }
 
 void QuickRecord::on_logoutButton_pressed()
 {
-  LoginDialog* loginDialog = LoginDialog::getInstance();
-  
-  if (!loginDialog) return;
-
-  loginDialog->reload();
-  hide();
+  fade(Widgets::loginDialog);
 }

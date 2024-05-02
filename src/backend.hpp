@@ -30,6 +30,7 @@ public:
   static void updateBookingsOnSelectedDate(const QDate& date);
   static void loadBookings();
   static void sortBookings();
+  static void reevaluateConflicts();
 
   static QString sendFiles(const Booking& booking);
 };

@@ -29,8 +29,10 @@ private slots:
   void on_cancelButton_pressed();
   
 public:
-  BookingEditor(Booking* bookingToEdit = nullptr, QWidget* parent = nullptr);
+  BookingEditor(QWidget* parent = nullptr);
   ~BookingEditor();
-  static void instance(Booking* bookingToEdit = nullptr, QWidget* parent = nullptr);
+  static void instance(QWidget* parent = nullptr);
+
+  void reload(Booking* bookingToEdit = nullptr);  
 
 };

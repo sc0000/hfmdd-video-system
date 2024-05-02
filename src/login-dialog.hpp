@@ -4,13 +4,15 @@
 #include <QDialog>
 #include <QLineEdit>
 
+#include "fullscreen-dialog.hpp"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class LoginDialog;
 }
 QT_END_NAMESPACE
 
-class LoginDialog : public QDialog
+class LoginDialog : public FullScreenDialog
 {
   Q_OBJECT
 private:
@@ -20,7 +22,6 @@ private:
 private:
   bool mailAddressIsValid;
 
-  void repositionMasterWidget();
   bool verifyMailAddress();
 
 private slots:
@@ -32,7 +33,6 @@ public:
   ~LoginDialog();
 
   static inline LoginDialog* getInstance() { return instance; }
-  // inline QLineEdit* getMailAddressLineEdit() { return ui->mailAddressLineEdit; }
-  void reload();
+  virtual void reload() override;
 };
 

@@ -27,7 +27,8 @@ with this program. If not, see <https://www.gnu.org/licenses/>
 #include "ptz.h"
 #include "login.hpp"
 #include "login-dialog.hpp"
-#include "path-manager.hpp"
+#include "widgets.hpp"
+#include "settings-manager.hpp"
 
 OBS_DECLARE_MODULE()
 OBS_MODULE_AUTHOR("Sebastian Cyliax <sebastiancyliax@gmx.net");
@@ -41,11 +42,13 @@ bool obs_module_load(void)
   
   ptz_load_devices();
 	ptz_load_action_source();
-	ptz_load_controls();
+	// ptz_load_controls();
 	ptz_load_settings();
 
-  login_load();
-  
+  // login_load();
+
+  Widgets::load();
+  FullScreenDialog::loadAnims();
 
   obs_register_source(get_source_record_filter_info());
   
@@ -58,7 +61,7 @@ bool obs_module_load(void)
     "AAAA/wAAAAD9AAAAAgAAAAEAAADQAAAD4/wCAAAABPsAAAAKAEwAbwBnAGkAbgEAAAAWAAAD4wAAAaYAB///+wAAABQAcwBjAGUAbgBlAHMARABvAGMAawAAAAAWAAAAjAAAAG8A////+wAAABYAcwBvAHUAcgBjAGUAcwBEAG8AYwBrAAAAABYAAADGAAAAbwD////7AAAAFgBQAFQAWgBDAG8AbgB0AHIAbwBsAHMAAAAAFgAAA+MAAAIXAAf//wAAAAMAAAeAAAAA0PwBAAAAA/wAAAAAAAACSgAAAAAA////+v////8CAAAAAvsAAAASAG0AaQB4AGUAcgBEAG8AYwBrAAAAAAD/////AAAAcQD////7AAAAHgB0AHIAYQBuAHMAaQB0AGkAbwBuAHMARABvAGMAawAAAAKiAAAAegAAAGsA////+wAAABgAYwBvAG4AdAByAG8AbABzAEQAbwBjAGsAAAAAAAAAB4AAAAE2AP////sAAAASAHMAdABhAHQAcwBEAG8AYwBrAgAAAcD///0iAAACuQAAAN4AAAasAAAD4wAAAAQAAAAEAAAACAAAAAj8AAAAAA==");
   config_set_string(globalConfig, "BasicWindow", "DocksLocked", "true");
 
-  PathManager::load();
+  SettingsManager::load();
 
 	return true;
 }

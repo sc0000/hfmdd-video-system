@@ -3,6 +3,8 @@
 #include <QWidget>
 #include <QDialog>
 #include <QListWidget>
+
+#include "fullscreen-dialog.hpp"
 #include "booking.h"
 
 QT_BEGIN_NAMESPACE
@@ -11,7 +13,7 @@ class QuickRecord;
 }
 QT_END_NAMESPACE
 
-class QuickRecord : public QDialog
+class QuickRecord : public FullScreenDialog
 {
   Q_OBJECT
 
@@ -23,13 +25,11 @@ private:
   QVector<Booking> bookingsOnSelectedDate;
 
 private:
-  void repositionMasterWidget();
   void sortBookings();
   QString makeEntry(const Booking& booking);
 
   void updateExistingBookingsLabel(QDate date);
   void updateConflictingBookings(const QDate& date);
-  bool bookingsAreConflicting(const Booking& booking0, const Booking& booking1);
 
   void roundTime(QTime& time);
   void updateStopTimeLabel();
@@ -49,7 +49,7 @@ public:
   ~QuickRecord();
   static inline QuickRecord* getInstance() { return instance; }
   
-  void reload();
+  virtual void reload() override;
 
   void loadBookings();
   

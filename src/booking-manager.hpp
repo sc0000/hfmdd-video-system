@@ -3,6 +3,8 @@
 #include <QWidget>
 #include <QDialog>
 #include <QListWidget>
+
+#include "fullscreen-dialog.hpp"
 #include "booking.h"
 
 QT_BEGIN_NAMESPACE
@@ -11,7 +13,7 @@ class BookingManager;
 }
 QT_END_NAMESPACE
 
-class BookingManager : public QDialog
+class BookingManager : public FullScreenDialog
 {
   Q_OBJECT
 
@@ -22,7 +24,6 @@ private:
   QVector<Booking>& bookings;
 
 private:
-  void repositionMasterWidget();
   QString makeEntry(const Booking& booking);
   
 private slots:
@@ -38,7 +39,7 @@ public:
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
   
-  void reload();
+  virtual void reload() override;
 
   void loadBookings();
   

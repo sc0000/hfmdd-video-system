@@ -201,7 +201,7 @@ public:
   virtual PTZPresetListModel* presetModel() { return &m_presetsModel; }
   PTZPresetListModel* userPresetModel() { return &m_userPresetsModel; } 
 
-  void prepare();
+  void reload();
 
   // TODO: Which of these actually need to be public?
 

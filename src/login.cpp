@@ -1,12 +1,16 @@
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 
+#include <QMainWindow>
+
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
+#include "mode-select.hpp"
+#include "quick-record.hpp"
 #include "booking-manager.hpp"
-#include "path-manager.hpp"
-#include "globals.hpp"
+#include "settings-manager.hpp"
+#include "widgets.hpp"
 #include "login-dialog.hpp"
 #include "ui_login.h"
 #include "login.hpp"
@@ -30,6 +34,9 @@ Login::Login(QWidget *parent)
   ui->setupUi(this);
 
   show();
+
+  obs_frontend_add_dock(this);
+  setFloating(true);
 }
 
 Login::~Login()
@@ -39,6 +46,8 @@ Login::~Login()
 
 void Login::on_startButton_pressed()
 {
-  LoginDialog* loginDialog = new LoginDialog(this);
-  loginDialog->exec();
+  Widgets::showFullScreenDialogs(true);
+
+  Widgets::loginDialog->reload();
+  hide();
 }

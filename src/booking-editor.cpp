@@ -1,13 +1,12 @@
 #include <QLabel>
 #include "json-parser.hpp"
-#include "globals.hpp"
 #include "backend.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
 #include "booking-editor.hpp"
 
-BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
+BookingEditor::BookingEditor(QWidget* parent)
   : QDialog(parent),
     ui(new Ui::BookingEditor),
     booking(Backend::currentBooking)
@@ -16,7 +15,15 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
   
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle("Booking Editor");
-  
+}
+
+BookingEditor::~BookingEditor()
+{
+  delete ui;
+}
+
+void BookingEditor::reload(Booking* bookingToEdit)
+{
   if (bookingToEdit) {
     isEditing = true;
     
@@ -31,21 +38,6 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
     booking.index = bookingToEdit->index;
   }
 
-  else {
-    isEditing = false;
-
-    QDate currentDate = QDate::currentDate();
-
-    ui->calendarWidget->setSelectedDate(currentDate);
-    updateExistingBookingsLabel(currentDate);
-    ui->startTimeEdit->setTime(ui->startTimeEdit->minimumTime());
-    ui->stopTimeEdit->setTime(ui->stopTimeEdit->minimumTime());
-    ui->eventTypeLineEdit->setText("");
-
-    booking.email = Backend::currentEmail;
-    booking.index = JsonParser::availableIndex();
-  }
-
   booking.date = ui->calendarWidget->selectedDate();
   booking.startTime = ui->startTimeEdit->time();
   booking.stopTime = ui->stopTimeEdit->time();
@@ -56,14 +48,9 @@ BookingEditor::BookingEditor(Booking* bookingToEdit, QWidget* parent)
   updateExistingBookingsLabel(booking.date);
 }
 
-BookingEditor::~BookingEditor()
+void BookingEditor::instance(QWidget* parent)
 {
-  delete ui;
-}
-
-void BookingEditor::instance(Booking* bookingToEdit, QWidget* parent)
-{
-  std::unique_ptr<BookingEditor> bookingEditor = std::make_unique<BookingEditor>(bookingToEdit, parent);
+  std::unique_ptr<BookingEditor> bookingEditor = std::make_unique<BookingEditor>(parent);
   bookingEditor->exec();
 }
 

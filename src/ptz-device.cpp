@@ -10,7 +10,6 @@
 #include "message-dialog.hpp"
 #include "json-parser.hpp"
 #include "backend.hpp"
-#include "globals.hpp"
 #include "booking-manager.hpp"
 #include "ptz-visca-udp.hpp"
 #include "ptz-visca-tcp.hpp"

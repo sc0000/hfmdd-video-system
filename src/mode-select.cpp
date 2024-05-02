@@ -4,20 +4,21 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "widgets.hpp"
+#include "login-dialog.hpp"
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
-#include "path-manager.hpp"
-#include "globals.hpp"
+#include "settings-manager.hpp"
 #include "ui_mode-select.h"
 #include "mode-select.hpp"
 
 ModeSelect* ModeSelect::instance = NULL;
 
 ModeSelect::ModeSelect(QWidget *parent)
-  : QDialog(parent),
+  : FullScreenDialog(parent),
     ui(new Ui::ModeSelect)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
@@ -26,9 +27,9 @@ ModeSelect::ModeSelect(QWidget *parent)
   instance = this;
   ui->setupUi(this);
 
-  repositionMasterWidget();
-
-  showFullScreen();
+  center(ui->masterWidget);
+  setModal(false);
+  hide();
 }
 
 ModeSelect::~ModeSelect()
@@ -38,67 +39,22 @@ ModeSelect::~ModeSelect()
 
 void ModeSelect::reload()
 {
-  repositionMasterWidget();
-  show();
-}
-
-void ModeSelect::repositionMasterWidget()
-{
-  Globals::centerFullScreenWidget(ui->masterWidget);
+  raise();
+  // Widgets::fullScreenDialogStack->setCurrentWidget(Widgets::modeSelect);
+  // Widgets::loginDialog->hide();
+  center(ui->masterWidget);
+  // showFullScreen();
 }
 
 void ModeSelect::on_quickModeButton_pressed()
 {
-  // if (!BookingManager::getInstance()) {
-  //   BookingManager* bookingManager = new BookingManager(this);
-
-  //   if (!bookingManager) return;
-
-  //   bookingManager->exec();
-  //   bookingManager->hide();
-  // }
-
   Backend::mode = EMode::QuickMode;
+  fade(Widgets::quickRecord);
 
-  QuickRecord* quickRecord = QuickRecord::getInstance();
-
-  if (quickRecord) {
-    quickRecord->loadBookings();
-    quickRecord->show();
-  }
-
-
-  else {
-    quickRecord = new QuickRecord(this);
-
-    if (!quickRecord) return;
-
-    quickRecord->exec();
-  }
-
-  hide();
 }
 
 void ModeSelect::on_bookModeButton_pressed()
 {
   Backend::mode = EMode::BookMode;
-  OkDialog::instance("BookMode!", this);
-
-  BookingManager* bookingManager = BookingManager::getInstance();
-
-  if (bookingManager) {
-    
-    bookingManager->loadBookings();
-    bookingManager->show();
-  }
-
-  else {
-    bookingManager = new BookingManager(this);
-
-    if (!bookingManager) return;
-
-    bookingManager->exec();
-  }
-
-  hide();
+  fade(Widgets::bookingManager);
 }  

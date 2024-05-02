@@ -4,12 +4,13 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "widgets.hpp"
+// #include "fullscreen-dialog.hpp" // TODO: Remove
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
-#include "path-manager.hpp"
-#include "globals.hpp"
+#include "settings-manager.hpp"
 #include "mode-select.hpp"
 #include "ui_login-dialog.h"
 #include "login-dialog.hpp"
@@ -17,7 +18,7 @@
 LoginDialog* LoginDialog::instance = NULL;
 
 LoginDialog::LoginDialog(QWidget *parent)
-  : QDialog(parent),
+  : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
     mailAddressIsValid(false)
 {
@@ -28,9 +29,10 @@ LoginDialog::LoginDialog(QWidget *parent)
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF0000 }");
 
-  repositionMasterWidget();
+  center(ui->masterWidget);
 
-  showFullScreen();
+  setModal(false);
+  hide();
 }
 
 LoginDialog::~LoginDialog()
@@ -40,15 +42,13 @@ LoginDialog::~LoginDialog()
 
 void LoginDialog::reload()
 {
-  repositionMasterWidget();
+  raise();
+  // Widgets::fullScreenDialogStack->setCurrentWidget(Widgets::loginDialog);
+  center(ui->masterWidget);
+  // showFullScreen();
+  
   ui->mailAddressLineEdit->clear();
   ui->passwordLineEdit->clear();
-  show();
-}
-
-void LoginDialog::repositionMasterWidget()
-{
-  Globals::centerFullScreenWidget(ui->masterWidget);
 }
 
 bool LoginDialog::verifyMailAddress()
@@ -80,21 +80,17 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
     if (Backend::currentEmail.endsWith(suffix))
     {
       mailAddressIsValid = true;
-      PathManager::innerDirectory = Backend::currentEmail.chopped(suffix.length());
+      SettingsManager::innerDirectory = Backend::currentEmail.chopped(suffix.length());
       ui->reminderLabel->setText(" ");
       break;
     }
   }
 
-  if (Backend::currentEmail == Backend::adminEmail) {
+  if (Backend::currentEmail == Backend::adminEmail) 
     ui->passwordLineEdit->setDisabled(false);
-    // PasswordDialog::instance(mailAddressIsValid, this);
-  }
 
   else 
     ui->passwordLineEdit->setDisabled(true);
-
- 
 
   verifyMailAddress();
 }
@@ -104,23 +100,9 @@ void LoginDialog::on_manageBookingsButton_pressed()
   if (!verifyMailAddress()) return;
 
   if (ui->passwordLineEdit->isEnabled() && ui->passwordLineEdit->text() != "pw") {
-    OkDialog::instance("Incorrect password", this);
+    Widgets::okDialog->display("Incorrect password");
     return;
   }
 
-  ModeSelect* modeSelect = ModeSelect::getInstance();
-
-  if (modeSelect) {
-    modeSelect->show();
-  }
-
-  else {
-    modeSelect = new ModeSelect(this);
-
-    if (!modeSelect) return;
-
-    modeSelect->exec();
-  }
-
-  hide();
+  fade(Widgets::modeSelect);
 }

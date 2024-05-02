@@ -2,7 +2,7 @@
 #include <QString>
 #include <QVector>
 
-class PathManager
+class SettingsManager
 {
 public:
   static QString baseDirectory;
@@ -17,6 +17,7 @@ public:
 
   static void updateFilterSettings(const char* path);
   static void resetFilterSettings();
+  static void save();
   static void load();
   static void setTempPath();
   static void deleteTempFiles();

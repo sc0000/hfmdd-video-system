@@ -2,14 +2,14 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "widgets.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "message-dialog.hpp"
 #include "booking-editor.hpp"
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
-#include "path-manager.hpp"
-#include "globals.hpp"
+#include "settings-manager.hpp"
 #include "mode-select.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
@@ -18,7 +18,7 @@
 BookingManager* BookingManager::instance = nullptr;
 
 BookingManager::BookingManager(QWidget* parent)
-  : QDialog(parent), 
+  : FullScreenDialog(parent), 
     ui(new Ui::BookingManager),
     bookings(Backend::loadedBookings)
 {
@@ -27,11 +27,10 @@ BookingManager::BookingManager(QWidget* parent)
   setWindowTitle("Booking Manager");
   instance = this;
   ui->setupUi(this);
-  repositionMasterWidget();
+  center(ui->masterWidget);
 
-  showFullScreen();
-  
-  loadBookings();
+  setModal(false);
+  hide();
 }
 
 BookingManager::~BookingManager()
@@ -41,13 +40,12 @@ BookingManager::~BookingManager()
 
 void BookingManager::reload()
 {
-  repositionMasterWidget();
-  show();
-}
+  raise();
+  center(ui->masterWidget);
 
-void BookingManager::repositionMasterWidget()
-{
-  Globals::centerFullScreenWidget(ui->masterWidget);
+  Backend::reevaluateConflicts();
+  loadBookings();
+  
 }
 
 void BookingManager::loadBookings()
@@ -84,7 +82,8 @@ QString BookingManager::makeEntry(const Booking& booking)
 
 void BookingManager::on_newBookingButton_pressed()
 {
-  BookingEditor::instance(nullptr, this);
+  // BookingEditor::instance(nullptr, this);
+  Widgets::bookingEditor->reload();
 }
 
 void BookingManager::on_editBookingButton_pressed()
@@ -99,7 +98,7 @@ void BookingManager::on_editBookingButton_pressed()
     return;
   }
 
-  BookingEditor::instance(&bookings[ui->bookingsList->currentRow()], this);
+  Widgets::bookingEditor->reload(&bookings[ui->bookingsList->currentRow()]);
 }
 
 void BookingManager::on_deleteBookingButton_pressed()
@@ -140,42 +139,25 @@ void BookingManager::on_toPTZControlsButton_pressed()
   }
 
   Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
-  PathManager::outerDirectory = Backend::currentBooking.date.toString(Qt::ISODate) + "/";
+  SettingsManager::outerDirectory = Backend::currentBooking.date.toString(Qt::ISODate) + "/";
 
   // TODO: Check: always reset or update, and setup option to reset manually?
-  PathManager::resetFilterSettings();
+  SettingsManager::resetFilterSettings();
 
-  hide();
+  Widgets::ptzControls->reload();
 
-  Login::getInstance()->hide();
-  LoginDialog::getInstance()->hide();
-
-  PTZControls* ptzControls = PTZControls::getInstance();
-
-  if (!ptzControls) return;
-
-  // load
-
-  ptzControls->prepare();
+  Widgets::showFullScreenDialogs(false);
 }
 
 void BookingManager::on_toModeSelectButton_pressed()
 {
-  ModeSelect* modeSelect = ModeSelect::getInstance();
-
-  if (!modeSelect) return;
-
-  modeSelect->reload();
-  hide();
+  Widgets::showFullScreenDialogs(true);
+  fade(Widgets::modeSelect);
 }
 
 void BookingManager::on_logoutButton_pressed()
 {
-  LoginDialog* loginDialog = LoginDialog::getInstance();
-  
-  if (!loginDialog) return;
-
-  loginDialog->reload();
-  hide();
+  Widgets::showFullScreenDialogs(true);
+  fade(Widgets::loginDialog);
 }
 

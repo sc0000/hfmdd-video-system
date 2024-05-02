@@ -23,6 +23,7 @@
 #include "touch-control.hpp"
 #include "ui_ptz-controls.h"
 #include "backend.hpp"
+#include "widgets.hpp"
 #include "settings.hpp"
 #include "ptz.h"
 #include "login.hpp"
@@ -32,8 +33,7 @@
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
 #include "json-parser.hpp"
-#include "globals.hpp"
-#include "path-manager.hpp"
+#include "settings-manager.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -420,6 +420,10 @@ PTZControls::PTZControls(QWidget *parent)
   //   "QPushButton { font-size: 8pt; background-color: red; }"
   // );
   //----------------------------------------------------
+  setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
+  setFeatures(QDockWidget::NoDockWidgetFeatures);
+  obs_frontend_add_dock(this);
+  setFloating(true); // Do after add_dock() to keep hidden at startup
 }
 
 PTZControls::~PTZControls()
@@ -528,7 +532,7 @@ void PTZControls::joystickButtonEvent(const QJoystickButtonEvent evt)
 }
 #endif /* ENABLE_JOYSTICK */
 
-void PTZControls::prepare()
+void PTZControls::reload()
 {
   connectSignalItemSelect();
   loadUserPresets();
@@ -1095,19 +1099,17 @@ void PTZControls::on_recordButton_clicked()
 
 void PTZControls::on_toBookingManagerButton_clicked()
 {
+  Widgets::showFullScreenDialogs(true);
+
   switch (Backend::mode) {
     case EMode::BookMode: {
-      BookingManager* bookingManager = BookingManager::getInstance();
-      if (!bookingManager) return;
-      bookingManager->reload();
+      Widgets::bookingManager->reload();
     }
 
     break;
     
     case EMode::QuickMode: {
-      QuickRecord* quickRecord = QuickRecord::getInstance();
-      if (!quickRecord) return;
-      quickRecord->reload();
+      Widgets::quickRecord->reload();
     }
     
     break;
@@ -1116,19 +1118,13 @@ void PTZControls::on_toBookingManagerButton_clicked()
       OkDialog::instance("ERROR: No mode selected", this);
       return;
   }
-  
 }
 
 void PTZControls::on_logoutButton_clicked()
 {
-  PathManager::deleteTempFiles();
-
+  SettingsManager::deleteTempFiles();
+  Widgets::loginDialog->reload();
   hide();
-  LoginDialog* loginDialog = LoginDialog::getInstance();
-
-  if (!loginDialog) return;
-
-  loginDialog->reload();
 }
 
 void PTZControls::setCurrent(uint32_t device_id)

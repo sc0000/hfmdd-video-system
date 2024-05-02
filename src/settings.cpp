@@ -30,7 +30,7 @@
 #include "ptz-controls.hpp"
 #include "settings.hpp"
 #include "ui_settings.h"
-#include "path-manager.hpp"
+#include "settings-manager.hpp"
 
 /* ----------------------------------------------------------------- */
 
@@ -390,31 +390,14 @@ void PTZSettings::showDevice(uint32_t device_id)
 
 void PTZSettings::getAdditionalProperties()
 {
-  char *file = obs_module_config_path("config2.json");
+  SettingsManager::load();
 
-	if (!file) return;
-
-	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
-
-  bfree(file);
-
-	if (!loaddata) return;
-  
-	obs_data_release(loaddata);
-
-  PathManager::baseDirectory = obs_data_get_string(loaddata, "base_directory");
-  PathManager::filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
-  PathManager::qualityPreset = obs_data_get_string(loaddata, "quality_preset");
-  PathManager::recFormat = obs_data_get_string(loaddata, "rec_format");
-
-  // ! ABOVE: FUNCTION IN SETTINGSMANAGER, BELOW: STAYS HERE
-
-  ui->baseDirectoryLineEdit->setText(PathManager::baseDirectory);
-  ui->filenameFormattingLineEdit->setText(PathManager::filenameFormatting);
-  ui->recFormatComboBox->setCurrentText(PathManager::recFormat);
+  ui->baseDirectoryLineEdit->setText(SettingsManager::baseDirectory);
+  ui->filenameFormattingLineEdit->setText(SettingsManager::filenameFormatting);
+  ui->recFormatComboBox->setCurrentText(SettingsManager::recFormat);
 
   for (const QString& preset : qualityPresets) {
-    if (preset.contains(PathManager::qualityPreset.toUpper())) {
+    if (preset.contains(SettingsManager::qualityPreset.toUpper())) {
       ui->qualityComboBox->setCurrentText(preset);
       break;
     }
@@ -423,44 +406,19 @@ void PTZSettings::getAdditionalProperties()
 
 void PTZSettings::updateAdditionalProperties()
 {
-	OBSData savedata = obs_data_create();
-	obs_data_release(savedata);
+	SettingsManager::baseDirectory = ui->baseDirectoryLineEdit->text();
+  SettingsManager::baseDirectory.replace("\\", "/");
 
-  PathManager::baseDirectory = ui->baseDirectoryLineEdit->text();
-  PathManager::baseDirectory.replace("\\", "/");
+  if (SettingsManager::baseDirectory.last(1) != "/")
+    SettingsManager::baseDirectory.append("/");
 
-  if (PathManager::baseDirectory.last(1) != "/")
-    PathManager::baseDirectory.append("/");
+  SettingsManager::filenameFormatting = ui->filenameFormattingLineEdit->text();
+  SettingsManager::qualityPreset = ui->qualityComboBox->currentText().first(2).toLower();
+  SettingsManager::recFormat = ui->recFormatComboBox->currentText();
 
-  PathManager::filenameFormatting = ui->filenameFormattingLineEdit->text();
-  PathManager::qualityPreset = ui->qualityComboBox->currentText().first(2).toLower();
-  PathManager::recFormat = ui->recFormatComboBox->currentText();
+  SettingsManager::resetFilterSettings();
 
-  PathManager::resetFilterSettings();
-
-  // ! ABOVE: STAYS HERE BELOW: TO SETTINGSMANAGER
-
-  char* file = obs_module_config_path("config2.json");
-
-	if (!file) return;
-
-  obs_data_set_string(savedata, "base_directory", PathManager::baseDirectory.toUtf8().constData());
-  obs_data_set_string(savedata, "filename_formatting", PathManager::filenameFormatting.toUtf8().constData());
-  obs_data_set_string(savedata, "rec_format", PathManager::recFormat.toUtf8().constData());
-  obs_data_set_string(savedata, "quality_preset", PathManager::qualityPreset.toUtf8().constData());
-
-  if (!obs_data_save_json_safe(savedata, file, "tmp", "bak")) {
-		char *path = obs_module_config_path("");
-
-		if (path) {
-			os_mkdirs(path);
-			bfree(path);
-		}
-
-		obs_data_save_json_safe(savedata, file, "tmp", "bak");
-	}
-
-	bfree(file);
+  SettingsManager::save();
 }
 
 /* ----------------------------------------------------------------- */

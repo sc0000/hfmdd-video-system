@@ -8,6 +8,7 @@ public:
 
   static void addBooking(const Booking& booking);
   static void updateBooking(const Booking& booking);
+  static void updateAllBookings(const QVector<Booking>& allBookings);
   static void getBookingsForEmail(const QString& mailAddress, QVector<Booking>& outVector);
   static void getBookingsOnDate(const QDate& date, QVector<Booking>& outVector);
   static void getAllBookings(QVector<Booking>& outVector);

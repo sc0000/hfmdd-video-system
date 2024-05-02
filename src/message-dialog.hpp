@@ -3,6 +3,10 @@
 #include <QWidget>
 #include <QLineEdit>
 
+#include "booking.h"
+
+// TODO: Remove 'instance' interfaces
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class OkDialog;
@@ -17,9 +21,10 @@ private:
   Ui::OkDialog* ui;
 
 public:
-  explicit OkDialog(const QString& message, QWidget* parent = nullptr);
+  explicit OkDialog(QWidget* parent = nullptr);
   static void instance(const QString& message, QWidget* parent = nullptr);
-  
+  void display(const QString& message);
+
 private slots:
   void on_okButton_pressed();
 };
@@ -36,11 +41,12 @@ class OkCancelDialog : public QDialog
 
 private:
   Ui::OkCancelDialog* ui;
-  bool& decision;  
+  bool decision;  
 
 public:
-  explicit OkCancelDialog(const QString& message, bool& out, QWidget* parent = nullptr);
+  explicit OkCancelDialog(QWidget* parent = nullptr);
   static void instance(const QString& message, bool& out, QWidget* parent = nullptr);
+  void display(const QString& message, bool& out);
 
 private slots:
   void on_okButton_pressed();
@@ -59,11 +65,12 @@ class PasswordDialog : public QDialog
 
 private:
   Ui::PasswordDialog* ui;
-  bool& valid;
+  bool valid;
 
 public:
-  explicit PasswordDialog(bool& out, QWidget* parent = nullptr);
+  explicit PasswordDialog(QWidget* parent = nullptr);
   static void instance(bool& out, QWidget* parent = nullptr);
+  void display(bool& out);
 
 private slots:
   void on_okButton_pressed();
@@ -84,8 +91,9 @@ private:
   Ui::PresetDialog* ui;
 
 public:
-  explicit PresetDialog(struct Booking* booking = nullptr, QWidget* parent = nullptr);
+  explicit PresetDialog(QWidget* parent = nullptr);
   static void instance(Booking* booking = nullptr, QWidget* parent = nullptr);
+  void display(Booking* booking = nullptr);
 
 private slots:
   void on_okButton_pressed();

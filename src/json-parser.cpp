@@ -8,7 +8,6 @@
 #include "backend.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
-#include "globals.hpp"
 #include "json-parser.hpp"
 
 QString JsonParser::bookingsPath = "V:/sb-terminal-test/bookings.json";
@@ -58,6 +57,26 @@ void JsonParser::updateBooking(const Booking& booking)
 
     if (obj.value("Index").toVariant().toInt() == booking.index)
       arr[i] = bookingObj;
+  }
+
+  writeJsonArrayToFile(arr, bookingsPath);
+}
+
+void JsonParser::updateAllBookings(const QVector<Booking>& allBookings)
+{
+  QJsonArray arr;
+
+  for (const Booking& booking : allBookings) {
+    QJsonObject bookingObj;
+    bookingObj.insert("Email", booking.email);
+    bookingObj.insert("Date", booking.date.toString(Qt::ISODate));
+    bookingObj.insert("StartTime", booking.startTime.toString("HH:mm"));
+    bookingObj.insert("StopTime", booking.stopTime.toString("HH:mm"));
+    bookingObj.insert("Event", booking.event);
+    bookingObj.insert("Conflicting", booking.isConflicting ? "true" : "false");
+    bookingObj.insert("Index", QString::number(booking.index));
+
+    arr.append(bookingObj);
   }
 
   writeJsonArrayToFile(arr, bookingsPath);
@@ -150,8 +169,6 @@ void JsonParser::getAllBookings(QVector<Booking>& outVector)
 
 void JsonParser::removeBooking(const Booking& booking)
 {
-  // TODO: Just use index!
-
   QJsonArray arr = readJsonArrayFromFile(bookingsPath);
 
   for (qsizetype i = arr.size() - 1; i >= 0; --i) {
