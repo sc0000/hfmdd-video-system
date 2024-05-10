@@ -20,7 +20,9 @@ LoginDialog* LoginDialog::instance = NULL;
 LoginDialog::LoginDialog(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
-    mailAddressIsValid(false)
+    mailAddressIsValid(false),
+    reminderLabelText("Please enter a valid HfMDD email address! Only admin accounts require a passwords."),
+    passwordLineEditPlaceholderText("Enter Password")
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setWindowTitle("Login Dialog");
@@ -47,6 +49,25 @@ void LoginDialog::reload()
   
   ui->mailAddressLineEdit->clear();
   ui->passwordLineEdit->clear();
+}
+
+void LoginDialog::translate(ELanguage language)
+{
+  switch (language) {
+    case ELanguage::German:
+    reminderLabelText = "Bitte geben Sie eine gültige HfMDD-E-Mail-Adresse ein! Nur Administratorkonten erfordern ein Passwort.";
+    passwordLineEditPlaceholderText = "Passwort";
+
+    break;
+
+    case ELanguage::English:
+    reminderLabelText = "Please enter a valid HfMDD email address! Only admin accounts require a passwords.";
+    passwordLineEditPlaceholderText = "Enter Password";
+    break;
+  }
+
+  ui->reminderLabel->setText(reminderLabelText);
+  ui->passwordLineEdit->setPlaceholderText(passwordLineEditPlaceholderText);
 }
 
 bool LoginDialog::verifyMailAddress()
@@ -103,4 +124,16 @@ void LoginDialog::on_manageBookingsButton_pressed()
   }
 
   fade(Widgets::modeSelect);
+}
+
+void LoginDialog::on_germanButton_pressed()
+{
+  for (Translatable* t : Widgets::translatables)
+    t->translate(ELanguage::German);
+}
+
+void LoginDialog::on_englishButton_pressed()
+{
+  for (Translatable* t : Widgets::translatables)
+      t->translate(ELanguage::English);
 }

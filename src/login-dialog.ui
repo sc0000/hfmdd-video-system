@@ -42,45 +42,13 @@
       <x>70</x>
       <y>150</y>
       <width>882</width>
-      <height>111</height>
+      <height>189</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <property name="verticalSpacing">
       <number>4</number>
      </property>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="passwordLineEdit">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <italic>true</italic>
-        </font>
-       </property>
-       <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
-       </property>
-       <property name="placeholderText">
-        <string>Enter Password</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="manageBookingsButton">
-       <property name="minimumSize">
-        <size>
-         <width>128</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Login</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLineEdit" name="mailAddressLineEdit">
        <property name="font">
@@ -113,7 +81,65 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="passwordLineEdit">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <italic>true</italic>
+        </font>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+       <property name="placeholderText">
+        <string>Enter Password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="manageBookingsButton">
+       <property name="minimumSize">
+        <size>
+         <width>128</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Login</string>
+       </property>
+      </widget>
+     </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="germanButton">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>360</y>
+      <width>111</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Deutsch</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="englishButton">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>360</y>
+      <width>111</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>English</string>
+    </property>
    </widget>
   </widget>
  </widget>

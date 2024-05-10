@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QLineEdit>
 
+#include "language.hpp"
 #include "fullscreen-dialog.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -12,7 +13,7 @@ class ModeSelect;
 }
 QT_END_NAMESPACE
 
-class ModeSelect : public FullScreenDialog
+class ModeSelect : public FullScreenDialog, public Translatable
 {
   Q_OBJECT
 private:
@@ -29,5 +30,7 @@ public:
 
   static inline ModeSelect* getInstance() { return instance; }
   virtual void reload() override;
+
+  virtual void translate(ELanguage language) override; 
 };
 

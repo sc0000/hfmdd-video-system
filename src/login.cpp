@@ -44,6 +44,11 @@ Login::~Login()
     delete ui;
 }
 
+void Login::translate(ELanguage language)
+{
+
+}
+
 void Login::on_startButton_pressed()
 {
   Widgets::showFullScreenDialogs(true);

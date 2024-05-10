@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QLineEdit>
 
+#include "language.hpp"
 #include "booking.h"
 
 // TODO: Remove 'instance' interfaces
@@ -13,7 +14,7 @@ class OkDialog;
 }
 QT_END_NAMESPACE
 
-class OkDialog : public QDialog
+class OkDialog : public QDialog, public Translatable
 {
   Q_OBJECT
 
@@ -23,6 +24,8 @@ private:
 public:
   explicit OkDialog(QWidget* parent = nullptr);
   void display(const QString& message);
+
+  virtual void translate(ELanguage language) override; 
 
 private slots:
   void on_okButton_pressed();
@@ -34,7 +37,7 @@ class OkCancelDialog;
 }
 QT_END_NAMESPACE
 
-class OkCancelDialog : public QDialog
+class OkCancelDialog : public QDialog, public Translatable
 {
   Q_OBJECT
 
@@ -45,6 +48,8 @@ private:
 public:
   explicit OkCancelDialog(QWidget* parent = nullptr);
   void display(const QString& message, bool& out);
+
+  virtual void translate(ELanguage language) override; 
 
 private slots:
   void on_okButton_pressed();
@@ -57,7 +62,7 @@ class PasswordDialog;
 }
 QT_END_NAMESPACE
 
-class PasswordDialog : public QDialog
+class PasswordDialog : public QDialog, public Translatable
 {
   Q_OBJECT
 
@@ -70,6 +75,8 @@ public:
   void display();
   inline bool isValid() { return valid; }
 
+  virtual void translate(ELanguage language) override; 
+
 private slots:
   void on_okButton_pressed();
   void on_cancelButton_pressed();  
@@ -81,7 +88,7 @@ class PresetDialog;
 }
 QT_END_NAMESPACE
 
-class PresetDialog : public QDialog
+class PresetDialog : public QDialog, public Translatable
 {
   Q_OBJECT
 
@@ -91,6 +98,8 @@ private:
 public:
   explicit PresetDialog(QWidget* parent = nullptr);
   void display(Booking* booking = nullptr);
+
+  virtual void translate(ELanguage language) override; 
 
 private slots:
   void on_okButton_pressed();

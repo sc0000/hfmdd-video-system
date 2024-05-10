@@ -89,6 +89,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # src/ptz.h
   src/backend.hpp
   # src/globals.hpp
+  src/language.hpp
   src/login.hpp
   src/login-dialog.hpp
   src/mode-select.hpp

@@ -1,4 +1,5 @@
 #include <QDialog>
+#include "language.hpp"
 #include "booking.h"
 
 QT_BEGIN_NAMESPACE
@@ -7,7 +8,7 @@ class BookingEditor;
 }
 QT_END_NAMESPACE
 
-class BookingEditor : public QDialog
+class BookingEditor : public QDialog, public Translatable
 {
   Q_OBJECT
 
@@ -33,6 +34,7 @@ public:
   ~BookingEditor();
   static void instance(QWidget* parent = nullptr);
 
-  void reload(Booking* bookingToEdit = nullptr);  
+  void reload(Booking* bookingToEdit = nullptr);
+  virtual void translate(ELanguage language) override;  
 
 };

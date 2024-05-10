@@ -11,6 +11,7 @@
 #include <obs.hpp>
 #include <QDockWidget>
 
+#include "language.hpp"
 #include "time-observer.hpp"
 #include "booking.h"
 #include "ptz.h"
@@ -19,7 +20,7 @@
 #include "ptz-device.hpp"
 #include "ui_ptz-controls.h"
 
-class PTZControls : public QDockWidget {
+class PTZControls : public QDockWidget, public Translatable {
 	Q_OBJECT
 
 private:
@@ -215,4 +216,6 @@ public:
   // void loginTimeOut();
 
   QString currCameraName = "Birddog1";
+
+  virtual void translate(ELanguage language) override; 
 };

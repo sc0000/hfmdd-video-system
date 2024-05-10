@@ -222,6 +222,11 @@ void PTZControls::stopRecording()
   Widgets::okDialog->display(sendFilesMsg);
 }
 
+void PTZControls::translate(ELanguage language)
+{
+
+}
+
 PTZControls::PTZControls(QWidget *parent)
 	: QDockWidget(parent), 
     ui(new Ui::PTZControls),
@@ -1120,8 +1125,8 @@ void PTZControls::on_logoutButton_clicked()
 {
   SettingsManager::deleteTempFiles();
 
-  Widgets::showFullScreenDialogs(true);
   Widgets::loginDialog->reload();
+  Widgets::showFullScreenDialogs(true);
   hide();
 }
 

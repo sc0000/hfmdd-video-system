@@ -4,6 +4,8 @@
 #include <QDockWidget>
 #include <QLineEdit>
 
+#include "language.hpp"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,7 +22,7 @@ class Login;
 }
 QT_END_NAMESPACE
 
-class Login : public QDockWidget
+class Login : public QDockWidget, public Translatable
 {
   Q_OBJECT
 private:
@@ -35,5 +37,7 @@ public:
   ~Login();
 
   static inline Login* getInstance() { return instance; }
+  
+  virtual void translate(ELanguage language) override; 
 };
 

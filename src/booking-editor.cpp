@@ -53,6 +53,11 @@ void BookingEditor::reload(Booking* bookingToEdit)
   raise();
 }
 
+void BookingEditor::translate(ELanguage language)
+{
+
+}
+
 void BookingEditor::instance(QWidget* parent)
 {
   std::unique_ptr<BookingEditor> bookingEditor = std::make_unique<BookingEditor>(parent);

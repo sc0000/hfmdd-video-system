@@ -1,4 +1,6 @@
 #include <QVector>
+
+#include "language.hpp"
 #include "fullscreen-dialog.hpp"
 
 class Widgets
@@ -20,6 +22,7 @@ public:
   static class PresetDialog* presetDialog;
 
   static QVector<FullScreenDialog*> fullScreenDialogs;
+  static QVector<Translatable*> translatables;
 
   static void showFullScreenDialogs(bool show);
 };

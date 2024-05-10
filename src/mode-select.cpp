@@ -43,11 +43,15 @@ void ModeSelect::reload()
   center(ui->masterWidget);
 }
 
+void ModeSelect::translate(ELanguage language)
+{
+
+}
+
 void ModeSelect::on_quickModeButton_pressed()
 {
   Backend::mode = EMode::QuickMode;
   fade(Widgets::quickRecord);
-
 }
 
 void ModeSelect::on_bookModeButton_pressed()

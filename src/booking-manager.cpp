@@ -71,6 +71,11 @@ void BookingManager::loadBookings()
   }
 }
 
+void BookingManager::translate(ELanguage language)
+{
+
+}
+
 QString BookingManager::makeEntry(const Booking& booking)
 {
   QString entry = 

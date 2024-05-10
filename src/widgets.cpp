@@ -1,3 +1,4 @@
+#include "language.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "mode-select.hpp"
@@ -16,6 +17,7 @@ BookingManager*Widgets::bookingManager;
 QuickRecord* Widgets::quickRecord;
 
 QVector<FullScreenDialog*> Widgets::fullScreenDialogs;
+QVector<Translatable*> Widgets::translatables;
 
 PTZControls* Widgets::ptzControls;
 OkDialog* Widgets::okDialog;
@@ -35,10 +37,6 @@ void Widgets::load()
   quickRecord = new QuickRecord(mainWindow);
   ptzControls = new PTZControls(mainWindow);
 
-  fullScreenDialogs = {
-    loginDialog, modeSelect, quickRecord, bookingManager
-  };
-
   okDialog = new OkDialog(mainWindow);
   okCancelDialog = new OkCancelDialog(mainWindow);
   passwordDialog = new PasswordDialog(mainWindow);
@@ -57,6 +55,15 @@ void Widgets::load()
     passwordDialog &&
     presetDialog
   );
+
+  fullScreenDialogs = {
+    loginDialog, modeSelect, quickRecord, bookingManager
+  };
+
+  translatables = {
+    login, loginDialog, modeSelect, bookingEditor, bookingManager, quickRecord, 
+    ptzControls, okDialog, okCancelDialog, presetDialog
+  };
 }
 
 void Widgets::showFullScreenDialogs(bool show)

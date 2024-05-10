@@ -61,6 +61,11 @@ void QuickRecord::reload()
   updateExistingBookingsLabel(booking.date);
 }
 
+void QuickRecord::translate(ELanguage language)
+{
+
+}
+
 void QuickRecord::loadBookings()
 {   
   if (Backend::currentEmail == Backend::adminEmail)

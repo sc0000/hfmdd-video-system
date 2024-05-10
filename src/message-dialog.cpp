@@ -32,6 +32,11 @@ void OkDialog::display(const QString& message)
   show();
 }
 
+void OkDialog::translate(ELanguage language)
+{
+
+}
+
 void OkDialog::on_okButton_pressed()
 {
   hide();
@@ -52,6 +57,11 @@ void OkCancelDialog::display(const QString& message, bool& out)
 {
   ui->messageLabel->setText(message);
   decision = out;
+}
+
+void OkCancelDialog::translate(ELanguage language)
+{
+
 }
 
 void OkCancelDialog::on_okButton_pressed()
@@ -80,6 +90,11 @@ void PasswordDialog::display()
 {
   valid = false;
   exec();
+}
+
+void PasswordDialog::translate(ELanguage language)
+{
+
 }
 
 void PasswordDialog::on_okButton_pressed()
@@ -126,6 +141,11 @@ void PresetDialog::display(Booking* booking)
   }
 
   show();
+}
+
+void PresetDialog::translate(ELanguage language)
+{
+
 }
 
 void PresetDialog::on_okButton_pressed()

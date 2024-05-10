@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QListWidget>
 
+#include "language.hpp"
 #include "fullscreen-dialog.hpp"
 #include "booking.h"
 
@@ -13,7 +14,7 @@ class QuickRecord;
 }
 QT_END_NAMESPACE
 
-class QuickRecord : public FullScreenDialog
+class QuickRecord : public FullScreenDialog, public Translatable
 {
   Q_OBJECT
 
@@ -54,4 +55,6 @@ public:
   void loadBookings();
   
   Booking booking;
+
+  virtual void translate(ELanguage language) override; 
 };
