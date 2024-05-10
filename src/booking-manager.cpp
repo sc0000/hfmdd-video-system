@@ -73,7 +73,26 @@ void BookingManager::loadBookings()
 
 void BookingManager::translate(ELanguage language)
 {
+  switch (language) {
+    case ELanguage::German:
+    ui->newBookingButton->setText("Neue Buchung");
+    ui->editBookingButton->setText("Buchung bearbeiten");
+    ui->deleteBookingButton->setText("Buchung löschen");
+    ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
+    ui->toModeSelectButton->setText("Zurück");
+    break;
 
+    case ELanguage::English:
+    ui->newBookingButton->setText("New Booking");
+    ui->editBookingButton->setText("Edit Booking");
+    ui->deleteBookingButton->setText("Delete Booking");
+    ui->toPTZControlsButton->setText("Go to Camera Controls");
+    ui->toModeSelectButton->setText("Go back to Mode Selection");
+    break;
+
+    case ELanguage::Default:
+    break;
+  }
 }
 
 QString BookingManager::makeEntry(const Booking& booking)
@@ -98,12 +117,22 @@ void BookingManager::on_newBookingButton_pressed()
 void BookingManager::on_editBookingButton_pressed()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
-    Widgets::okDialog->display("Please select the booking you want to edit.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ? 
+      "Please select the booking you want to edit." :
+      "Bitte wählen Sie eine Buchung aus, die Sie bearbeiten wollen."  
+    );
+
     return;
   }
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
-    Widgets::okDialog->display("Please select only one booking to edit.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please select only one booking to edit." :
+      "Bitte wählen Sie nur eine Buchung zur Bearbeitung aus."
+    );
+
     return;
   }
 
@@ -113,7 +142,12 @@ void BookingManager::on_editBookingButton_pressed()
 void BookingManager::on_deleteBookingButton_pressed()
 {
   if (ui->bookingsList->selectedItems().isEmpty()) {
-    Widgets::okDialog->display("Please select the booking you want to delete.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please select the booking you want to delete." :
+      "Bitte wählen Sie eine Buchung aus, die Sie löschen möchten."
+    );
+
     return;
   }
 
@@ -121,7 +155,9 @@ void BookingManager::on_deleteBookingButton_pressed()
 
   bool confirmed;
   Widgets::okCancelDialog->display(
-    "Do you really want to delete the selected booking? This cannot be undone.", 
+    Backend::language != ELanguage::German ?
+    "Do you really want to delete the selected booking? This cannot be undone." :
+    "Wollen Sie diese Buchung wirklich löschen? Das kann nicht rückgängig gemacht werden.", 
     confirmed
   );
 
@@ -138,12 +174,20 @@ void BookingManager::on_deleteBookingButton_pressed()
 void BookingManager::on_toPTZControlsButton_pressed()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
-    Widgets::okDialog->display("Please select a booking to continue.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please select a booking to continue." :
+      "Bitte wählen Sie eine Buchung aus, um fortzufahren."
+    );
+
     return;
   }
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
-    Widgets::okDialog->display("Please select only one booking to continue.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please select only one booking to continue." :
+      "Bitte wählen Sie nur eine Buchung aus, um fortzufahren.");
     return;
   }
 

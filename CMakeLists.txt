@@ -65,6 +65,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/ptz-controls.ui
   src/settings.ui
   src/settings-manager.cpp
+  src/login-dialog.qrc
   src/ptz-controls.qrc
   # src/ptz.c
   src/ptz-controls.cpp

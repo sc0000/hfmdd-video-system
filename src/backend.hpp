@@ -2,6 +2,7 @@
 
 #include <QVector>
 
+#include "language.hpp"
 #include "booking.h"
 
 enum class EMode
@@ -18,6 +19,7 @@ public:
   const static QString adminEmail;
   const static QString adminPassword;
   static EMode mode;
+  static ELanguage language;
 
   static QDate selectedDate;
 

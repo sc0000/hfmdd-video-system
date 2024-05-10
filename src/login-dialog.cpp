@@ -57,7 +57,6 @@ void LoginDialog::translate(ELanguage language)
     case ELanguage::German:
     reminderLabelText = "Bitte geben Sie eine gültige HfMDD-E-Mail-Adresse ein! Nur Administratorkonten erfordern ein Passwort.";
     passwordLineEditPlaceholderText = "Passwort";
-
     break;
 
     case ELanguage::English:
@@ -74,7 +73,7 @@ bool LoginDialog::verifyMailAddress()
 {
   if (!mailAddressIsValid) {
     ui->reminderLabel->show();
-    ui->reminderLabel->setText("Please enter a valid HfMDD email address! Only admin accounts require a passwords.");
+    ui->reminderLabel->setText(reminderLabelText);
     ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF0000 }");
     return false;
   }
@@ -128,12 +127,16 @@ void LoginDialog::on_manageBookingsButton_pressed()
 
 void LoginDialog::on_germanButton_pressed()
 {
+  Backend::language = ELanguage::German;
+
   for (Translatable* t : Widgets::translatables)
     t->translate(ELanguage::German);
 }
 
 void LoginDialog::on_englishButton_pressed()
 {
+  Backend::language = ELanguage::English;
+
   for (Translatable* t : Widgets::translatables)
       t->translate(ELanguage::English);
 }

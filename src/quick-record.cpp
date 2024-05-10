@@ -63,7 +63,22 @@ void QuickRecord::reload()
 
 void QuickRecord::translate(ELanguage language)
 {
+  switch (language) {
+    case ELanguage::German:
+    ui->recordUntilLabel->setText("Aufnehmen bis...");
+    ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
+    ui->toModeSelectButton->setText("Zurück");
+    break;
 
+    case ELanguage::English:
+    ui->recordUntilLabel->setText("Record until...");
+    ui->toPTZControlsButton->setText("Go to Camera Controls");
+    ui->toModeSelectButton->setText("Go back to Mode Selection");
+    break;
+
+    case ELanguage::Default:
+    break;
+  }
 }
 
 void QuickRecord::loadBookings()
@@ -125,11 +140,15 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   if (bookingsOnSelectedDate.isEmpty() ||
      (bookingsOnSelectedDate.size() == 1 && bookingsOnSelectedDate[0].index == booking.index)) {
-        ui->bookingsOnSelectedDateLabel->setText("There are no bookings yet on " + date.toString() + ".");
+        ui->bookingsOnSelectedDateLabel->setText(Backend::language != ELanguage::German ? 
+          "There are no bookings yet on " + date.toString() + "." : 
+          "Es gibt noch keine Buchungen am " + date.toString() + ".");
         return;
   }
 
-  QString str = "The following times have been booked later today:\n ";
+  QString str = Backend::language != ELanguage::German ? 
+    "The following times have been booked later today:\n" :
+    "Heute sind bereits folgende Zeiten gebucht:\n";
 
   str += "<html><head/><body>";
 
@@ -205,7 +224,12 @@ void QuickRecord::on_decreaseTimeBy20Button_pressed()
   }
 
   if (newStopTime > QTime(23, 0)) {
-    Widgets::okDialog->display("Recordings can't extend beyond 23:00");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ? 
+      "Recordings can't extend beyond 23:00" :
+      "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
+    );
+
     return;
   }
 
@@ -224,7 +248,12 @@ void QuickRecord::on_decreaseTimeBy05Button_pressed()
   }
 
   if (newStopTime > QTime(23, 0)) {
-    Widgets::okDialog->display("Recordings can't extend beyond 23:00");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ? 
+      "Recordings can't extend beyond 23:00" :
+      "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
+    );
+    
     return;
   }
 

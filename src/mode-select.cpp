@@ -45,7 +45,20 @@ void ModeSelect::reload()
 
 void ModeSelect::translate(ELanguage language)
 {
+  switch (language) {
+    case ELanguage::German:
+    ui->quickModeButton->setText("Direkt ein Video aufnehmen");
+    ui->bookModeButton->setText("Eine Aufnahmesession buchen");
+    break;
 
+    case ELanguage::English:
+    ui->quickModeButton->setText("Record a video right now");
+    ui->bookModeButton->setText("Book a video recording session in the future");
+    break;
+
+    case ELanguage::Default:
+    break;
+  }
 }
 
 void ModeSelect::on_quickModeButton_pressed()

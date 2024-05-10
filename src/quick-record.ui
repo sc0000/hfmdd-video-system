@@ -47,7 +47,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="recordUntilLabel">
        <property name="font">
         <font>
          <pointsize>12</pointsize>

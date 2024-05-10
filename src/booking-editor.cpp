@@ -55,7 +55,30 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
 void BookingEditor::translate(ELanguage language)
 {
+  switch (language) {
+    case ELanguage::German:
+    ui->bookingsOnSelectedDateLabel->setText("Kein Datum ausgewählt");
+    ui->startTimeLabel->setText("Startzeit");
+    ui->stopTimeLabel->setText("Stopzeit");
+    ui->eventTypeLabel->setText("Art der Veranstaltung");
+    ui->saveButton->setText("Speichern");
+    ui->cancelButton->setText("Verwerfen");
+    ui->calendarWidget->setLocale(QLocale::German);
+    break;
 
+    case ELanguage::English:
+    ui->bookingsOnSelectedDateLabel->setText("No date selected.");
+    ui->startTimeLabel->setText("Start Time");
+    ui->stopTimeLabel->setText("Stop Time");
+    ui->eventTypeLabel->setText("Type of Event");
+    ui->saveButton->setText("Save");
+    ui->cancelButton->setText("Cancel");
+    ui->calendarWidget->setLocale(QLocale::English);
+    break;
+
+    case ELanguage::Default:
+    break;
+  }
 }
 
 void BookingEditor::instance(QWidget* parent)
@@ -73,11 +96,18 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
-        ui->bookingsOnSelectedDateLabel->setText("There are no bookings yet on " + date.toString() + ".");
+        ui->bookingsOnSelectedDateLabel->setText(
+          Backend::language != ELanguage::German ?
+          "There are no bookings yet on " + date.toString() + "." :
+          "Es gibt noch keine Buchungen am " + date.toString() + "."
+        );
+
         return;
   }
 
-  QString str = "The following times have been booked on " + date.toString() + ":\n";
+  QString str = Backend::language != ELanguage::German ?
+    "The following times have been booked on " + date.toString() + ":\n" :
+    "Am " + date.toString() + " wurden folgende Zeiten gebucht:\n";
 
   str += "<html><head/><body>";
 
@@ -94,8 +124,11 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
     str += b.startTime.toString("HH:mm") + "-" + b.stopTime.toString("HH:mm") + ": " + b.event + " (" + b.email + ")";
 
-    if (isConflicting)
-      str += " CONFLICTING!</span>";
+    if (isConflicting) {
+      str += Backend::language != ELanguage::German ?
+        " CONFLICTING!</span>" : 
+        " BUCHUNGSKONFLIKT!</span>";
+    }
 
     str += "<br/>";
   }
@@ -148,12 +181,22 @@ void BookingEditor::on_saveButton_pressed()
     return;
 
   if (booking.event == "") {
-    Widgets::okDialog->display("Please specify the type of event!");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please specify the type of event!" :
+      "Bitte geben Sie die Art der Veranstaltung an"
+    );
+
     return;
   }
 
   if (ui->startTimeEdit->time() == ui->stopTimeEdit->time()) {
-    Widgets::okDialog->display("Start and stop time are identical. Please select a time frame!");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Start and stop time are identical. Please select a reasonable time frame!" :
+      "Start- und Stopzeit sind identisch. Bitte wählen Sie einen geeigneten Zeitraum!"
+    );
+
     return;
   }
   

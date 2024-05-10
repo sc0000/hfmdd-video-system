@@ -13,6 +13,7 @@ QString Backend::currentEmail = "";
 const QString Backend::adminEmail = "oliver.fenk@hfmdd.de";
 const QString Backend::adminPassword = "pw";
 EMode Backend::mode = EMode::Default;
+ELanguage Backend::language = ELanguage::English;
 
 QDate Backend::selectedDate = QDate();
 
