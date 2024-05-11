@@ -175,7 +175,9 @@ void PTZControls::startRecording()
 {
   if (booking.date != QDate::currentDate()) {
       Widgets::okDialog->display(
-        "The selected booking does not have today's date."
+        Backend::language != ELanguage::German ?
+        "The selected booking does not have today's date." :
+        "Die ausgewählte Buchung entspricht nicht dem heutigen Datum."
       );
 
       return;
@@ -186,9 +188,13 @@ void PTZControls::startRecording()
     if (currentTime < booking.startTime.addSecs(-15 * 60)  ||
         currentTime > booking.startTime.addSecs(30 * 60)) {
       Widgets::okDialog->display(
-        "You can start a booked recording 15 minutes\n"
+        // TODO: Accommodate flexible earliest start time/auto stop time
+        Backend::language != ELanguage::German ?
+        ("You can start a booked recording 15 minutes\n"
         "before the specified start time at the earliest,\n"
-        "and 30 minutes after that time at the latest."
+        "and 30 minutes after that time at the latest.") :
+        ("Sie können eine gebuchte Aufnahme frühestens 15 Minuten\n"
+        "vor und spätestens 30 Minuten nach der angegebenen Zeit starten.")
       );
 
       return;
@@ -205,18 +211,26 @@ void PTZControls::startRecording()
       "QPushButton { font-size: 8pt; background-color: green; }"
     );
 
-    ui->recordButton->setText("Stop Recording");
+    ui->recordButton->setText(
+      Backend::language != ELanguage::German ?
+      "Stop Recording" :
+      "Aufnahme beenden"
+    );
 }
 
 void PTZControls::stopRecording()
 {
   obs_frontend_recording_stop();
 
-    ui->recordButton->setStyleSheet(
-      "QPushButton { font-size: 8pt; background-color: red; }"
-    );
+  ui->recordButton->setStyleSheet(
+    "QPushButton { font-size: 8pt; background-color: red; }"
+  );
 
-    ui->recordButton->setText("Start Recording");
+  ui->recordButton->setText(
+    Backend::language != ELanguage::German ?
+    "Start Recording" :
+    "Aufnahme starten"
+  );
 
   const QString sendFilesMsg = Backend::sendFiles(booking);
   Widgets::okDialog->display(sendFilesMsg);
@@ -224,7 +238,34 @@ void PTZControls::stopRecording()
 
 void PTZControls::translate(ELanguage language)
 {
+  switch (language) {
+    case ELanguage::German:
+    ui->cameraControlsLabel->setText("Kamerasteuerung");
+    ui->previousCamButton->setText("Vorherige\nKamera");
+    ui->nextCamButton->setText("Nächste\nKamera");
+    ui->overviewButton->setText("Gesamtansicht");
+    ui->savePresetButton->setText("Speichern");
+    ui->loadPresetButton->setText("Laden");
+    ui->deletePresetButton->setText("Löschen");
+    ui->recordButton->setText("Aufnahme starten");
+    ui->toBookingManagerButton->setText("Zurück");
+    break;
 
+    case ELanguage::English:
+    ui->cameraControlsLabel->setText("Camera Controls");
+    ui->previousCamButton->setText("Previous\nCamera");
+    ui->nextCamButton->setText("Next\nCamera");
+    ui->overviewButton->setText("Camera Overview");
+    ui->savePresetButton->setText("Save");
+    ui->loadPresetButton->setText("Load");
+    ui->deletePresetButton->setText("Delete");
+    ui->recordButton->setText("Record");
+    ui->toBookingManagerButton->setText("To Booking Manager");
+    break;
+
+    case ELanguage::Default:
+    break;
+  }
 }
 
 PTZControls::PTZControls(QWidget *parent)
@@ -543,16 +584,18 @@ void PTZControls::reload()
   selectCamera();
   setFloating(false);
 
-  switch (Backend::mode) {
-    case EMode::BookMode:
-      ui->toBookingManagerButton->setText("To Booking Manager");
-      break;
-    case EMode::QuickMode:
-      ui->toBookingManagerButton->setText("To Time Slot Setup");
-      break;
-    case EMode::Default:
-      ui->toBookingManagerButton->setText("ERROR");
-      break;
+  if (Backend::language == ELanguage::English) {
+    switch (Backend::mode) {
+      case EMode::BookMode:
+        ui->toBookingManagerButton->setText("To Booking Manager");
+        break;
+      case EMode::QuickMode:
+        ui->toBookingManagerButton->setText("To Time Slot Setup");
+        break;
+      case EMode::Default:
+        ui->toBookingManagerButton->setText("ERROR");
+        break;
+    }
   }
 
   show();
@@ -572,7 +615,13 @@ void PTZControls::setViewportMode()
 
   // TODO: Better layout for three and more cameras!
   if (showOverview) {
-    ui->overviewButton->setText("Single Camera View");
+    ui->overviewButton->setText(
+      Backend::language != ELanguage::German ?
+      "Single Camera View" :
+      "Einzelansicht"
+    );
+
+    // ? Enable camera selection by clicking on preview ?
     // ui->previousCamButton->setDisabled(true);
     // ui->nextCamButton->setDisabled(true);
 
@@ -597,7 +646,13 @@ void PTZControls::setViewportMode()
   }
 
   else {
-    ui->overviewButton->setText("Camera Overview");
+    ui->overviewButton->setText(
+      Backend::language != ELanguage::German ?
+      "Camera Overview" : 
+      "Gesamtansicht"
+    );
+
+    // ? See above ?
     // ui->previousCamButton->setDisabled(false);
     // ui->nextCamButton->setDisabled(false);
 
@@ -1026,7 +1081,12 @@ void PTZControls::on_loadPresetButton_clicked()
   QModelIndex index = ui->presetListView->currentIndex();
 
   if (!index.isValid()) {
-    Widgets::okDialog->display("Please select the booking you want to load.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please select the preset you want to load." :
+      "Bitte wählen Sie ein Preset aus,\ndas Sie laden möchten."
+    );
+
     return;
   }
   
@@ -1043,7 +1103,12 @@ void PTZControls::on_deletePresetButton_clicked()
   QModelIndex index = ui->presetListView->currentIndex();
 
   if (!index.isValid()) {
-    Widgets::okDialog->display("Please select the booking you want to delete.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "Please select the preset you want to delete." :
+      "Bitte wählen Sie ein Preset aus,\ndas Sie löschen möchten."
+    );
+
     return;
   }
 
@@ -1054,13 +1119,20 @@ void PTZControls::on_deletePresetButton_clicked()
   JsonParser::getPresetsForEmail(Backend::adminEmail, oliversPresets);
 
   if (Backend::currentEmail != Backend::adminEmail && oliversPresets.contains(id)) {
-    Widgets::okDialog->display("You don't have permission to delete this preset");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "You don't have permission to delete this preset" : 
+      "Sie haben keine Befugnis, dieses Preset zu löschen."
+    );
+
     return;
   }
 
   bool confirmed;
   Widgets::okCancelDialog->display(
-    "Do you really want to delete the selected preset? This cannot be undone.", 
+    Backend::language != ELanguage::German ?
+    "Do you really want to delete the selected preset? This cannot be undone." : 
+    "Möchten Sie das ausgewählte Preset wirklich unwiderruflich löschen?", 
     confirmed
   );
   
@@ -1125,8 +1197,8 @@ void PTZControls::on_logoutButton_clicked()
 {
   SettingsManager::deleteTempFiles();
 
-  Widgets::loginDialog->reload();
   Widgets::showFullScreenDialogs(true);
+  Widgets::loginDialog->reload();
   hide();
 }
 
@@ -1468,7 +1540,12 @@ void PTZControls::on_actionPTZProperties_triggered()
   // if (!Widgets::passwordDialog->isValid()) return;
 
   if (Backend::currentEmail != Backend::adminEmail) {
-    Widgets::okDialog->display("You don't have permission to access the settings menu.");
+    Widgets::okDialog->display(
+      Backend::language != ELanguage::German ?
+      "You don't have permission to access the settings menu." :
+      "Sie haben keine Befugnis, die Einstellungen zu öffnen."
+    );
+
     return;
   }
 

@@ -14,7 +14,7 @@ class OkDialog;
 }
 QT_END_NAMESPACE
 
-class OkDialog : public QDialog, public Translatable
+class OkDialog : public QDialog
 {
   Q_OBJECT
 
@@ -24,8 +24,6 @@ private:
 public:
   explicit OkDialog(QWidget* parent = nullptr);
   void display(const QString& message);
-
-  virtual void translate(ELanguage language) override; 
 
 private slots:
   void on_okButton_pressed();
@@ -37,7 +35,7 @@ class OkCancelDialog;
 }
 QT_END_NAMESPACE
 
-class OkCancelDialog : public QDialog, public Translatable
+class OkCancelDialog : public QDialog
 {
   Q_OBJECT
 
@@ -48,8 +46,6 @@ private:
 public:
   explicit OkCancelDialog(QWidget* parent = nullptr);
   void display(const QString& message, bool& out);
-
-  virtual void translate(ELanguage language) override; 
 
 private slots:
   void on_okButton_pressed();
@@ -62,7 +58,7 @@ class PasswordDialog;
 }
 QT_END_NAMESPACE
 
-class PasswordDialog : public QDialog, public Translatable
+class PasswordDialog : public QDialog
 {
   Q_OBJECT
 
@@ -73,9 +69,7 @@ private:
 public:
   explicit PasswordDialog(QWidget* parent = nullptr);
   void display();
-  inline bool isValid() { return valid; }
-
-  virtual void translate(ELanguage language) override; 
+  inline bool isValid() { return valid; } 
 
 private slots:
   void on_okButton_pressed();
@@ -88,7 +82,7 @@ class PresetDialog;
 }
 QT_END_NAMESPACE
 
-class PresetDialog : public QDialog, public Translatable
+class PresetDialog : public QDialog
 {
   Q_OBJECT
 
@@ -97,9 +91,7 @@ private:
 
 public:
   explicit PresetDialog(QWidget* parent = nullptr);
-  void display(Booking* booking = nullptr);
-
-  virtual void translate(ELanguage language) override; 
+  void display(Booking* booking = nullptr); 
 
 private slots:
   void on_okButton_pressed();

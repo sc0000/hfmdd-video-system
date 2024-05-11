@@ -62,7 +62,7 @@ void Widgets::load()
 
   translatables = {
     login, loginDialog, modeSelect, bookingEditor, bookingManager, quickRecord, 
-    ptzControls, okDialog, okCancelDialog, presetDialog
+    ptzControls
   };
 }
 

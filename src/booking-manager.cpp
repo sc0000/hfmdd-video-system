@@ -157,7 +157,7 @@ void BookingManager::on_deleteBookingButton_pressed()
   Widgets::okCancelDialog->display(
     Backend::language != ELanguage::German ?
     "Do you really want to delete the selected booking? This cannot be undone." :
-    "Wollen Sie diese Buchung wirklich löschen? Das kann nicht rückgängig gemacht werden.", 
+    "Wollen Sie diese Buchung wirklich unwiderruflich löschen?", 
     confirmed
   );
 
