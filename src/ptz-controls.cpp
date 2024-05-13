@@ -1196,9 +1196,11 @@ void PTZControls::on_toBookingManagerButton_clicked()
 void PTZControls::on_logoutButton_clicked()
 {
   SettingsManager::deleteTempFiles();
-
+  
   Widgets::showFullScreenDialogs(true);
-  Widgets::loginDialog->reload();
+  
+  // This is a dirty hack to get the logout from camera controls to work
+  Widgets::bookingManager->toLoginDialog();
   hide();
 }
 

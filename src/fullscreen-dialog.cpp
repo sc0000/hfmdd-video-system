@@ -27,7 +27,7 @@ void FullScreenDialog::loadAnims()
   fadeOutAnim->setEndValue(0.f);
 }
 
-void FullScreenDialog::center(QWidget* masterWidget)
+void FullScreenDialog::center(QWidget* masterWidget, int xOffset, int yOffset)
 {
   QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
 
@@ -43,13 +43,13 @@ void FullScreenDialog::center(QWidget* masterWidget)
   int masterWidgetX = centerPoint.x() - (masterWidget->width() / 2);
   int masterWidgetY = centerPoint.y() - (masterWidget->height() / 2);
 
-  masterWidget->move(masterWidgetX, masterWidgetY);
+  masterWidget->move(masterWidgetX + xOffset, masterWidgetY + yOffset);
 }
 
 void FullScreenDialog::fade(FullScreenDialog* next)
 {
   next->reload();
-  raise();
+  // raise();
   
   fadeOutAnim->setTargetObject(this);
   fadeInAnim->setTargetObject(next);

@@ -52,6 +52,11 @@ void BookingManager::reload()
   
 }
 
+void BookingManager::toLoginDialog()
+{ 
+  fade(Widgets::loginDialog);
+}
+
 void BookingManager::loadBookings()
 {   
   Backend::loadBookings();

@@ -39,10 +39,11 @@ public:
   BookingManager(QWidget* parent = nullptr);
   ~BookingManager();
   static inline BookingManager* getInstance() { return instance; }
-  
   virtual void reload() override;
+  void toLoginDialog();
 
   void loadBookings();
 
-   virtual void translate(ELanguage language) override; 
+  virtual void translate(ELanguage language) override;
+
 };

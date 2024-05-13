@@ -57,7 +57,7 @@ void Widgets::load()
   );
 
   fullScreenDialogs = {
-    loginDialog, modeSelect, quickRecord, bookingManager
+    modeSelect, loginDialog, quickRecord, bookingManager
   };
 
   translatables = {

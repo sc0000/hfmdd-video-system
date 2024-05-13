@@ -12,7 +12,7 @@ public:
   static void loadAnims();
   
 protected:
-  void center(QWidget* masterWidget);
+  void center(QWidget* masterWidget, int xOffset = 0, int yOffset = 0);
   void fade(FullScreenDialog* next);
   virtual void reload() = 0;
 
