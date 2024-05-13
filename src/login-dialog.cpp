@@ -44,6 +44,19 @@ LoginDialog::LoginDialog(QWidget *parent)
   // ui->manageBookingsButton->setStyleSheet("QPushButton:focus { background-color: #f21a1a }"
   //                        "QPushButton:focus:pressed { background-color: #f21a1a }");
 
+  ui->languageComboBox->addItem("Deutsch");
+  ui->languageComboBox->addItem("English");
+  ui->languageComboBox->setCurrentText("English");
+
+  ui->languageComboBox->setStyleSheet("QComboBox { background-color: #f21a1a; border-radius: none; color: #fefdfe; font-size: 16px; }");
+  // ui->languageComboBox->view().setStyleSheet("QListView { background-color: #f21a1a; }");
+  QListView* dropdown = static_cast<QListView*>(ui->languageComboBox->view());
+  dropdown->setStyleSheet("QListView { background-color: #f21a1a; color: #fefdfe; font-size: 16px; }"
+                          "QListView::item { min-height: 32px; }");
+
+  ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
+  ui->passwordLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
+
   center(ui->masterWidget);
   setModal(false);
   hide();
@@ -68,17 +81,16 @@ void LoginDialog::reload()
   int screenWidth = screenGeometry.width();
   int screenHeight = screenGeometry.height();
 
-  QPoint languageSelectionWidgetPos = QPoint(
-    screenWidth - (8 + ui->languageSelectionWidget->width()), 
-    screenHeight - (8 + ui->languageSelectionWidget->height())
+  QPoint logoWidgetPos = QPoint(20, 20);
+  QPoint nameWidgetPos = QPoint(180, 24);
+  QPoint languageComboBoxPos = QPoint(
+    screenWidth - (ui->languageComboBox->width()), 
+    16 + ui->languageComboBox->height()
   );
 
-  QPoint logoWidgetPos = QPoint(20, 20);
-  QPoint nameWidgetPos = QPoint(180, 20);
-
-  ui->languageSelectionWidget->move(languageSelectionWidgetPos);
   ui->logoWidget->move(logoWidgetPos);
   ui->nameWidget->move(nameWidgetPos);
+  ui->languageComboBox->move(languageComboBoxPos);
 
   ui->backgroundWidget->setFixedWidth(160);
   ui->backgroundWidget->setFixedHeight(screenHeight);
@@ -112,12 +124,12 @@ bool LoginDialog::verifyMailAddress()
   if (!mailAddressIsValid) {
     ui->reminderLabel->show();
     ui->reminderLabel->setText(reminderLabelText);
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a; border-radius: none; }");
     return false;
   }
 
   else {
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #66cc00 }");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #66cc00; border-radius: none; }");
   }
 
   return true;
@@ -172,18 +184,19 @@ void LoginDialog::on_manageBookingsButton_pressed()
   fade(Widgets::modeSelect);
 }
 
-void LoginDialog::on_germanButton_pressed()
+void LoginDialog::on_languageComboBox_currentTextChanged(const QString& text)
 {
-  Backend::language = ELanguage::German;
+  if (text == "English") {
+    Backend::language = ELanguage::English;
 
-  for (Translatable* t : Widgets::translatables)
-    t->translate(ELanguage::German);
-}
+    for (Translatable* t : Widgets::translatables)
+        t->translate(ELanguage::English);
+  }
 
-void LoginDialog::on_englishButton_pressed()
-{
-  Backend::language = ELanguage::English;
+  if (text == "Deutsch") {
+    Backend::language = ELanguage::German;
 
-  for (Translatable* t : Widgets::translatables)
-      t->translate(ELanguage::English);
+    for (Translatable* t : Widgets::translatables)
+      t->translate(ELanguage::German);
+  }
 }

@@ -169,97 +169,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="languageSelectionWidget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>1390</x>
-     <y>140</y>
-     <width>160</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="languageSelectionLayout">
-    <property name="spacing">
-     <number>12</number>
-    </property>
-    <item>
-     <widget class="QPushButton" name="germanButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>60</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>60</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>:/icons/icons/DE.svg</normaloff>:/icons/icons/DE.svg</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>60</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="flat">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="englishButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>60</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>60</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>:/icons/icons/GB.svg</normaloff>:/icons/icons/GB.svg</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>60</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="flat">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QWidget" name="backgroundWidget" native="true">
    <property name="geometry">
     <rect>
@@ -371,6 +280,22 @@
     <size>
      <width>240</width>
      <height>37</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="languageComboBox">
+   <property name="geometry">
+    <rect>
+     <x>1381</x>
+     <y>490</y>
+     <width>271</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>256</width>
+     <height>32</height>
     </size>
    </property>
   </widget>

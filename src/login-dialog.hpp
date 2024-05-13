@@ -32,8 +32,7 @@ private:
 private slots:
   void on_mailAddressLineEdit_textChanged(const QString& text);
   void on_manageBookingsButton_pressed();
-  void on_germanButton_pressed();
-  void on_englishButton_pressed();
+  void on_languageComboBox_currentTextChanged(const QString& text);
     
 public:
   LoginDialog(QWidget *parent = nullptr);
