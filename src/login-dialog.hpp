@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QDialog>
 #include <QLineEdit>
+#include <QPaintEvent>
 
 #include "fullscreen-dialog.hpp"
 
@@ -25,6 +26,8 @@ private:
 
   QString reminderLabelText;
   QString passwordLineEditPlaceholderText;
+
+  // virtual void paintEvent(QPaintEvent* event) override;
 
 private slots:
   void on_mailAddressLineEdit_textChanged(const QString& text);

@@ -2,6 +2,8 @@
 #include <obs-frontend-api.h>
 
 #include <QScreen>
+#include <QPainter>
+#include <QPixmap>
 
 #include "backend.hpp"
 #include "widgets.hpp"
@@ -21,18 +23,28 @@ LoginDialog::LoginDialog(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
     mailAddressIsValid(false),
-    reminderLabelText("Please enter a valid HfMDD email address! Only admin accounts require a passwords."),
-    passwordLineEditPlaceholderText("Enter Password")
+    reminderLabelText("Please log in with your HfMDD email address! Only admin accounts require a password."),
+    passwordLineEditPlaceholderText("Password")
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setWindowTitle("Login Dialog");
 
   instance = this;
   ui->setupUi(this);
-  ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF0000 }");
+  ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
+  ui->backgroundWidget->setStyleSheet("background-image: url(C:/dev/test-background.png);");
+  ui->logoWidget->setStyleSheet("background-image: url(C:/dev/logo-white.png);"
+                                "background-repeat: no-repeat;"
+                                "background-position: center;"
+                                "background-size: contain;");
+  ui->nameWidget->setStyleSheet("background-image: url(C:/dev/name.png);"
+                                "background-repeat: no-repeat;"
+                                "background-position: center;"
+                                "background-size: contain;");
+  // ui->manageBookingsButton->setStyleSheet("QPushButton:focus { background-color: #f21a1a }"
+  //                        "QPushButton:focus:pressed { background-color: #f21a1a }");
 
   center(ui->masterWidget);
-
   setModal(false);
   hide();
 }
@@ -45,7 +57,33 @@ LoginDialog::~LoginDialog()
 void LoginDialog::reload()
 {
   raise();
-  center(ui->masterWidget);
+  center(ui->masterWidget, 50, 0);
+
+   QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
+
+  if (!mainWindow) return;
+
+  QRect screenGeometry = mainWindow->screen()->geometry();
+
+  int screenWidth = screenGeometry.width();
+  int screenHeight = screenGeometry.height();
+
+  QPoint languageSelectionWidgetPos = QPoint(
+    screenWidth - (8 + ui->languageSelectionWidget->width()), 
+    screenHeight - (8 + ui->languageSelectionWidget->height())
+  );
+
+  QPoint logoWidgetPos = QPoint(20, 20);
+  QPoint nameWidgetPos = QPoint(180, 20);
+
+  ui->languageSelectionWidget->move(languageSelectionWidgetPos);
+  ui->logoWidget->move(logoWidgetPos);
+  ui->nameWidget->move(nameWidgetPos);
+
+  ui->backgroundWidget->setFixedWidth(160);
+  ui->backgroundWidget->setFixedHeight(screenHeight);
+
+  ui->reminderLabelWidget->move(180, screenHeight - (8 + ui->reminderLabelWidget->height()));
   
   ui->mailAddressLineEdit->clear();
   ui->passwordLineEdit->clear();
@@ -55,13 +93,13 @@ void LoginDialog::translate(ELanguage language)
 {
   switch (language) {
     case ELanguage::German:
-    reminderLabelText = "Bitte geben Sie eine gültige HfMDD-E-Mail-Adresse ein! Nur Administratorkonten erfordern ein Passwort.";
+    reminderLabelText = "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein! Nur Administratorkonten erfordern ein Passwort.";
     passwordLineEditPlaceholderText = "Passwort";
     break;
 
     case ELanguage::English:
-    reminderLabelText = "Please enter a valid HfMDD email address! Only admin accounts require a passwords.";
-    passwordLineEditPlaceholderText = "Enter Password";
+    reminderLabelText = "Please log in with your HfMDD email address! Only admin accounts require a password.";
+    passwordLineEditPlaceholderText = "Password";
     break;
   }
 
@@ -74,13 +112,12 @@ bool LoginDialog::verifyMailAddress()
   if (!mailAddressIsValid) {
     ui->reminderLabel->show();
     ui->reminderLabel->setText(reminderLabelText);
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #FF0000 }");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
     return false;
   }
 
   else {
-    ui->reminderLabel->setText(" ");
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #00FF00 }");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #66cc00 }");
   }
 
   return true;
@@ -102,6 +139,8 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
       ui->reminderLabel->setText(" ");
       break;
     }
+
+    else ui->reminderLabel->setText(reminderLabelText);
   }
 
   if (Backend::currentEmail == Backend::adminEmail) 
@@ -109,6 +148,14 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 
   else 
     ui->passwordLineEdit->setDisabled(true);
+
+  QFont font = ui->mailAddressLineEdit->font();
+
+  if (text == "")
+    ui->mailAddressLineEdit->setFont(QFont(font.family(), font.pointSize(), font.weight(), true));
+
+  else 
+    ui->mailAddressLineEdit->setFont(QFont(font.family(), font.pointSize(), font.weight(), false));
 
   verifyMailAddress();
 }

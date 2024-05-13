@@ -25,142 +25,354 @@
   <property name="font">
    <font>
     <pointsize>12</pointsize>
+    <bold>false</bold>
    </font>
   </property>
   <widget class="QWidget" name="masterWidget" native="true">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>1024</width>
-     <height>481</height>
+     <x>270</x>
+     <y>60</y>
+     <width>1061</width>
+     <height>531</height>
     </rect>
    </property>
-   <widget class="QWidget" name="gridLayoutWidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>150</y>
-      <width>882</width>
-      <height>121</height>
+      <x>330</x>
+      <y>120</y>
+      <width>411</width>
+      <height>231</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <property name="verticalSpacing">
-      <number>4</number>
-     </property>
-     <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
       <widget class="QLineEdit" name="mailAddressLineEdit">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <italic>false</italic>
-        </font>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="placeholderText">
-        <string/>
+       <property name="minimumSize">
+        <size>
+         <width>409</width>
+         <height>0</height>
+        </size>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="reminderLabel">
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
-         <height>24</height>
+         <width>409</width>
+         <height>64</height>
         </size>
        </property>
        <property name="font">
         <font>
          <pointsize>12</pointsize>
          <italic>true</italic>
+         <bold>false</bold>
         </font>
        </property>
-       <property name="text">
-        <string>Please enter a valid HfMDD email address! Only admin accounts require a passwords.</string>
+       <property name="frame">
+        <bool>true</bool>
+       </property>
+       <property name="cursorPosition">
+        <number>0</number>
+       </property>
+       <property name="placeholderText">
+        <string>Email</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item>
       <widget class="QLineEdit" name="passwordLineEdit">
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>409</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>409</width>
+         <height>64</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <pointsize>12</pointsize>
          <italic>true</italic>
+         <bold>false</bold>
         </font>
+       </property>
+       <property name="frame">
+        <bool>true</bool>
        </property>
        <property name="echoMode">
         <enum>QLineEdit::Password</enum>
        </property>
+       <property name="cursorPosition">
+        <number>0</number>
+       </property>
        <property name="placeholderText">
-        <string>Enter Password</string>
+        <string>Password</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item>
       <widget class="QPushButton" name="manageBookingsButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>128</width>
-         <height>0</height>
+         <width>409</width>
+         <height>64</height>
         </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>409</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="text">
         <string>Login</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="germanButton">
+  </widget>
+  <widget class="QWidget" name="languageSelectionWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>1390</x>
+     <y>140</y>
+     <width>160</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="languageSelectionLayout">
+    <property name="spacing">
+     <number>12</number>
+    </property>
+    <item>
+     <widget class="QPushButton" name="germanButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>:/icons/icons/DE.svg</normaloff>:/icons/icons/DE.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="englishButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>:/icons/icons/GB.svg</normaloff>:/icons/icons/GB.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>60</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="backgroundWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>160</width>
+     <height>1080</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+  </widget>
+  <widget class="QWidget" name="logoWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>760</y>
+     <width>120</width>
+     <height>106</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>120</width>
+     <height>106</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>120</width>
+     <height>106</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QWidget" name="reminderLabelWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>660</y>
+     <width>931</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <widget class="QLabel" name="reminderLabel">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>360</y>
-      <width>81</width>
-      <height>61</height>
+      <x>10</x>
+      <y>0</y>
+      <width>921</width>
+      <height>74</height>
      </rect>
     </property>
-    <property name="text">
-     <string/>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
-    <property name="icon">
-     <iconset resource="login-dialog.qrc">
-      <normaloff>:/icons/icons/DE.svg</normaloff>:/icons/icons/DE.svg</iconset>
-    </property>
-    <property name="iconSize">
+    <property name="minimumSize">
      <size>
-      <width>80</width>
-      <height>80</height>
+      <width>409</width>
+      <height>0</height>
      </size>
     </property>
-   </widget>
-   <widget class="QPushButton" name="englishButton">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>360</y>
-      <width>81</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset resource="login-dialog.qrc">
-      <normaloff>:/icons/icons/GB.svg</normaloff>:/icons/icons/GB.svg</iconset>
-    </property>
-    <property name="iconSize">
+    <property name="maximumSize">
      <size>
-      <width>80</width>
-      <height>80</height>
+      <width>16777215</width>
+      <height>16777215</height>
      </size>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Please log in with your HfMDD email address! Only admin accounts require a password.</string>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <property name="indent">
+     <number>4</number>
+    </property>
    </widget>
+  </widget>
+  <widget class="QWidget" name="nameWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>810</y>
+     <width>240</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>240</width>
+     <height>37</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>240</width>
+     <height>37</height>
+    </size>
+   </property>
   </widget>
  </widget>
  <resources/>
