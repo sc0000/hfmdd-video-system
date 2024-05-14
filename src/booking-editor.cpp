@@ -32,6 +32,11 @@ void BookingEditor::reload(Booking* bookingToEdit)
     ui->calendarWidget->setSelectedDate(bookingToEdit->date);
     updateExistingBookingsLabel(bookingToEdit->date);
 
+    // ui->calendarWidget->setStyleSheet("QCalendarWidget QToolButton { background-color: rgb(255, 0, 0);}"
+    //   "QCalendarWidget QToolButton:hover { background-color: rgb(128, 0, 126)}"
+    //   "QCalendarWidget QSpinBox { background-color: rgb(128, 128, 0)}"
+    //   "QCalendarWidget QTableView { background-color: rgb(0, 255, 0)}");
+
     ui->startTimeEdit->setTime(bookingToEdit->startTime);
     ui->stopTimeEdit->setTime(bookingToEdit->stopTime);
     ui->eventTypeLineEdit->setText(bookingToEdit->event);

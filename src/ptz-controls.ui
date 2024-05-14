@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>208</width>
-    <height>625</height>
+    <height>678</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -91,6 +91,7 @@
              <font>
               <pointsize>10</pointsize>
               <italic>true</italic>
+              <bold>false</bold>
               <underline>false</underline>
              </font>
             </property>
@@ -114,7 +115,10 @@
              <widget class="QPushButton" name="previousCamButton">
               <property name="font">
                <font>
-                <pointsize>8</pointsize>
+                <pointsize>10</pointsize>
+                <bold>false</bold>
+                <strikeout>false</strikeout>
+                <kerning>true</kerning>
                </font>
               </property>
               <property name="text">
@@ -127,12 +131,16 @@ Camera</string>
              <widget class="QPushButton" name="nextCamButton">
               <property name="font">
                <font>
-                <pointsize>8</pointsize>
+                <pointsize>10</pointsize>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
                <string>Next
 Camera</string>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -142,7 +150,8 @@ Camera</string>
            <widget class="QPushButton" name="overviewButton">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>10</pointsize>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -646,22 +655,10 @@ Camera</string>
           </property>
           <item>
            <widget class="QPushButton" name="savePresetButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>10</pointsize>
              </font>
-            </property>
-            <property name="toolTip">
-             <string>Save the current camera positions as a preset</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font-size: 8pt;</string>
             </property>
             <property name="text">
              <string>Save</string>
@@ -670,22 +667,10 @@ Camera</string>
           </item>
           <item>
            <widget class="QPushButton" name="loadPresetButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>10</pointsize>
              </font>
-            </property>
-            <property name="toolTip">
-             <string>Load the selected preset</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font-size: 8pt;</string>
             </property>
             <property name="text">
              <string>Load</string>
@@ -696,7 +681,8 @@ Camera</string>
            <widget class="QPushButton" name="deletePresetButton">
             <property name="font">
              <font>
-              <pointsize>8</pointsize>
+              <pointsize>10</pointsize>
+              <bold>false</bold>
              </font>
             </property>
             <property name="toolTip">
@@ -754,6 +740,24 @@ Camera</string>
          <layout class="QVBoxLayout" name="recordButtonLayout">
           <item>
            <widget class="QPushButton" name="recordButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>58</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>58</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <bold>true</bold>
@@ -766,6 +770,12 @@ Camera</string>
           </item>
           <item>
            <widget class="QPushButton" name="toBookingManagerButton">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <bold>false</bold>
+             </font>
+            </property>
             <property name="text">
              <string>To Booking Manager</string>
             </property>
@@ -773,6 +783,12 @@ Camera</string>
           </item>
           <item>
            <widget class="QPushButton" name="logoutButton">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <bold>false</bold>
+             </font>
+            </property>
             <property name="text">
              <string>Logout</string>
             </property>

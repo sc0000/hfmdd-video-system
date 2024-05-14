@@ -213,8 +213,8 @@ void PTZControls::startRecording()
 
     ui->recordButton->setText(
       Backend::language != ELanguage::German ?
-      "Stop Recording" :
-      "Aufnahme beenden"
+      "Stop!" :
+      "Stop!"
     );
 }
 
@@ -228,8 +228,8 @@ void PTZControls::stopRecording()
 
   ui->recordButton->setText(
     Backend::language != ELanguage::German ?
-    "Start Recording" :
-    "Aufnahme starten"
+    "Record" :
+    "Record"
   );
 
   const QString sendFilesMsg = Backend::sendFiles(booking);
@@ -247,7 +247,7 @@ void PTZControls::translate(ELanguage language)
     ui->savePresetButton->setText("Speichern");
     ui->loadPresetButton->setText("Laden");
     ui->deletePresetButton->setText("Löschen");
-    ui->recordButton->setText("Aufnahme starten");
+    ui->recordButton->setText("Record");
     ui->toBookingManagerButton->setText("Zurück");
     break;
 
@@ -460,10 +460,13 @@ PTZControls::PTZControls(QWidget *parent)
 	}
 
   //----------------------------------------------------
-  // ui->recordButton->setStyleSheet(
-  //   "QPushButton { font-size: 8pt; background-color: red; }"
-  // );
+  ui->recordButton->setStyleSheet(
+    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); font-size: 20px; }"
+  );
   //----------------------------------------------------
+
+  ui->presetListView->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
+
   setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   obs_frontend_add_dock(this);

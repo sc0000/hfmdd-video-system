@@ -33,6 +33,7 @@ LoginDialog::LoginDialog(QWidget *parent)
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
   ui->backgroundWidget->setStyleSheet("background-image: url(C:/dev/test-background.png);");
+  // ui->logoWidget->setStyleSheet("background: transparent;");
   ui->logoWidget->setStyleSheet("background-image: url(C:/dev/logo-white.png);"
                                 "background-repeat: no-repeat;"
                                 "background-position: center;"
@@ -48,11 +49,12 @@ LoginDialog::LoginDialog(QWidget *parent)
   ui->languageComboBox->addItem("English");
   ui->languageComboBox->setCurrentText("English");
 
-  ui->languageComboBox->setStyleSheet("QComboBox { background-color: #f21a1a; border-radius: none; color: #fefdfe; font-size: 16px; }");
+  ui->languageComboBox->setStyleSheet("QComboBox { background-color: #ffbf00; border-radius: none; color: rgb(31, 30, 31); font-size: 16px; }");
   // ui->languageComboBox->view().setStyleSheet("QListView { background-color: #f21a1a; }");
   QListView* dropdown = static_cast<QListView*>(ui->languageComboBox->view());
-  dropdown->setStyleSheet("QListView { background-color: #f21a1a; color: #fefdfe; font-size: 16px; }"
-                          "QListView::item { min-height: 32px; }");
+  dropdown->setStyleSheet("QListView { background-color: #ffbf00; color: rgb(31, 30, 31); font-size: 16px; }"
+                          "QListView::item { min-height: 64px; }"
+                          "QListView::item:hover { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: none; }");
 
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
   ui->passwordLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
@@ -124,12 +126,12 @@ bool LoginDialog::verifyMailAddress()
   if (!mailAddressIsValid) {
     ui->reminderLabel->show();
     ui->reminderLabel->setText(reminderLabelText);
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a; border-radius: none; }");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a; border-radius: none; background-color: rgb(254, 253, 254)}");
     return false;
   }
 
   else {
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #66cc00; border-radius: none; }");
+    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid rgb(31, 30, 31); border-radius: none; background-color: rgb(254, 253, 254)}");
   }
 
   return true;

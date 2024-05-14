@@ -155,7 +155,7 @@
        <property name="font">
         <font>
          <pointsize>12</pointsize>
-         <bold>false</bold>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -183,28 +183,6 @@
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
-   </property>
-  </widget>
-  <widget class="QWidget" name="logoWidget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>760</y>
-     <width>120</width>
-     <height>106</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>120</width>
-     <height>106</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>120</width>
-     <height>106</height>
-    </size>
    </property>
   </widget>
   <widget class="QWidget" name="reminderLabelWidget" native="true">
@@ -267,19 +245,19 @@
      <x>740</x>
      <y>810</y>
      <width>240</width>
-     <height>37</height>
+     <height>39</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
      <width>240</width>
-     <height>37</height>
+     <height>39</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>240</width>
-     <height>37</height>
+     <height>39</height>
     </size>
    </property>
   </widget>
@@ -296,6 +274,28 @@
     <size>
      <width>256</width>
      <height>32</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QWidget" name="logoWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>750</y>
+     <width>120</width>
+     <height>105</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>120</width>
+     <height>105</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>120</width>
+     <height>105</height>
     </size>
    </property>
   </widget>

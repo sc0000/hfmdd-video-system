@@ -86,6 +86,12 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QPushButton" name="newBookingButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>New Booking</string>
          </property>
@@ -93,6 +99,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="editBookingButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Edit Booking</string>
          </property>
@@ -100,6 +112,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="deleteBookingButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Delete Booking</string>
          </property>
@@ -136,6 +154,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="toModeSelectButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Go back to Mode Selection</string>
          </property>
@@ -143,6 +167,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="logoutButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Logout</string>
          </property>

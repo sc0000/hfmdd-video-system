@@ -33,6 +33,8 @@ BookingManager::BookingManager(QWidget* parent)
   ui->setupUi(this);
   center(ui->masterWidget);
 
+  ui->bookingsList->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
+
   setModal(false);
   hide();
 }
@@ -69,8 +71,11 @@ void BookingManager::loadBookings()
     QString entryText = makeEntry(bookings[i]);
     QListWidgetItem* item = new QListWidgetItem(entryText);
     
-    if (bookings[i].isConflicting)
-      item->setBackground(Qt::red);
+    if (bookings[i].isConflicting) {
+      item->setBackground(QBrush(QColor(31, 30, 31)));
+      item->setForeground(QBrush(QColor(254, 253, 254)));
+    }
+      
 
     ui->bookingsList->addItem(item);
   }

@@ -57,11 +57,15 @@
        <property name="font">
         <font>
          <pointsize>12</pointsize>
-         <bold>false</bold>
+         <bold>true</bold>
+         <stylestrategy>NoAntialias</stylestrategy>
         </font>
        </property>
        <property name="text">
         <string>Record a video right now</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -72,6 +76,13 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+         <stylestrategy>NoAntialias</stylestrategy>
+        </font>
        </property>
        <property name="text">
         <string>Book a video recording
