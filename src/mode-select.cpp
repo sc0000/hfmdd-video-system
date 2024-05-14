@@ -28,6 +28,10 @@ ModeSelect::ModeSelect(QWidget *parent)
   ui->setupUi(this);
   
   center(ui->masterWidget);
+
+  // ui->quickModeButton->setStyleSheet("QPushButton { border-radius: none; }");
+  ui->bookModeButton->setStyleSheet("QPushButton:hover { background-color: rgb(42,130,218); }");
+
   setModal(false);
   hide();
 }
@@ -41,9 +45,6 @@ void ModeSelect::reload()
 {
   raise();
   center(ui->masterWidget);
-
-  ui->quickModeButton->setStyleSheet("QPushButton { border-radius: none; }");
-  ui->bookModeButton->setStyleSheet("QPushButton { border-radius: none; }");
 }
 
 void ModeSelect::translate(ELanguage language)

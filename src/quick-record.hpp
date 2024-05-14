@@ -31,8 +31,6 @@ private:
 
   void updateExistingBookingsLabel(QDate date);
   void updateConflictingBookings(const QDate& date);
-
-  void roundTime(QTime& time);
   void updateStopTimeLabel();
   
 private slots:

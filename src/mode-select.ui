@@ -36,61 +36,47 @@
      <height>481</height>
     </rect>
    </property>
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QPushButton" name="quickModeButton">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>160</y>
-      <width>681</width>
-      <height>91</height>
+      <x>0</x>
+      <y>0</y>
+      <width>481</width>
+      <height>481</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="quickModeButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-         <stylestrategy>NoAntialias</stylestrategy>
-        </font>
-       </property>
-       <property name="text">
-        <string>Record a video right now</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="bookModeButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <bold>true</bold>
-         <stylestrategy>NoAntialias</stylestrategy>
-        </font>
-       </property>
-       <property name="text">
-        <string>Book a video recording
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>64</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Record a video right now</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bookModeButton">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>0</y>
+      <width>481</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>64</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Book a video recording
 session in the future</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    </property>
    </widget>
   </widget>
  </widget>

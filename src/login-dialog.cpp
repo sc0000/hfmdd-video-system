@@ -33,7 +33,6 @@ LoginDialog::LoginDialog(QWidget *parent)
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
   ui->backgroundWidget->setStyleSheet("background-image: url(C:/dev/test-background.png);");
-  // ui->logoWidget->setStyleSheet("background: transparent;");
   ui->logoWidget->setStyleSheet("background-image: url(C:/dev/logo-white.png);"
                                 "background-repeat: no-repeat;"
                                 "background-position: center;"
@@ -42,15 +41,12 @@ LoginDialog::LoginDialog(QWidget *parent)
                                 "background-repeat: no-repeat;"
                                 "background-position: center;"
                                 "background-size: contain;");
-  // ui->manageBookingsButton->setStyleSheet("QPushButton:focus { background-color: #f21a1a }"
-  //                        "QPushButton:focus:pressed { background-color: #f21a1a }");
 
   ui->languageComboBox->addItem("Deutsch");
   ui->languageComboBox->addItem("English");
   ui->languageComboBox->setCurrentText("English");
 
   ui->languageComboBox->setStyleSheet("QComboBox { background-color: #ffbf00; border-radius: none; color: rgb(31, 30, 31); font-size: 16px; }");
-  // ui->languageComboBox->view().setStyleSheet("QListView { background-color: #f21a1a; }");
   QListView* dropdown = static_cast<QListView*>(ui->languageComboBox->view());
   dropdown->setStyleSheet("QListView { background-color: #ffbf00; color: rgb(31, 30, 31); font-size: 16px; }"
                           "QListView::item { min-height: 64px; }"
@@ -87,7 +83,7 @@ void LoginDialog::reload()
   QPoint nameWidgetPos = QPoint(180, 24);
   QPoint languageComboBoxPos = QPoint(
     screenWidth - (ui->languageComboBox->width()), 
-    16 + ui->languageComboBox->height()
+    24 + ui->languageComboBox->height()
   );
 
   ui->logoWidget->move(logoWidgetPos);

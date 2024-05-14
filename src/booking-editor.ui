@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>611</width>
-    <height>652</height>
+    <width>631</width>
+    <height>711</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -26,8 +26,8 @@
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>561</width>
-     <height>609</height>
+     <width>597</width>
+     <height>671</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -101,96 +101,127 @@
      </layout>
     </item>
     <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>12</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="timeLabel">
+      <property name="font">
+       <font>
+        <pointsize>28</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>00:00 - 00:00</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="setTimesLayout">
       <property name="leftMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="startTimeLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
+       <widget class="QPushButton" name="setStartTimeButton">
+        <property name="minimumSize">
          <size>
-          <width>80</width>
-          <height>16777215</height>
+          <width>0</width>
+          <height>36</height>
          </size>
         </property>
         <property name="text">
-         <string>Start Time</string>
+         <string>Edit Start Time</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QTimeEdit" name="startTimeEdit">
-        <property name="maximumTime">
-         <time>
-          <hour>23</hour>
-          <minute>0</minute>
-          <second>0</second>
-         </time>
-        </property>
-        <property name="minimumTime">
-         <time>
-          <hour>7</hour>
-          <minute>0</minute>
-          <second>0</second>
-         </time>
-        </property>
-        <property name="displayFormat">
-         <string notr="true">HH:mm</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="stopTimeLabel">
-        <property name="maximumSize">
+       <widget class="QPushButton" name="setStopTimeButton">
+        <property name="minimumSize">
          <size>
-          <width>80</width>
-          <height>16777215</height>
+          <width>0</width>
+          <height>36</height>
          </size>
         </property>
         <property name="text">
-         <string>Stop Time</string>
+         <string>Edit Stop Time</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="decreaseTimeBy60Button">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>- 60 min</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QTimeEdit" name="stopTimeEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QPushButton" name="decreaseTimeBy05Button">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
         </property>
-        <property name="maximumTime">
-         <time>
-          <hour>23</hour>
-          <minute>0</minute>
-          <second>0</second>
-         </time>
+        <property name="text">
+         <string>- 5 min</string>
         </property>
-        <property name="minimumTime">
-         <time>
-          <hour>7</hour>
-          <minute>1</minute>
-          <second>0</second>
-         </time>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="increaseTimeBy05Button">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
         </property>
-        <property name="currentSection">
-         <enum>QDateTimeEdit::HourSection</enum>
+        <property name="text">
+         <string>+ 5 min</string>
         </property>
-        <property name="displayFormat">
-         <string notr="true">HH:mm</string>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="increaseTimeBy60Button">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>+ 60 min</string>
         </property>
        </widget>
       </item>
@@ -199,10 +230,10 @@
     <item>
      <layout class="QHBoxLayout" name="eventTypeLayout">
       <property name="leftMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
@@ -232,16 +263,22 @@
     <item>
      <layout class="QHBoxLayout" name="buttonsLayout">
       <property name="leftMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
        <widget class="QPushButton" name="saveButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
+        </property>
         <property name="text">
          <string>Save</string>
         </property>
@@ -249,6 +286,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="cancelButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
+        </property>
         <property name="text">
          <string>Cancel</string>
         </property>

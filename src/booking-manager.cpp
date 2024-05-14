@@ -107,13 +107,17 @@ void BookingManager::translate(ELanguage language)
 
 QString BookingManager::makeEntry(const Booking& booking)
 {
+  QString conflictLabel = Backend::language != ELanguage::German ?
+    "\t--CONFLICTING!" :
+    "\t--BUCHUNGSKONFLIKT!";
+
   QString entry = 
       booking.date.toString("ddd MMM dd yyyy") + "\t" +
       booking.startTime.toString("HH:mm") + " - " +
       booking.stopTime.toString("HH:mm") + "\t" +
       booking.event.leftJustified(20, ' ') + "\t" +
       booking.email.leftJustified(20, ' ') +
-      (booking.isConflicting ? "\t--CONFLICTING!" : "");
+      (booking.isConflicting ? conflictLabel : "");
 
   return entry;
 }

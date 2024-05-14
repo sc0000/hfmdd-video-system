@@ -11,9 +11,12 @@
 BookingEditor::BookingEditor(QWidget* parent)
   : QDialog(parent),
     ui(new Ui::BookingEditor),
-    booking(Backend::currentBooking)
+    booking(Backend::currentBooking),
+    timeToSet(ETimeToSet::StartTime)
 {
   ui->setupUi(this);
+
+  ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
   
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
   setWindowTitle("Booking Editor");
@@ -28,29 +31,38 @@ void BookingEditor::reload(Booking* bookingToEdit)
 {
   if (bookingToEdit) {
     isEditing = true;
+
+    ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; }");
     
     ui->calendarWidget->setSelectedDate(bookingToEdit->date);
     updateExistingBookingsLabel(bookingToEdit->date);
 
-    // ui->calendarWidget->setStyleSheet("QCalendarWidget QToolButton { background-color: rgb(255, 0, 0);}"
-    //   "QCalendarWidget QToolButton:hover { background-color: rgb(128, 0, 126)}"
-    //   "QCalendarWidget QSpinBox { background-color: rgb(128, 128, 0)}"
-    //   "QCalendarWidget QTableView { background-color: rgb(0, 255, 0)}");
-
-    ui->startTimeEdit->setTime(bookingToEdit->startTime);
-    ui->stopTimeEdit->setTime(bookingToEdit->stopTime);
+    // ui->startTimeEdit->setTime(bookingToEdit->startTime);
+    // ui->stopTimeEdit->setTime(bookingToEdit->stopTime);
     ui->eventTypeLineEdit->setText(bookingToEdit->event);
 
     booking.email = bookingToEdit->email;
     booking.index = bookingToEdit->index;
+    booking.startTime = bookingToEdit->startTime;
+    booking.stopTime = bookingToEdit->stopTime;
+  }
+
+  else {
+    booking.startTime = QTime::currentTime();
+    Backend::roundTime(booking.startTime);
+    booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) ? 
+      booking.startTime.addSecs(60 * 60) : 
+      QTime(23, 0);
   }
 
   booking.date = ui->calendarWidget->selectedDate();
-  booking.startTime = ui->startTimeEdit->time();
-  booking.stopTime = ui->stopTimeEdit->time();
+  // booking.startTime = ui->startTimeEdit->time();
+  // booking.stopTime = ui->stopTimeEdit->time();
   booking.event = ui->eventTypeLineEdit->text();
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
+
+  drawTimespan();
 
   updateExistingBookingsLabel(booking.date);
 
@@ -63,8 +75,8 @@ void BookingEditor::translate(ELanguage language)
   switch (language) {
     case ELanguage::German:
     ui->bookingsOnSelectedDateLabel->setText("Kein Datum ausgewählt");
-    ui->startTimeLabel->setText("Startzeit");
-    ui->stopTimeLabel->setText("Stopzeit");
+    ui->setStartTimeButton->setText("Startzeit ändern");
+    ui->setStopTimeButton->setText("Stopzeit ändern");
     ui->eventTypeLabel->setText("Art der Veranstaltung");
     ui->saveButton->setText("Speichern");
     ui->cancelButton->setText("Verwerfen");
@@ -73,8 +85,8 @@ void BookingEditor::translate(ELanguage language)
 
     case ELanguage::English:
     ui->bookingsOnSelectedDateLabel->setText("No date selected.");
-    ui->startTimeLabel->setText("Start Time");
-    ui->stopTimeLabel->setText("Stop Time");
+    ui->setStartTimeButton->setText("Edit Start Time");
+    ui->setStopTimeButton->setText("Edit Stop Time");
     ui->eventTypeLabel->setText("Type of Event");
     ui->saveButton->setText("Save");
     ui->cancelButton->setText("Cancel");
@@ -144,6 +156,12 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
   ui->bookingsOnSelectedDateLabel->setText(str);
 }
 
+void BookingEditor::drawTimespan()
+{
+  ui->timeLabel->setText(booking.startTime.toString("HH:mm") + " – " + booking.stopTime.toString("HH:mm"));
+}
+
+
 void BookingEditor::on_calendarWidget_clicked(QDate date)
 {
   booking.date = date;
@@ -153,24 +171,146 @@ void BookingEditor::on_calendarWidget_clicked(QDate date)
   updateExistingBookingsLabel(date);
 }
 
+void BookingEditor::on_setStartTimeButton_pressed()
+{
+  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px;  }");
+  ui->setStopTimeButton->setStyleSheet(
+    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px;  }"
+    "QPushButton:hover {background-color: #ffbf00; font-size: 16px;}"  
+  );
+
+  timeToSet = ETimeToSet::StartTime;
+}
+  
+void BookingEditor::on_setStopTimeButton_pressed()
+{
+  ui->setStopTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px;  }");
+  ui->setStartTimeButton->setStyleSheet(
+    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px;  }"
+    "QPushButton:hover {background-color: #ffbf00; font-size: 16px;}"  
+  );
+
+  timeToSet = ETimeToSet::StopTime;
+}
+
+void BookingEditor::on_decreaseTimeBy60Button_pressed()
+{
+  if (timeToSet == ETimeToSet::StartTime) {
+    QTime newStartTime = booking.startTime.addSecs(60 * -60);
+
+    if (newStartTime < QTime(7, 0)) 
+      return;
+
+    booking.startTime = newStartTime;
+  }
+
+  if (timeToSet == ETimeToSet::StopTime) {
+    QTime newStopTime = booking.stopTime.addSecs(60 * -60);
+
+    if (newStopTime <= booking.startTime) {
+      QTime newStartTime = newStopTime.addSecs(60 * -60);
+      booking.startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
+    }
+
+    booking.stopTime = newStopTime;
+  }
+
+  drawTimespan();
+}
+
+void BookingEditor::on_decreaseTimeBy05Button_pressed()
+{
+  if (timeToSet == ETimeToSet::StartTime) {
+    QTime newStartTime = booking.startTime.addSecs(60 * -5);
+
+    if (newStartTime < QTime(7, 0)) 
+      return;
+
+    booking.startTime = newStartTime;
+  }
+
+  if (timeToSet == ETimeToSet::StopTime) {
+    QTime newStopTime = booking.stopTime.addSecs(60 * -5);
+
+    if (newStopTime <= booking.startTime) {
+      QTime newStartTime = newStopTime.addSecs(60 * -5);
+      booking.startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
+    }
+
+    booking.stopTime = newStopTime;
+  }
+
+  drawTimespan();
+}
+
+void BookingEditor::on_increaseTimeBy05Button_pressed()
+{
+  if (timeToSet == ETimeToSet::StartTime) {
+    QTime newStartTime = booking.startTime.addSecs(60 * 5);
+
+    if (newStartTime >= booking.stopTime) {
+      QTime newStopTime = newStartTime.addSecs(60 * 5);
+      booking.stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
+    }
+
+    booking.startTime = newStartTime;
+  }
+
+  if (timeToSet == ETimeToSet::StopTime) {
+    QTime newStopTime = booking.stopTime.addSecs(60 * 5);
+
+    if (newStopTime > QTime(23, 0))
+      return;
+
+    booking.stopTime = newStopTime;
+  }
+
+  drawTimespan();
+}
+
+void BookingEditor::on_increaseTimeBy60Button_pressed()
+{
+  if (timeToSet == ETimeToSet::StartTime) {
+    QTime newStartTime = booking.startTime.addSecs(60 * 60);
+
+    if (newStartTime >= booking.stopTime) {
+      QTime newStopTime = newStartTime.addSecs(60 * 60);
+      booking.stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
+    }
+
+    booking.startTime = newStartTime;
+  }
+
+  if (timeToSet == ETimeToSet::StopTime) {
+    QTime newStopTime = booking.stopTime.addSecs(60 * 60);
+
+    if (newStopTime > QTime(23, 0))
+      return;
+
+    booking.stopTime = newStopTime;
+  }
+
+  drawTimespan();
+}
+
 void BookingEditor::on_startTimeEdit_timeChanged(QTime time)
 {
-  booking.startTime = time;
+  // booking.startTime = time;
 
-  if (time > booking.stopTime) 
-    ui->stopTimeEdit->setTime(time);
+  // if (time > booking.stopTime) 
+  //   ui->stopTimeEdit->setTime(time);
 
-  updateExistingBookingsLabel(booking.date);
+  // updateExistingBookingsLabel(booking.date);
 }
 
 void BookingEditor::on_stopTimeEdit_timeChanged(QTime time)
 {
-  booking.stopTime = time;
+  // booking.stopTime = time;
 
-  if (time < booking.startTime) 
-    ui->startTimeEdit->setTime(time);
+  // if (time < booking.startTime) 
+  //   ui->startTimeEdit->setTime(time);
 
-  updateExistingBookingsLabel(booking.date);
+  // updateExistingBookingsLabel(booking.date);
 }
 
 void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
@@ -180,11 +320,6 @@ void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
 
 void BookingEditor::on_saveButton_pressed()
 {
-  BookingManager* bookingManager = BookingManager::getInstance();
-
-  if (!bookingManager) 
-    return;
-
   if (booking.event == "") {
     Widgets::okDialog->display(
       Backend::language != ELanguage::German ?
@@ -195,7 +330,7 @@ void BookingEditor::on_saveButton_pressed()
     return;
   }
 
-  if (ui->startTimeEdit->time() == ui->stopTimeEdit->time()) {
+  if (booking.startTime == booking.stopTime) {
     Widgets::okDialog->display(
       Backend::language != ELanguage::German ?
       "Start and stop time are identical. Please select a reasonable time frame!" :
@@ -213,7 +348,7 @@ void BookingEditor::on_saveButton_pressed()
   else 
     JsonParser::addBooking(booking);
 
-  bookingManager->loadBookings();
+  Widgets::bookingManager->loadBookings();
 
   hide();
 }

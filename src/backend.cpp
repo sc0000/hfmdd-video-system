@@ -114,6 +114,30 @@ void Backend::reevaluateConflicts()
   }
 }
 
+void Backend::roundTime(QTime& time)
+{
+  int minutes = time.minute();
+  int remainder = minutes % 10;
+  int roundedMinutes = minutes - remainder;
+
+  if (remainder > 4)
+    roundedMinutes += 10;
+
+  if (roundedMinutes >= 60) {
+    roundedMinutes = 0;
+    int hour = time.hour();
+
+    if (hour == 23) 
+      time = QTime(0, 0);
+
+    else 
+      time = QTime(hour + 1, 0);
+  }
+
+  else
+    time = QTime(time.hour(), roundedMinutes);
+}
+
 QString Backend::sendFiles(const Booking& booking)
 {
   const QString dllFilePath = QCoreApplication::applicationFilePath();
