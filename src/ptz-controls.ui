@@ -831,7 +831,7 @@ Camera</string>
      <normaloff>:/settings/images/settings/general.svg</normaloff>:/settings/images/settings/general.svg</iconset>
    </property>
    <property name="text">
-    <string>PTZ Properties</string>
+    <string>Settings</string>
    </property>
    <property name="toolTip">
     <string>PTZ Camera Properties</string>

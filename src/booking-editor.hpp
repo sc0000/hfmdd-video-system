@@ -42,8 +42,6 @@ private slots:
   void on_increaseTimeBy05Button_pressed();
   void on_increaseTimeBy60Button_pressed();
 
-  void on_startTimeEdit_timeChanged(QTime time);
-  void on_stopTimeEdit_timeChanged(QTime time);
   void on_eventTypeLineEdit_textChanged(const QString& text);
   void on_saveButton_pressed();
   void on_cancelButton_pressed();

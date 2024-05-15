@@ -29,7 +29,6 @@ ModeSelect::ModeSelect(QWidget *parent)
   
   center(ui->masterWidget);
 
-  // ui->quickModeButton->setStyleSheet("QPushButton { border-radius: none; }");
   ui->bookModeButton->setStyleSheet("QPushButton:hover { background-color: rgb(42,130,218); }");
 
   setModal(false);

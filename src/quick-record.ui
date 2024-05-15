@@ -46,6 +46,9 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="spacing">
+      <number>4</number>
+     </property>
      <item>
       <widget class="QLabel" name="recordUntilLabel">
        <property name="font">
@@ -67,6 +70,9 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>4</number>
+       </property>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
@@ -108,12 +114,18 @@
             <string>There are no other bookings yet today.</string>
            </property>
            <property name="margin">
-            <number>8</number>
+            <number>0</number>
+           </property>
+           <property name="indent">
+            <number>4</number>
            </property>
           </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="spacing">
+            <number>4</number>
+           </property>
            <item>
             <widget class="QPushButton" name="decreaseTimeBy20Button">
              <property name="sizePolicy">
@@ -198,6 +210,9 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <property name="spacing">
+        <number>4</number>
+       </property>
        <item>
         <widget class="QPushButton" name="toPTZControlsButton">
          <property name="minimumSize">

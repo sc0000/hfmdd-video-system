@@ -53,6 +53,8 @@ void BookingEditor::reload(Booking* bookingToEdit)
     booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) ? 
       booking.startTime.addSecs(60 * 60) : 
       QTime(23, 0);
+
+    ui->eventTypeLineEdit->setText("");
   }
 
   booking.date = ui->calendarWidget->selectedDate();
@@ -115,8 +117,8 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText(
           Backend::language != ELanguage::German ?
-          "There are no bookings yet on " + date.toString() + "." :
-          "Es gibt noch keine Buchungen am " + date.toString() + "."
+          "There are no other bookings yet on " + date.toString() + "." :
+          "Es gibt keine anderen Buchungen am " + date.toString() + "."
         );
 
         return;
@@ -293,26 +295,6 @@ void BookingEditor::on_increaseTimeBy60Button_pressed()
   drawTimespan();
 }
 
-void BookingEditor::on_startTimeEdit_timeChanged(QTime time)
-{
-  // booking.startTime = time;
-
-  // if (time > booking.stopTime) 
-  //   ui->stopTimeEdit->setTime(time);
-
-  // updateExistingBookingsLabel(booking.date);
-}
-
-void BookingEditor::on_stopTimeEdit_timeChanged(QTime time)
-{
-  // booking.stopTime = time;
-
-  // if (time < booking.startTime) 
-  //   ui->startTimeEdit->setTime(time);
-
-  // updateExistingBookingsLabel(booking.date);
-}
-
 void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
 {
   booking.event = text;
@@ -330,6 +312,7 @@ void BookingEditor::on_saveButton_pressed()
     return;
   }
 
+  // ? Does this what it should ? What about seconds ?
   if (booking.startTime == booking.stopTime) {
     Widgets::okDialog->display(
       Backend::language != ELanguage::German ?

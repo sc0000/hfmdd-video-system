@@ -7,7 +7,6 @@
 
 #include "backend.hpp"
 #include "widgets.hpp"
-// #include "fullscreen-dialog.hpp" // TODO: Remove
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
