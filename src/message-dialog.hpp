@@ -6,7 +6,7 @@
 #include "language.hpp"
 #include "booking.h"
 
-// TODO: Remove 'instance' interfaces
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

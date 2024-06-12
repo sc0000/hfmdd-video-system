@@ -121,12 +121,17 @@ bool LoginDialog::verifyMailAddress()
   if (!mailAddressIsValid) {
     ui->reminderLabel->show();
     ui->reminderLabel->setText(reminderLabelText);
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a; border-radius: none; background-color: rgb(254, 253, 254)}");
+    ui->mailAddressLineEdit->setStyleSheet(
+      "QLineEdit { border: 2px solid #f21a1a; border-radius: 0px; background-color: rgb(254, 253, 254)}"
+    );
+
     return false;
   }
 
   else {
-    ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid rgb(31, 30, 31); border-radius: none; background-color: rgb(254, 253, 254)}");
+    ui->mailAddressLineEdit->setStyleSheet(
+      "QLineEdit { border: 2px solid rgb(31, 30, 31); border-radius: 0px; background-color: rgb(254, 253, 254)}"
+    );
   }
 
   return true;
@@ -136,15 +141,18 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 {
   Backend::currentEmail = text;
   mailAddressIsValid = false;
+  
+  if (mailAddressIsValid)
+    ui->reminderLabel->setText("");
 
-  const QString mailSuffices[] = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" }; // TODO: Remove gmx
+  else 
+    ui->reminderLabel->setText(reminderLabelText);
 
-  for (const QString& suffix : mailSuffices)
+  for (const QString& suffix : SettingsManager::mailSuffices)
   {
     if (Backend::currentEmail.endsWith(suffix))
     {
       mailAddressIsValid = true;
-      SettingsManager::innerDirectory = Backend::currentEmail.chopped(suffix.length());
       ui->reminderLabel->setText(" ");
       break;
     }

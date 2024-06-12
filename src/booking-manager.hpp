@@ -23,9 +23,6 @@ private:
   Ui::BookingManager* ui;
 
   QVector<Booking>& bookings;
-
-private:
-  QString makeEntry(const Booking& booking);
   
 private slots:
   void on_newBookingButton_pressed();

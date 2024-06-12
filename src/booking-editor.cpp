@@ -4,6 +4,7 @@
 #include "widgets.hpp"
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
+#include "settings-manager.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
 #include "booking-editor.hpp"
@@ -32,15 +33,9 @@ void BookingEditor::reload(Booking* bookingToEdit)
   if (bookingToEdit) {
     isEditing = true;
 
-    ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; }");
-    
-    ui->calendarWidget->setSelectedDate(bookingToEdit->date);
-    updateExistingBookingsLabel(bookingToEdit->date);
-
-    // ui->startTimeEdit->setTime(bookingToEdit->startTime);
-    // ui->stopTimeEdit->setTime(bookingToEdit->stopTime);
     ui->eventTypeLineEdit->setText(bookingToEdit->event);
 
+    booking.date = bookingToEdit->date;
     booking.email = bookingToEdit->email;
     booking.index = bookingToEdit->index;
     booking.startTime = bookingToEdit->startTime;
@@ -48,6 +43,10 @@ void BookingEditor::reload(Booking* bookingToEdit)
   }
 
   else {
+    booking.date = QDate::currentDate();
+    booking.email = Backend::currentEmail;
+    booking.event = "";
+    booking.index = JsonParser::availableIndex();
     booking.startTime = QTime::currentTime();
     Backend::roundTime(booking.startTime);
     booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) ? 
@@ -57,16 +56,13 @@ void BookingEditor::reload(Booking* bookingToEdit)
     ui->eventTypeLineEdit->setText("");
   }
 
-  booking.date = ui->calendarWidget->selectedDate();
-  // booking.startTime = ui->startTimeEdit->time();
-  // booking.stopTime = ui->stopTimeEdit->time();
-  booking.event = ui->eventTypeLineEdit->text();
+  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; }");
+  ui->calendarWidget->setSelectedDate(booking.date);
+  updateExistingBookingsLabel(booking.date);
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
 
   drawTimespan();
-
-  updateExistingBookingsLabel(booking.date);
 
   exec();
   raise();
@@ -110,7 +106,6 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 {
   Backend::updateBookingsOnSelectedDate(date);
 
-  const Booking& booking = Backend::currentBooking;
   const QVector<Booking>& bosd = Backend::bookingsOnSelectedDate;
 
   if (bosd.isEmpty() ||

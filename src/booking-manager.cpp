@@ -68,14 +68,13 @@ void BookingManager::loadBookings()
   ui->bookingsList->clear();
 
   for (qsizetype i = 0; i < bookings.size(); ++i) {
-    QString entryText = makeEntry(bookings[i]);
+    QString entryText = Backend::makeEntry(bookings[i]);
     QListWidgetItem* item = new QListWidgetItem(entryText);
     
     if (bookings[i].isConflicting) {
       item->setBackground(QBrush(QColor(31, 30, 31)));
       item->setForeground(QBrush(QColor(254, 253, 254)));
     }
-      
 
     ui->bookingsList->addItem(item);
   }
@@ -105,27 +104,9 @@ void BookingManager::translate(ELanguage language)
   }
 }
 
-QString BookingManager::makeEntry(const Booking& booking)
-{
-  QString conflictLabel = Backend::language != ELanguage::German ?
-    "\t--CONFLICTING!" :
-    "\t--BUCHUNGSKONFLIKT!";
-
-  QString entry = 
-      booking.date.toString("ddd MMM dd yyyy") + "\t" +
-      booking.startTime.toString("HH:mm") + " - " +
-      booking.stopTime.toString("HH:mm") + "\t" +
-      booking.event.leftJustified(20, ' ') + "\t" +
-      booking.email.leftJustified(20, ' ') +
-      (booking.isConflicting ? conflictLabel : "");
-
-  return entry;
-}
-
 void BookingManager::on_newBookingButton_pressed()
 {
-  // BookingEditor::instance(nullptr, this);
-  Widgets::bookingEditor->reload();
+  Widgets::bookingEditor->reload(nullptr);
 }
 
 void BookingManager::on_editBookingButton_pressed()
@@ -206,13 +187,11 @@ void BookingManager::on_toPTZControlsButton_pressed()
   }
 
   Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
-  SettingsManager::outerDirectory = Backend::currentBooking.date.toString(Qt::ISODate) + "/";
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   SettingsManager::resetFilterSettings();
 
   Widgets::ptzControls->reload();
-
   Widgets::showFullScreenDialogs(false);
 }
 

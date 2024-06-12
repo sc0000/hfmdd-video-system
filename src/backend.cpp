@@ -138,6 +138,23 @@ void Backend::roundTime(QTime& time)
     time = QTime(time.hour(), roundedMinutes);
 }
 
+QString Backend::makeEntry(const Booking& booking)
+{
+  QString conflictLabel = Backend::language != ELanguage::German ?
+    "\t--CONFLICTING!" :
+    "\t--BUCHUNGSKONFLIKT!";
+
+  QString entry = 
+    booking.date.toString("ddd MMM dd yyyy") + "\t" +
+    booking.startTime.toString("HH:mm") + " - " +
+    booking.stopTime.toString("HH:mm") + "\t" +
+    booking.event.leftJustified(20, ' ') + "\t" +
+    booking.email.leftJustified(20, ' ') +
+    (booking.isConflicting ? conflictLabel : "");
+
+  return entry;
+}
+
 QString Backend::sendFiles(const Booking& booking)
 {
   const QString dllFilePath = QCoreApplication::applicationFilePath();
@@ -165,7 +182,9 @@ QString Backend::sendFiles(const Booking& booking)
   jsonObj["basePath"] = apiBasePath;
   jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
   jsonObj["receiver"] = booking.email;
-  jsonObj["subject"] = "HfMDD Concert Hall Recordings " + booking.date.toString("ddd MMM dd yyyy");
+  jsonObj["subject"] = (Backend::language != ELanguage::German ? 
+    "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
+    booking.date.toString("ddd MMM dd yyyy");
 
   QJsonDocument jsonDoc(jsonObj);
 

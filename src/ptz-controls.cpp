@@ -207,24 +207,16 @@ void PTZControls::startRecording()
     m_timeObserver = nullptr;
     m_timeObserver = new TimeObserver(threshold, &timeOut, this);
 
-    ui->recordButton->setStyleSheet(
-      "QPushButton { font-size: 8pt; background-color: green; }"
-    );
-
     ui->recordButton->setText(
       Backend::language != ELanguage::German ?
-      "Stop!" :
-      "Stop!"
+      "Stop" :
+      "Stop"
     );
 }
 
 void PTZControls::stopRecording()
 {
   obs_frontend_recording_stop();
-
-  ui->recordButton->setStyleSheet(
-    "QPushButton { font-size: 8pt; background-color: red; }"
-  );
 
   ui->recordButton->setText(
     Backend::language != ELanguage::German ?

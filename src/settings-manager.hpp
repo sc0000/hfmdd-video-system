@@ -9,12 +9,16 @@ public:
   static QString outerDirectory;
   static QString innerDirectory;
 
+  static QVector<QString> mailSuffices;
+
   static QVector<obs_source_t*> sources;
 
   static QString filenameFormatting;
   static QString recFormat;
   static QString qualityPreset;
 
+  static void setOuterDirectory();
+  static void setInnerDirectory();
   static void updateFilterSettings(const char* path);
   static void resetFilterSettings();
   static void save();

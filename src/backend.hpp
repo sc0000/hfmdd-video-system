@@ -34,6 +34,7 @@ public:
   static void sortBookings();
   static void reevaluateConflicts();
   static void roundTime(QTime& time);
+  static QString makeEntry(const Booking& booking);
 
   static QString sendFiles(const Booking& booking);
 };

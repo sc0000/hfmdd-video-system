@@ -4,6 +4,7 @@
 #include <util/config-file.h>
 #include "source-record.h"
 #include "widgets.hpp"
+#include "backend.hpp"
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
 #include "settings-manager.hpp"
@@ -11,6 +12,8 @@
 QString SettingsManager::baseDirectory = "V:/sb-terminal-test/";
 QString SettingsManager::outerDirectory = "";
 QString SettingsManager::innerDirectory = "";
+
+QVector<QString> SettingsManager::mailSuffices = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" };
 
 QString SettingsManager::filenameFormatting = "";
 QString SettingsManager::recFormat = "";
@@ -33,6 +36,23 @@ static void filter_enum_callback(obs_source_t* source, obs_source_t* filter, voi
   if (!source || !filter) return;
 
   obs_source_filter_remove(source, filter);
+}
+
+void SettingsManager::setOuterDirectory()
+{
+  outerDirectory = Backend::currentBooking.date.toString(Qt::ISODate) + "/";
+}
+
+void SettingsManager::setInnerDirectory()
+{
+  for (const QString& suffix : mailSuffices)
+  {
+    if (Backend::currentEmail.endsWith(suffix))
+    {
+      innerDirectory = Backend::currentEmail.chopped(suffix.length());
+      break;
+    }
+  }
 }
 
 void SettingsManager::updateFilterSettings(const char* path)
@@ -71,8 +91,23 @@ void SettingsManager::updateFilterSettings(const char* path)
 
 void SettingsManager::resetFilterSettings()
 {
-  if (baseDirectory == "" || outerDirectory == "" || innerDirectory == "") {
-    Widgets::okDialog->display("ERROR: Unspecified directory");
+  setOuterDirectory();
+  setInnerDirectory();
+ 
+  if (baseDirectory == "") {
+    Widgets::okDialog->display("ERROR: Unspecified base directory");
+    return;
+  }
+
+  if (outerDirectory == "") {
+    Widgets::okDialog->display("ERROR: Unspecified outer directory");
+    return;
+  }
+
+  setInnerDirectory();
+
+  if (innerDirectory == "") {
+    Widgets::okDialog->display("ERROR: Unspecified inner directory");
     return;
   }
 
@@ -95,6 +130,7 @@ void SettingsManager::resetFilterSettings()
   QString sourceRecordFilterName = sourceRecordFilterInfo->get_name(unused);
 
   QString path = baseDirectory + outerDirectory + innerDirectory;
+
   QByteArray pathByteArray = path.toLocal8Bit();
   const char* c_path = pathByteArray.data();
 

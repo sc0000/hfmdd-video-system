@@ -19,7 +19,8 @@ QuickRecord* QuickRecord::instance = nullptr;
 
 QuickRecord::QuickRecord(QWidget* parent)
   : FullScreenDialog(parent), 
-    ui(new Ui::QuickRecord)
+    ui(new Ui::QuickRecord),
+    booking(Backend::currentBooking)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   
@@ -31,7 +32,7 @@ QuickRecord::QuickRecord(QWidget* parent)
   setModal(false);
   hide();
   
-  loadBookings();
+  Backend::loadBookings();
 }
 
 QuickRecord::~QuickRecord()
@@ -42,13 +43,11 @@ QuickRecord::~QuickRecord()
 void QuickRecord::reload()
 {
   raise();
-  // Widgets::fullScreenDialogStack->setCurrentWidget(Widgets::quickRecord);
   center(ui->masterWidget);
-  // show();
 
   Backend::reevaluateConflicts();
 
-  loadBookings();
+  Backend::loadBookings();
   booking.date = QDate::currentDate();
   booking.startTime = QTime::currentTime();
   booking.stopTime = booking.startTime.addSecs(60 * 60);
@@ -81,65 +80,65 @@ void QuickRecord::translate(ELanguage language)
   }
 }
 
-void QuickRecord::loadBookings()
-{   
-  if (Backend::currentEmail == Backend::adminEmail)
-    JsonParser::getAllBookings(bookings);
+// void QuickRecord::loadBookings()
+// {   
+//   if (Backend::currentEmail == Backend::adminEmail)
+//     JsonParser::getAllBookings(bookings);
 
-  else   
-    JsonParser::getBookingsForEmail(Backend::currentEmail, bookings);
+//   else   
+//     JsonParser::getBookingsForEmail(Backend::currentEmail, bookings);
 
-  sortBookings();
-}
+//   sortBookings();
+// }
 
-void QuickRecord::sortBookings()
-{
-  qsizetype size = bookings.size();
+// void QuickRecord::sortBookings()
+// {
+//   qsizetype size = bookings.size();
 
-  for (qsizetype i = 0; i < size; ++i) {
-    bool flag = false;
+//   for (qsizetype i = 0; i < size; ++i) {
+//     bool flag = false;
 
-    for (qsizetype j = 0; j < size - 1 - i; ++j) {
-      QString dateTime0 = bookings[j].date.toString(Qt::ISODate) + "_" +
-        bookings[j].startTime.toString("HH:mm");
+//     for (qsizetype j = 0; j < size - 1 - i; ++j) {
+//       QString dateTime0 = bookings[j].date.toString(Qt::ISODate) + "_" +
+//         bookings[j].startTime.toString("HH:mm");
 
-      QString dateTime1 = bookings[j + 1].date.toString(Qt::ISODate) + "_" +
-        bookings[j + 1].startTime.toString("HH:mm");
+//       QString dateTime1 = bookings[j + 1].date.toString(Qt::ISODate) + "_" +
+//         bookings[j + 1].startTime.toString("HH:mm");
 
-      if (dateTime0 > dateTime1) {
-        Booking tmp = bookings[j];
-        bookings[j] = bookings[j + 1];
-        bookings[j + 1] = tmp;
+//       if (dateTime0 > dateTime1) {
+//         Booking tmp = bookings[j];
+//         bookings[j] = bookings[j + 1];
+//         bookings[j + 1] = tmp;
 
-        flag = true;
-      }
-    }
+//         flag = true;
+//       }
+//     }
 
-    if (flag == 0) break;
-  }
-}
+//     if (flag == 0) break;
+//   }
+// }
 
-QString QuickRecord::makeEntry(const Booking& booking)
-{
-  QString entry = 
-      booking.date.toString("ddd MMM dd yyyy") + "\t" +
-      booking.startTime.toString("HH:mm") + " - " +
-      booking.stopTime.toString("HH:mm") + "\t" +
-      booking.event.leftJustified(20, ' ') + "\t" +
-      booking.email.leftJustified(20, ' ') +
-      (booking.isConflicting ? "\t--CONFLICTING!" : "");
+// QString QuickRecord::makeEntry(const Booking& booking)
+// {
+//   QString entry = 
+//       booking.date.toString("ddd MMM dd yyyy") + "\t" +
+//       booking.startTime.toString("HH:mm") + " - " +
+//       booking.stopTime.toString("HH:mm") + "\t" +
+//       booking.event.leftJustified(20, ' ') + "\t" +
+//       booking.email.leftJustified(20, ' ') +
+//       (booking.isConflicting ? "\t--CONFLICTING!" : "");
 
-  return entry;
-}
+//   return entry;
+// }
 
 void QuickRecord::updateExistingBookingsLabel(QDate date)
 {
-  bookingsOnSelectedDate.clear();
-  
-  JsonParser::getBookingsOnDate(date, bookingsOnSelectedDate);
+  Backend::updateBookingsOnSelectedDate(date);
 
-  if (bookingsOnSelectedDate.isEmpty() ||
-     (bookingsOnSelectedDate.size() == 1 && bookingsOnSelectedDate[0].index == booking.index)) {
+  const QVector<Booking>& bosd = Backend::bookingsOnSelectedDate;
+
+  if (bosd.isEmpty() ||
+     (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText(Backend::language != ELanguage::German ? 
           "There are no bookings yet on " + date.toString() + "." : 
           "Es gibt noch keine Buchungen am " + date.toString() + ".");
@@ -152,7 +151,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   str += "<html><head/><body>";
 
-  for (Booking& b : bookingsOnSelectedDate) {
+  for (const Booking& b : bosd) {
     if (b.index == booking.index ||
         b.stopTime < booking.startTime) continue;
 
@@ -268,9 +267,7 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 
 
 void QuickRecord::on_toPTZControlsButton_pressed()
-{
-  SettingsManager::outerDirectory = booking.date.toString(Qt::ISODate) + "/";
-  
+{ 
   // TODO: Check: always reset or update, and setup option to reset manually?
   SettingsManager::resetFilterSettings();
 
