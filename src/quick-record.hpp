@@ -22,15 +22,9 @@ private:
   static QuickRecord* instance;
   Ui::QuickRecord* ui;
 
-  // QVector<Booking> bookings;
-  // QVector<Booking> bookingsOnSelectedDate;
-
   Booking& booking;
 
 private:
-  // void sortBookings();
-  // QString makeEntry(const Booking& booking);
-
   void updateExistingBookingsLabel(QDate date);
   void updateConflictingBookings(const QDate& date);
   void updateStopTimeLabel();
@@ -51,8 +45,5 @@ public:
   static inline QuickRecord* getInstance() { return instance; }
   
   virtual void reload() override;
-
-  // void loadBookings();
-
   virtual void translate(ELanguage language) override; 
 };

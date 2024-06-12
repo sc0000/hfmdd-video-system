@@ -617,8 +617,8 @@ void PTZControls::setViewportMode()
     );
 
     // ? Enable camera selection by clicking on preview ?
-    // ui->previousCamButton->setDisabled(true);
-    // ui->nextCamButton->setDisabled(true);
+    ui->previousCamButton->setDisabled(true);
+    ui->nextCamButton->setDisabled(true);
 
     for (qsizetype i = 0; i < allCameras().size(); ++i) {
       QString name = "Birddog" + QString::number(i + 1);
@@ -636,7 +636,7 @@ void PTZControls::setViewportMode()
       obs_sceneitem_set_pos(item, &pos);
       obs_sceneitem_set_bounds_type(item, OBS_BOUNDS_SCALE_INNER);
       obs_sceneitem_set_bounds(item, &bounds);
-      obs_sceneitem_set_locked(item, true);
+      obs_sceneitem_set_locked(item, false);
     }
   }
 
@@ -648,8 +648,8 @@ void PTZControls::setViewportMode()
     );
 
     // ? See above ?
-    // ui->previousCamButton->setDisabled(false);
-    // ui->nextCamButton->setDisabled(false);
+    ui->previousCamButton->setDisabled(false);
+    ui->nextCamButton->setDisabled(false);
 
     vec2 pos = { 0.f, 0.f };
     vec2 scale = { 1.f, 1.f };
@@ -1177,6 +1177,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
     break;
     
     case EMode::QuickMode: {
+      JsonParser::removeBooking(Backend::currentBooking);
       Widgets::quickRecord->reload();
     }
     

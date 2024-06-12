@@ -37,6 +37,7 @@ Login::Login(QWidget *parent)
 
   obs_frontend_add_dock(this);
   setFloating(true);
+  setTitleBarWidget(new QWidget());
 }
 
 Login::~Login()

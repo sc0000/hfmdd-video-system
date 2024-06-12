@@ -307,8 +307,7 @@ void BookingEditor::on_saveButton_pressed()
     return;
   }
 
-  // ? Does this what it should ? What about seconds ?
-  if (booking.startTime == booking.stopTime) {
+  if (booking.startTime.toString("HH:mm") == booking.stopTime.toString("HH:mm")) {
     Widgets::okDialog->display(
       Backend::language != ELanguage::German ?
       "Start and stop time are identical. Please select a reasonable time frame!" :

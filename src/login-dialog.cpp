@@ -4,6 +4,7 @@
 #include <QScreen>
 #include <QPainter>
 #include <QPixmap>
+#include <QDir>
 
 #include "backend.hpp"
 #include "widgets.hpp"
@@ -31,15 +32,22 @@ LoginDialog::LoginDialog(QWidget *parent)
   instance = this;
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
-  ui->backgroundWidget->setStyleSheet("background-image: url(C:/dev/test-background.png);");
-  ui->logoWidget->setStyleSheet("background-image: url(C:/dev/logo-white.png);"
-                                "background-repeat: no-repeat;"
-                                "background-position: center;"
-                                "background-size: contain;");
-  ui->nameWidget->setStyleSheet("background-image: url(C:/dev/name.png);"
-                                "background-repeat: no-repeat;"
-                                "background-position: center;"
-                                "background-size: contain;");
+
+  // Construct the stylesheet strings with actual values
+  QString backgroundWidgetStyleSheet = QString("background-image: url(../../assets/sidebar.png);");
+  ui->backgroundWidget->setStyleSheet(backgroundWidgetStyleSheet);
+
+  QString logoWidgetStyleSheet = QString("background-image: url(../../assets/logo-white.png);"
+                                        "background-repeat: no-repeat;"
+                                        "background-position: center;"
+                                        "background-size: contain;");
+  ui->logoWidget->setStyleSheet(logoWidgetStyleSheet);
+
+  QString nameWidgetStyleSheet = QString("background-image: url(../../assets/name.png);"
+                                        "background-repeat: no-repeat;"
+                                        "background-position: center;"
+                                        "background-size: contain;");
+  ui->nameWidget->setStyleSheet(nameWidgetStyleSheet);
 
   ui->languageComboBox->addItem("Deutsch");
   ui->languageComboBox->addItem("English");

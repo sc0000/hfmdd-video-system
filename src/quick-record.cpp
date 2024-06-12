@@ -56,6 +56,7 @@ void QuickRecord::reload()
   booking.event = "Quick Record";
 
   Backend::roundTime(booking.stopTime);
+  Backend::updateBookingsOnSelectedDate(booking.date);
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
 }
@@ -79,57 +80,6 @@ void QuickRecord::translate(ELanguage language)
     break;
   }
 }
-
-// void QuickRecord::loadBookings()
-// {   
-//   if (Backend::currentEmail == Backend::adminEmail)
-//     JsonParser::getAllBookings(bookings);
-
-//   else   
-//     JsonParser::getBookingsForEmail(Backend::currentEmail, bookings);
-
-//   sortBookings();
-// }
-
-// void QuickRecord::sortBookings()
-// {
-//   qsizetype size = bookings.size();
-
-//   for (qsizetype i = 0; i < size; ++i) {
-//     bool flag = false;
-
-//     for (qsizetype j = 0; j < size - 1 - i; ++j) {
-//       QString dateTime0 = bookings[j].date.toString(Qt::ISODate) + "_" +
-//         bookings[j].startTime.toString("HH:mm");
-
-//       QString dateTime1 = bookings[j + 1].date.toString(Qt::ISODate) + "_" +
-//         bookings[j + 1].startTime.toString("HH:mm");
-
-//       if (dateTime0 > dateTime1) {
-//         Booking tmp = bookings[j];
-//         bookings[j] = bookings[j + 1];
-//         bookings[j + 1] = tmp;
-
-//         flag = true;
-//       }
-//     }
-
-//     if (flag == 0) break;
-//   }
-// }
-
-// QString QuickRecord::makeEntry(const Booking& booking)
-// {
-//   QString entry = 
-//       booking.date.toString("ddd MMM dd yyyy") + "\t" +
-//       booking.startTime.toString("HH:mm") + " - " +
-//       booking.stopTime.toString("HH:mm") + "\t" +
-//       booking.event.leftJustified(20, ' ') + "\t" +
-//       booking.email.leftJustified(20, ' ') +
-//       (booking.isConflicting ? "\t--CONFLICTING!" : "");
-
-//   return entry;
-// }
 
 void QuickRecord::updateExistingBookingsLabel(QDate date)
 {
@@ -268,6 +218,9 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 
 void QuickRecord::on_toPTZControlsButton_pressed()
 { 
+  Backend::updateConflictingBookings(booking.date);
+  JsonParser::addBooking(booking);
+
   // TODO: Check: always reset or update, and setup option to reset manually?
   SettingsManager::resetFilterSettings();
 
