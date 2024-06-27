@@ -2,6 +2,8 @@
 
 #include <QDialog>
 #include <QWidget>
+#include <QKeyEvent>
+#include <QCloseEvent>
 #include <QPropertyAnimation>
 
 class FullScreenDialog : public QDialog
@@ -15,6 +17,9 @@ protected:
   void center(QWidget* masterWidget, int xOffset = 0, int yOffset = 0);
   void fade(FullScreenDialog* next);
   virtual void reload() = 0;
+
+  virtual void keyPressEvent(QKeyEvent* e) override;
+  virtual void closeEvent(QCloseEvent* e) override;
 
 private:
   static QPropertyAnimation* fadeInAnim;

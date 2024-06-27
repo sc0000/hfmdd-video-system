@@ -133,15 +133,15 @@ private slots:
 	void on_focusButton_far_released();
 	void on_focusButton_onetouch_clicked();
 
-  void on_previousCamButton_clicked();
-  void on_nextCamButton_clicked();
+  void on_previousCamButton_pressed();
+  void on_nextCamButton_pressed();
   void on_overviewButton_clicked();
 
   void on_savePresetButton_clicked();
   void on_loadPresetButton_clicked();
   void on_deletePresetButton_clicked();
   
-  void on_recordButton_clicked();
+  void on_recordButton_pressed();
   void on_toBookingManagerButton_clicked();
   void on_logoutButton_clicked();
 

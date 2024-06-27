@@ -31,7 +31,7 @@ private:
 
 private slots:
   void on_mailAddressLineEdit_textChanged(const QString& text);
-  void on_manageBookingsButton_pressed();
+  void on_manageBookingsButton_clicked();
   void on_languageComboBox_currentTextChanged(const QString& text);
     
 public:

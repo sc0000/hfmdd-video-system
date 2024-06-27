@@ -35,9 +35,9 @@ private slots:
   void on_increaseTimeBy05Button_pressed();
   void on_increaseTimeBy20Button_pressed();
 
-  void on_toPTZControlsButton_pressed();
-  void on_toModeSelectButton_pressed();
-  void on_logoutButton_pressed();  
+  void on_toPTZControlsButton_clicked();
+  void on_toModeSelectButton_clicked();
+  void on_logoutButton_clicked();  
 
 public:
   QuickRecord(QWidget* parent = nullptr);

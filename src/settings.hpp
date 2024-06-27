@@ -31,6 +31,8 @@ private:
 	Ui_PTZSettings *ui;
 	OBSData settings;
 
+  bool sourcesDockIsOpen;
+
   // ! MOVE TO SETTINGSMANAGER
   QVector<QString> qualityPresets = {
     "P1: Fastest (Lowest Quality)",
@@ -85,6 +87,8 @@ public slots:
 	void on_enableDebugLogCheckBox_stateChanged(int state);
 
   void on_saveButton_pressed();
+  void on_sourcesButton_pressed();
+  void on_sourcesButton_released();
 
 	void currentChanged(const QModelIndex &current,
 			    const QModelIndex &previous);

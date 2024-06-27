@@ -119,7 +119,8 @@ void PTZSettings::updateProperties(OBSData old_settings, OBSData new_settings)
 
 PTZSettings::PTZSettings() 
   : QWidget(nullptr), 
-    ui(new Ui_PTZSettings)
+    ui(new Ui_PTZSettings),
+    sourcesDockIsOpen(false)
 {
 	settings = obs_data_create();
 	obs_data_release(settings);
@@ -328,6 +329,34 @@ void PTZSettings::on_enableDebugLogCheckBox_stateChanged(int state)
 void PTZSettings::on_saveButton_pressed()
 {
   updateAdditionalProperties();
+}
+
+void PTZSettings::on_sourcesButton_pressed()
+{
+  (sourcesDockIsOpen = !sourcesDockIsOpen);
+
+  QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
+
+  if (!mainWindow) return;
+
+  QDockWidget* sourcesDock = mainWindow->findChild<QDockWidget*>("sourcesDock");
+
+  if (!sourcesDock) return;
+
+  if (sourcesDockIsOpen) 
+    sourcesDock->show();
+    
+  else 
+    sourcesDock->hide();
+}
+
+void PTZSettings::on_sourcesButton_released()
+{
+  if (sourcesDockIsOpen)
+    ui->sourcesButton->setText("Close Sources Dock");
+
+  else
+    ui->sourcesButton->setText("Edit Sources");
 }
 
 void PTZSettings::currentChanged(const QModelIndex &current,

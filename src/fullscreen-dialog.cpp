@@ -1,5 +1,7 @@
 #include <QRect>
 #include <QScreen>
+#include <QKeyEvent>
+#include <QCloseEvent>
 
 #include <obs-frontend-api.h>
 
@@ -56,4 +58,17 @@ void FullScreenDialog::fade(FullScreenDialog* next)
 
   fadeInAnim->start();
   fadeOutAnim->start();
+}
+
+void FullScreenDialog::keyPressEvent(QKeyEvent* e)
+{
+  if (e->key() == Qt::Key_Escape)
+    e->ignore();
+
+  else e->accept();
+}
+
+void FullScreenDialog::closeEvent(QCloseEvent* e)
+{
+  e->ignore();
 }

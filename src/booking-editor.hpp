@@ -43,8 +43,8 @@ private slots:
   void on_increaseTimeBy60Button_pressed();
 
   void on_eventTypeLineEdit_textChanged(const QString& text);
-  void on_saveButton_pressed();
-  void on_cancelButton_pressed();
+  void on_saveButton_clicked();
+  void on_cancelButton_clicked();
   
 public:
   BookingEditor(QWidget* parent = nullptr);

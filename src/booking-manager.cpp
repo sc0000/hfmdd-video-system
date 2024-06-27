@@ -104,12 +104,12 @@ void BookingManager::translate(ELanguage language)
   }
 }
 
-void BookingManager::on_newBookingButton_pressed()
+void BookingManager::on_newBookingButton_clicked()
 {
   Widgets::bookingEditor->reload(nullptr);
 }
 
-void BookingManager::on_editBookingButton_pressed()
+void BookingManager::on_editBookingButton_clicked()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
@@ -134,7 +134,7 @@ void BookingManager::on_editBookingButton_pressed()
   Widgets::bookingEditor->reload(&bookings[ui->bookingsList->currentRow()]);
 }
 
-void BookingManager::on_deleteBookingButton_pressed()
+void BookingManager::on_deleteBookingButton_clicked()
 {
   if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
@@ -166,7 +166,7 @@ void BookingManager::on_deleteBookingButton_pressed()
   if (item) delete item;
 }
 
-void BookingManager::on_toPTZControlsButton_pressed()
+void BookingManager::on_toPTZControlsButton_clicked()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
@@ -195,13 +195,13 @@ void BookingManager::on_toPTZControlsButton_pressed()
   Widgets::showFullScreenDialogs(false);
 }
 
-void BookingManager::on_toModeSelectButton_pressed()
+void BookingManager::on_toModeSelectButton_clicked()
 {
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::modeSelect);
 }
 
-void BookingManager::on_logoutButton_pressed()
+void BookingManager::on_logoutButton_clicked()
 {
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::loginDialog);

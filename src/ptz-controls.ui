@@ -16,6 +16,11 @@
     <height>524287</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <family>DaxOT</family>
+   </font>
+  </property>
   <property name="contextMenuPolicy">
    <enum>Qt::CustomContextMenu</enum>
   </property>
@@ -68,6 +73,7 @@
          <widget class="QLabel" name="cameraControlsLabel">
           <property name="font">
            <font>
+            <family>DaxOT</family>
             <pointsize>12</pointsize>
             <bold>true</bold>
            </font>
@@ -89,6 +95,7 @@
            <widget class="QLabel" name="currentCameraLabel">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
               <italic>true</italic>
               <bold>false</bold>
@@ -115,6 +122,7 @@
              <widget class="QPushButton" name="previousCamButton">
               <property name="font">
                <font>
+                <family>DaxOT</family>
                 <pointsize>10</pointsize>
                 <bold>false</bold>
                 <strikeout>false</strikeout>
@@ -131,6 +139,7 @@ Camera</string>
              <widget class="QPushButton" name="nextCamButton">
               <property name="font">
                <font>
+                <family>DaxOT</family>
                 <pointsize>10</pointsize>
                 <bold>false</bold>
                </font>
@@ -150,6 +159,7 @@ Camera</string>
            <widget class="QPushButton" name="overviewButton">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
               <bold>false</bold>
              </font>
@@ -636,6 +646,7 @@ Camera</string>
          <widget class="QLabel" name="presetsLabel">
           <property name="font">
            <font>
+            <family>DaxOT</family>
             <pointsize>12</pointsize>
             <bold>true</bold>
            </font>
@@ -657,6 +668,7 @@ Camera</string>
            <widget class="QPushButton" name="savePresetButton">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
              </font>
             </property>
@@ -669,6 +681,7 @@ Camera</string>
            <widget class="QPushButton" name="loadPresetButton">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
              </font>
             </property>
@@ -681,6 +694,7 @@ Camera</string>
            <widget class="QPushButton" name="deletePresetButton">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
               <bold>false</bold>
              </font>
@@ -728,6 +742,11 @@ Camera</string>
         </item>
         <item>
          <widget class="CircularListView" name="presetListView">
+          <property name="font">
+           <font>
+            <family>Courier</family>
+           </font>
+          </property>
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
@@ -760,6 +779,7 @@ Camera</string>
             </property>
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <bold>true</bold>
              </font>
             </property>
@@ -772,6 +792,7 @@ Camera</string>
            <widget class="QPushButton" name="toBookingManagerButton">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
               <bold>false</bold>
              </font>
@@ -785,6 +806,7 @@ Camera</string>
            <widget class="QPushButton" name="logoutButton">
             <property name="font">
              <font>
+              <family>DaxOT</family>
               <pointsize>10</pointsize>
               <bold>false</bold>
              </font>

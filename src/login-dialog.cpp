@@ -28,6 +28,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setWindowTitle("Login Dialog");
+  setFont(QFont("DaxOT-Medium"));
 
   instance = this;
   ui->setupUi(this);
@@ -185,7 +186,7 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
   verifyMailAddress();
 }
 
-void LoginDialog::on_manageBookingsButton_pressed()
+void LoginDialog::on_manageBookingsButton_clicked()
 {
   if (!verifyMailAddress()) return;
 

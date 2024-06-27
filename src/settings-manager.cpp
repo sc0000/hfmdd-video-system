@@ -19,6 +19,15 @@ QString SettingsManager::filenameFormatting = "";
 QString SettingsManager::recFormat = "";
 QString SettingsManager::qualityPreset = "";
 
+QString SettingsManager::nasIP = "";
+QString SettingsManager::nasPort = "";
+QString SettingsManager::nasUser = "";
+QString SettingsManager::nasPassword = "";
+
+QString SettingsManager::mailHost = "";
+QString SettingsManager::mailUser = "";
+QString SettingsManager::mailPassword = "";
+
 QVector<obs_source_t*> SettingsManager::sources;
 
 static bool scene_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*) 

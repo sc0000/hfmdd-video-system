@@ -608,6 +608,8 @@ void PTZControls::setViewportMode()
   obs_source_t* scene_source = obs_frontend_get_current_scene();
   obs_scene_t* scene = obs_scene_from_source(scene_source);
 
+  const qsizetype size = allCameras().size();
+
   // TODO: Better layout for three and more cameras!
   if (showOverview) {
     ui->overviewButton->setText(
@@ -620,7 +622,8 @@ void PTZControls::setViewportMode()
     ui->previousCamButton->setDisabled(true);
     ui->nextCamButton->setDisabled(true);
 
-    for (qsizetype i = 0; i < allCameras().size(); ++i) {
+    for (qsizetype i = 0; i < size; ++i) {
+      // ! New naming convention !
       QString name = "Birddog" + QString::number(i + 1);
       obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
       
@@ -630,9 +633,54 @@ void PTZControls::setViewportMode()
       else
         obs_sceneitem_select(item, true);
 
-      vec2 pos = { viewportSize.x - viewportSize.x / (i + 1.f), 0.f};
-      vec2 bounds = { viewportSize.x / 2.f, viewportSize.y };
+      vec2 pos, bounds;
 
+      switch (size) {
+        case 1:
+          // TODO: Disable overview, only single camera
+          pos = { 0.f, 0.f };
+          bounds = { viewportSize.x, viewportSize.y };         
+          break;
+
+        case 2:
+          pos = { viewportSize.x - viewportSize.x / (i + 1.f), 0.f};
+          bounds = { viewportSize.x / 2.f, viewportSize.y };
+          break;
+
+        case 3:
+          pos = i < 2 ? vec2{
+            viewportSize.x - viewportSize.x / (i + 1.f), 0.f
+          } : vec2{
+            viewportSize.x / 4.f, viewportSize.y / 2.f
+          };
+
+          bounds = { viewportSize.x / 2.f, viewportSize.y / 2.f };
+
+           if (i < 2) 
+            obs_sceneitem_set_bounds_alignment(item, OBS_ALIGN_BOTTOM);
+
+          else 
+            obs_sceneitem_set_bounds_alignment(item, OBS_ALIGN_TOP);
+
+          break;
+
+        case 4:  
+          pos = { 
+            viewportSize.x - viewportSize.x / static_cast<float>(i % 2 + 1),
+            viewportSize.y - viewportSize.y / (i < 2 ? 1 : 2) 
+          };
+
+          bounds = { viewportSize.x / 2.f, viewportSize.y / 2.f };
+          
+          if (i < 2) 
+            obs_sceneitem_set_bounds_alignment(item, OBS_ALIGN_BOTTOM);
+
+          else 
+            obs_sceneitem_set_bounds_alignment(item, OBS_ALIGN_TOP);
+
+          break;
+      }
+  
       obs_sceneitem_set_pos(item, &pos);
       obs_sceneitem_set_bounds_type(item, OBS_BOUNDS_SCALE_INNER);
       obs_sceneitem_set_bounds(item, &bounds);
@@ -647,6 +695,9 @@ void PTZControls::setViewportMode()
       "Gesamtansicht"
     );
 
+    if (size == 1)
+      ui->overviewButton->setDisabled(true);
+
     // ? See above ?
     ui->previousCamButton->setDisabled(false);
     ui->nextCamButton->setDisabled(false);
@@ -654,7 +705,7 @@ void PTZControls::setViewportMode()
     vec2 pos = { 0.f, 0.f };
     vec2 scale = { 1.f, 1.f };
 
-    for (qsizetype i = 0; i < allCameras().size(); ++i) {
+    for (qsizetype i = 0; i < size; ++i) {
       QString name = "Birddog" + QString::number(i + 1);
       obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
 
@@ -1035,7 +1086,7 @@ void PTZControls::on_focusButton_onetouch_clicked()
 		ptz->focus_onetouch();
 }
 
-void PTZControls::on_previousCamButton_clicked()
+void PTZControls::on_previousCamButton_pressed()
 {
    uint previousIndex = currCameraName.last(1).toUInt() - 1;
 
@@ -1047,7 +1098,7 @@ void PTZControls::on_previousCamButton_clicked()
   selectCamera();
 }
 
-void PTZControls::on_nextCamButton_clicked()
+void PTZControls::on_nextCamButton_pressed()
 {
   uint nextIndex = currCameraName.last(1).toUInt() + 1;
 
@@ -1156,7 +1207,7 @@ bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, vo
   return true;
 }
 
-void PTZControls::on_recordButton_clicked()
+void PTZControls::on_recordButton_pressed()
 {
   if (!obs_frontend_recording_active()) 
     startRecording();

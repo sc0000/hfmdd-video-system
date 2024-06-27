@@ -134,7 +134,7 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
       isConflicting = true; 
           
     if (isConflicting)
-      str += "<span style=\"background-color:red;\">";
+      str += "<span style=\"background-color: rgb(31, 30, 31); color: rgb(254, 253, 254);\">";
 
     str += b.startTime.toString("HH:mm") + "-" + b.stopTime.toString("HH:mm") + ": " + b.event + " (" + b.email + ")";
 
@@ -295,7 +295,7 @@ void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
   booking.event = text;
 }
 
-void BookingEditor::on_saveButton_pressed()
+void BookingEditor::on_saveButton_clicked()
 {
   if (booking.event == "") {
     Widgets::okDialog->display(
@@ -330,7 +330,7 @@ void BookingEditor::on_saveButton_pressed()
   hide();
 }
 
-void BookingEditor::on_cancelButton_pressed()
+void BookingEditor::on_cancelButton_clicked()
 {
   hide();
 }

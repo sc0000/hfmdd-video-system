@@ -24,6 +24,7 @@
   </property>
   <property name="font">
    <font>
+    <family>DaxOT</family>
     <pointsize>12</pointsize>
    </font>
   </property>
@@ -53,6 +54,7 @@
       <widget class="QLabel" name="recordUntilLabel">
        <property name="font">
         <font>
+         <family>DaxOT</family>
          <pointsize>12</pointsize>
          <bold>false</bold>
         </font>
@@ -85,6 +87,7 @@
            </property>
            <property name="font">
             <font>
+             <family>DaxOT</family>
              <pointsize>32</pointsize>
              <bold>true</bold>
             </font>
@@ -104,6 +107,7 @@
           <widget class="QLabel" name="bookingsOnSelectedDateLabel">
            <property name="font">
             <font>
+             <family>DaxOT</family>
              <pointsize>10</pointsize>
             </font>
            </property>
@@ -223,6 +227,7 @@
          </property>
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>true</bold>
           </font>

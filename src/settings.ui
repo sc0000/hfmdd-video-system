@@ -7,11 +7,12 @@
     <x>0</x>
     <y>0</y>
     <width>750</width>
-    <height>516</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="font">
    <font>
+    <family>DaxOT</family>
     <pointsize>9</pointsize>
    </font>
   </property>
@@ -34,7 +35,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
@@ -158,15 +159,22 @@
          <x>11</x>
          <y>295</y>
          <width>549</width>
-         <height>171</height>
+         <height>207</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="recOptionsLayout">
         <item row="3" column="1">
          <widget class="QComboBox" name="qualityComboBox"/>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="recFormatLabel">
+        <item row="4" column="0">
+         <widget class="QPushButton" name="saveButton">
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="baseDirectoryLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -186,7 +194,10 @@
            </size>
           </property>
           <property name="text">
-           <string>Recording Format</string>
+           <string>Base Directory</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -234,6 +245,60 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="recFormatLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>140</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>124</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Recording Format</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="baseDirectoryLineEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>DaxOT</family>
+            <pointsize>9</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string notr="true"/>
+          </property>
+          <property name="placeholderText">
+           <string notr="true">Set base directory for all saved videos, bookings, and presets</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label">
           <property name="sizePolicy">
@@ -256,69 +321,6 @@
           </property>
           <property name="text">
            <string>Quality Preset</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="baseDirectoryLineEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>400</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="text">
-           <string notr="true"/>
-          </property>
-          <property name="placeholderText">
-           <string notr="true">Set base directory for all saved videos, bookings, and presets</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="baseDirectoryLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>140</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>124</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Base Directory</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="saveButton">
-          <property name="text">
-           <string>Save</string>
           </property>
          </widget>
         </item>
@@ -434,6 +436,13 @@
                </property>
               </spacer>
              </item>
+             <item>
+              <widget class="QPushButton" name="sourcesButton">
+               <property name="text">
+                <string>Edit Sources</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
@@ -499,13 +508,17 @@
         <property name="verticalSpacing">
          <number>21</number>
         </property>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="nasUserNameLineEdit"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="nasPortLabel">
+        <item row="3" column="0">
+         <widget class="QLabel" name="nasPasswordLabel">
           <property name="text">
-           <string>NAS PORT</string>
+           <string>NAS Password</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="nasUserNameLabel">
+          <property name="text">
+           <string>NAS User Name</string>
           </property>
          </widget>
         </item>
@@ -516,66 +529,52 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="nasPasswordLabel">
-          <property name="text">
-           <string>NAS Password</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="nasPasswordLineEdit"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="nasIpLineEdit"/>
-        </item>
-        <item row="6" column="1">
-         <widget class="QLineEdit" name="mailUserNameLineEdit"/>
-        </item>
-        <item row="5" column="1">
+        <item row="4" column="1">
          <widget class="QLineEdit" name="mailHostLineEdit"/>
         </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="nasPortLineEdit"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="nasUserNameLabel">
+        <item row="6" column="0">
+         <widget class="QLabel" name="mailPasswordLabel">
           <property name="text">
-           <string>NAS User Name</string>
+           <string>Mail Password</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="mailServiceLineEdit"/>
-        </item>
-        <item row="7" column="1">
+        <item row="6" column="1">
          <widget class="QLineEdit" name="mailPasswordLineEdit"/>
         </item>
         <item row="4" column="0">
-         <widget class="QLabel" name="mailServiceLabel">
-          <property name="text">
-           <string>Mail Service</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
          <widget class="QLabel" name="mailHostLabel">
           <property name="text">
            <string>Mail Host</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="mailUserNameLabel">
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="nasUserNameLineEdit"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="nasIpLineEdit"/>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="mailUserNameLineEdit"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="nasPasswordLineEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="nasPortLabel">
           <property name="text">
-           <string>Mail User Name</string>
+           <string>NAS PORT</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="mailPasswordLabel">
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="nasPortLineEdit"/>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="mailUserNameLabel">
           <property name="text">
-           <string>Mail Password</string>
+           <string>Mail User Name</string>
           </property>
          </widget>
         </item>

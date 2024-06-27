@@ -24,6 +24,7 @@
   </property>
   <property name="font">
    <font>
+    <family>DaxOT</family>
     <pointsize>12</pointsize>
    </font>
   </property>
@@ -88,6 +89,7 @@
         <widget class="QPushButton" name="newBookingButton">
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>false</bold>
           </font>
@@ -101,6 +103,7 @@
         <widget class="QPushButton" name="editBookingButton">
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>false</bold>
           </font>
@@ -114,6 +117,7 @@
         <widget class="QPushButton" name="deleteBookingButton">
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>false</bold>
           </font>
@@ -140,6 +144,7 @@
         <widget class="QPushButton" name="toPTZControlsButton">
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>true</bold>
           </font>
@@ -156,6 +161,7 @@
         <widget class="QPushButton" name="toModeSelectButton">
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>false</bold>
           </font>
@@ -169,6 +175,7 @@
         <widget class="QPushButton" name="logoutButton">
          <property name="font">
           <font>
+           <family>DaxOT</family>
            <pointsize>12</pointsize>
            <bold>false</bold>
           </font>

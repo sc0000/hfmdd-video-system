@@ -17,6 +17,15 @@ public:
   static QString recFormat;
   static QString qualityPreset;
 
+  static QString nasIP;
+  static QString nasPort;
+  static QString nasUser;
+  static QString nasPassword;
+  
+  static QString mailHost;
+  static QString mailUser;
+  static QString mailPassword;
+
   static void setOuterDirectory();
   static void setInnerDirectory();
   static void updateFilterSettings(const char* path);

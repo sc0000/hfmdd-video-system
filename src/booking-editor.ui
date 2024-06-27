@@ -18,6 +18,7 @@
   </property>
   <property name="font">
    <font>
+    <family>DaxOT</family>
     <pointsize>12</pointsize>
    </font>
   </property>
@@ -126,6 +127,7 @@
      <widget class="QLabel" name="timeLabel">
       <property name="font">
        <font>
+        <family>DaxOT</family>
         <pointsize>28</pointsize>
         <bold>true</bold>
        </font>

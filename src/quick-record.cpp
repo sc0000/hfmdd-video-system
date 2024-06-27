@@ -111,7 +111,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
       isConflicting = true; 
           
     if (isConflicting)
-      str += "<span style=\"background-color:red;\">";
+      str += "<span style=\"background-color: rgb(31, 30, 31); color: rgb(254, 253, 254);\">";
 
     str += b.startTime.toString("HH:mm") + "-" + 
       b.stopTime.toString("HH:mm") + ": " + 
@@ -216,7 +216,7 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 }
 
 
-void QuickRecord::on_toPTZControlsButton_pressed()
+void QuickRecord::on_toPTZControlsButton_clicked()
 { 
   Backend::updateConflictingBookings(booking.date);
   JsonParser::addBooking(booking);
@@ -228,12 +228,12 @@ void QuickRecord::on_toPTZControlsButton_pressed()
   Widgets::showFullScreenDialogs(false);
 }
 
-void QuickRecord::on_toModeSelectButton_pressed()
+void QuickRecord::on_toModeSelectButton_clicked()
 {
   fade(Widgets::modeSelect);
 }
 
-void QuickRecord::on_logoutButton_pressed()
+void QuickRecord::on_logoutButton_clicked()
 {
   fade(Widgets::loginDialog);
 }

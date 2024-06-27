@@ -19,6 +19,7 @@ with this program. If not, see <https://www.gnu.org/licenses/>
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 #include <QWidget>
+#include <QFontDatabase>
 #include "simple-recording.h"
 #include "source-record.h"
 #include <plugin-support.h>
@@ -39,6 +40,8 @@ bool obs_module_load(void)
   QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
   // SimpleRecordingWidget* simpleRecordingWidget = new SimpleRecordingWidget(mainWindow);
   // obs_frontend_add_dock(simpleRecordingWidget);
+
+  if (!mainWindow) return false;
   
   ptz_load_devices();
 	ptz_load_action_source();
@@ -47,12 +50,17 @@ bool obs_module_load(void)
   Widgets::load();
   FullScreenDialog::loadAnims();
 
+  // mainWindow->setStyleSheet("QWidget { font: DaxOT-Medium; }");
+
   obs_register_source(get_source_record_filter_info());
   
 	obs_log(LOG_INFO, "plugin loaded successfully (version %s)",
 		PLUGIN_VERSION);
 
   config_t* globalConfig = obs_frontend_get_global_config();
+
+  if (!globalConfig) return false;
+
   config_set_string(globalConfig, "General", "CurrentTheme3", "CustomDark");
   config_set_string(globalConfig, "BasicWindow", "DockState", 
     "AAAA/wAAAAD9AAAAAgAAAAEAAADQAAAD4/wCAAAABPsAAAAKAEwAbwBnAGkAbgEAAAAWAAAD4wAAAaYAB///+wAAABQAcwBjAGUAbgBlAHMARABvAGMAawAAAAAWAAAAjAAAAG8A////+wAAABYAcwBvAHUAcgBjAGUAcwBEAG8AYwBrAAAAABYAAADGAAAAbwD////7AAAAFgBQAFQAWgBDAG8AbgB0AHIAbwBsAHMAAAAAFgAAA+MAAAIXAAf//wAAAAMAAAeAAAAA0PwBAAAAA/wAAAAAAAACSgAAAAAA////+v////8CAAAAAvsAAAASAG0AaQB4AGUAcgBEAG8AYwBrAAAAAAD/////AAAAcQD////7AAAAHgB0AHIAYQBuAHMAaQB0AGkAbwBuAHMARABvAGMAawAAAAKiAAAAegAAAGsA////+wAAABgAYwBvAG4AdAByAG8AbABzAEQAbwBjAGsAAAAAAAAAB4AAAAE2AP////sAAAASAHMAdABhAHQAcwBEAG8AYwBrAgAAAcD///0iAAACuQAAAN4AAAasAAAD4wAAAAQAAAAEAAAACAAAAAj8AAAAAA==");

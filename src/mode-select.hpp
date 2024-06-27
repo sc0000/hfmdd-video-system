@@ -21,8 +21,8 @@ private:
   Ui::ModeSelect* ui;
 
 private slots:
-  void on_quickModeButton_pressed();
-  void on_bookModeButton_pressed();  
+  void on_quickModeButton_clicked();
+  void on_bookModeButton_clicked();  
     
 public:
   ModeSelect(QWidget *parent = nullptr);
