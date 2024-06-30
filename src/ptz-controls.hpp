@@ -39,6 +39,7 @@ private:
 
   bool showOverview = true;
 
+  bool hasRecorded = false;
 	bool live_moves_disabled = false;
 
 	// Current status

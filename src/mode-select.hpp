@@ -22,7 +22,7 @@ private:
 
 private slots:
   void on_quickModeButton_clicked();
-  void on_bookModeButton_clicked();  
+  void on_bookModeButton_clicked();
     
 public:
   ModeSelect(QWidget *parent = nullptr);

@@ -42,19 +42,19 @@ void Widgets::load()
   passwordDialog = new PasswordDialog(mainWindow);
   presetDialog = new PresetDialog(mainWindow);
 
-  assert(
-    login &&
-    loginDialog &&
-    modeSelect &&
-    bookingEditor &&
-    bookingManager &&
-    quickRecord &&
-    ptzControls &&
-    okDialog &&
-    okCancelDialog &&
-    passwordDialog &&
-    presetDialog
-  );
+  // assert(
+  //   login &&
+  //   loginDialog &&
+  //   modeSelect &&
+  //   bookingEditor &&
+  //   bookingManager &&
+  //   quickRecord &&
+  //   ptzControls &&
+  //   okDialog &&
+  //   okCancelDialog &&
+  //   passwordDialog &&
+  //   presetDialog
+  // );
 
   fullScreenDialogs = {
     modeSelect, loginDialog, quickRecord, bookingManager

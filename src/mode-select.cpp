@@ -12,6 +12,7 @@
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
 #include "settings-manager.hpp"
+#include "json-parser.hpp"
 #include "ui_mode-select.h"
 #include "mode-select.hpp"
 
@@ -43,6 +44,12 @@ ModeSelect::~ModeSelect()
 
 void ModeSelect::reload()
 {
+  // Backend::currentBooking.date = QDate::currentDate();
+  // Backend::currentBooking.startTime = QTime::currentTime();
+  // Backend::currentBooking.stopTime = Backend::currentBooking.startTime.addSecs(60 * 60);
+  // Backend::currentBooking.email = Backend::currentEmail;
+  // Backend::currentBooking.index = JsonParser::availableIndex();
+
   raise();
   center(ui->masterWidget);
 }

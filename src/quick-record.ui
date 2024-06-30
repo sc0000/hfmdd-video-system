@@ -96,7 +96,7 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="text">
-            <string>timeLabelPlaceholder</string>
+            <string>00:00</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>

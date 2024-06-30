@@ -49,6 +49,13 @@ void ptz_load_controls(void)
   obs_frontend_pop_ui_translation();
 }
 
+void timeOut()
+{
+  if (!Widgets::ptzControls) return;
+
+  Widgets::ptzControls->stopRecording();
+}
+
 PTZControls *PTZControls::instance = NULL;
 
 /**
@@ -162,15 +169,6 @@ void PTZControls::connectSignalItemSelect()
   signal_handler_connect(sh, "item_select", item_select_cb, NULL);
 }
 
-void timeOut()
-{
-  PTZControls* ptzControls = PTZControls::getInstance();
-  
-  if (!ptzControls) return;
-
-  ptzControls->stopRecording();
-}
-
 void PTZControls::startRecording()
 {
   if (booking.date != QDate::currentDate()) {
@@ -204,8 +202,8 @@ void PTZControls::startRecording()
 
     // TODO: Set proper threshold, 15 minutes after specified stop time!
     QDateTime threshold(booking.date, booking.stopTime);
-    m_timeObserver = nullptr;
-    m_timeObserver = new TimeObserver(threshold, &timeOut, this);
+    m_timeObserver->setThreshold(threshold);
+    m_timeObserver->start();
 
     ui->recordButton->setText(
       Backend::language != ELanguage::German ?
@@ -217,6 +215,9 @@ void PTZControls::startRecording()
 void PTZControls::stopRecording()
 {
   obs_frontend_recording_stop();
+
+  hasRecorded = true;
+  m_timeObserver->stop();
 
   ui->recordButton->setText(
     Backend::language != ELanguage::German ?
@@ -459,6 +460,8 @@ PTZControls::PTZControls(QWidget *parent)
 
   ui->presetListView->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
 
+  m_timeObserver = new TimeObserver(QDateTime(booking.date, booking.stopTime), &timeOut, this);
+
   setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   obs_frontend_add_dock(this);
@@ -578,6 +581,8 @@ void PTZControls::reload()
   setViewportMode();
   selectCamera();
   setFloating(false);
+
+  hasRecorded = false;
 
   if (Backend::language == ELanguage::English) {
     switch (Backend::mode) {
@@ -1228,7 +1233,9 @@ void PTZControls::on_toBookingManagerButton_clicked()
     break;
     
     case EMode::QuickMode: {
-      JsonParser::removeBooking(Backend::currentBooking);
+      if (!hasRecorded)
+        JsonParser::removeBooking(Backend::currentBooking);
+
       Widgets::quickRecord->reload();
     }
     
@@ -1242,6 +1249,9 @@ void PTZControls::on_toBookingManagerButton_clicked()
 
 void PTZControls::on_logoutButton_clicked()
 {
+  if (Backend::mode == EMode::QuickMode && !hasRecorded)
+    JsonParser::removeBooking(Backend::currentBooking);
+
   SettingsManager::deleteTempFiles();
   
   Widgets::showFullScreenDialogs(true);
