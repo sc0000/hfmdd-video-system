@@ -244,28 +244,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="nameWidget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>810</y>
-     <width>240</width>
-     <height>39</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>240</width>
-     <height>39</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>240</width>
-     <height>39</height>
-    </size>
-   </property>
-  </widget>
   <widget class="QComboBox" name="languageComboBox">
    <property name="geometry">
     <rect>
@@ -302,6 +280,39 @@
      <width>120</width>
      <height>105</height>
     </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="nameLabel">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>890</y>
+     <width>512</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>512</width>
+     <height>64</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>512</width>
+     <height>64</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>DaxOT</family>
+     <pointsize>16</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Hochschule für Musik
+Carl Maria von Weber Dresden</string>
    </property>
   </widget>
  </widget>

@@ -44,11 +44,8 @@ LoginDialog::LoginDialog(QWidget *parent)
                                         "background-size: contain;");
   ui->logoWidget->setStyleSheet(logoWidgetStyleSheet);
 
-  QString nameWidgetStyleSheet = QString("background-image: url(../../assets/name.png);"
-                                        "background-repeat: no-repeat;"
-                                        "background-position: center;"
-                                        "background-size: contain;");
-  ui->nameWidget->setStyleSheet(nameWidgetStyleSheet);
+  QString nameLabelStyleSheet = QString("QLabel { color: #ffbf00; }");
+  ui->nameLabel->setStyleSheet(nameLabelStyleSheet);
 
   ui->languageComboBox->addItem("Deutsch");
   ui->languageComboBox->addItem("English");
@@ -88,14 +85,14 @@ void LoginDialog::reload()
   int screenHeight = screenGeometry.height();
 
   QPoint logoWidgetPos = QPoint(20, 20);
-  QPoint nameWidgetPos = QPoint(180, 24);
+  QPoint nameLabelPos = QPoint(180, 8);
   QPoint languageComboBoxPos = QPoint(
     screenWidth - (ui->languageComboBox->width()), 
     24 + ui->languageComboBox->height()
   );
 
   ui->logoWidget->move(logoWidgetPos);
-  ui->nameWidget->move(nameWidgetPos);
+  ui->nameLabel->move(nameLabelPos);
   ui->languageComboBox->move(languageComboBoxPos);
 
   ui->backgroundWidget->setFixedWidth(160);
