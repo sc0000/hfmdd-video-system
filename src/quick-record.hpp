@@ -28,6 +28,7 @@ private:
   void updateExistingBookingsLabel(QDate date);
   void updateConflictingBookings(const QDate& date);
   void updateStopTimeLabel();
+  void updateDurationLabel();
   
 private slots:
   void on_decreaseTimeBy20Button_pressed();

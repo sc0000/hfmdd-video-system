@@ -59,6 +59,7 @@ void QuickRecord::reload()
   Backend::updateBookingsOnSelectedDate(booking.date);
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
+  updateDurationLabel();
 }
 
 void QuickRecord::translate(ELanguage language)
@@ -161,6 +162,20 @@ void QuickRecord::on_decreaseTimeBy20Button_pressed()
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
+  updateDurationLabel();
+}
+
+void QuickRecord::updateDurationLabel()
+{
+  int secs = QTime::currentTime().secsTo(booking.stopTime);
+  int totalMin = secs / 60;
+  QString hours = QString::number(totalMin / 60);
+  QString minutes = QString::number(totalMin % 60);
+
+  ui->durationLabel->setText(Backend::language != ELanguage::German ?
+    "( " + hours + "h " + minutes + "min from now )" : 
+    "( " + hours + "h " + minutes + "min ab jetzt )" 
+  );
 }
 
 void QuickRecord::on_decreaseTimeBy05Button_pressed()
@@ -185,6 +200,7 @@ void QuickRecord::on_decreaseTimeBy05Button_pressed()
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
+  updateDurationLabel();
 }
 
 void QuickRecord::on_increaseTimeBy05Button_pressed()
@@ -199,6 +215,7 @@ void QuickRecord::on_increaseTimeBy05Button_pressed()
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
+  updateDurationLabel();
 }
 
 void QuickRecord::on_increaseTimeBy20Button_pressed()
@@ -213,6 +230,7 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
+  updateDurationLabel();
 }
 
 
