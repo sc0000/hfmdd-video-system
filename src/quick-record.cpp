@@ -42,6 +42,11 @@ QuickRecord::~QuickRecord()
 
 void QuickRecord::reload()
 {
+  if (!Backend::mailAddressIsValid) {
+    Widgets::loginDialog->reload();
+    return;
+  }
+
   raise();
   center(ui->masterWidget);
 
@@ -140,31 +145,6 @@ void QuickRecord::updateStopTimeLabel()
   ui->stopTimeLabel->setText(booking.stopTime.toString("HH:mm"));
 }
 
-void QuickRecord::on_decreaseTimeBy20Button_pressed()
-{
-  QTime newStopTime = booking.stopTime.addSecs(60 * -20);
-
-  if (newStopTime <= booking.startTime) {
-    Widgets::okDialog->display("Invalid time");
-    return;
-  }
-
-  if (newStopTime > QTime(23, 0)) {
-    Widgets::okDialog->display(
-      Backend::language != ELanguage::German ? 
-      "Recordings can't extend beyond 23:00" :
-      "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
-    );
-
-    return;
-  }
-
-  booking.stopTime = newStopTime;
-  updateStopTimeLabel();
-  updateExistingBookingsLabel(booking.date);
-  updateDurationLabel();
-}
-
 void QuickRecord::updateDurationLabel()
 {
   int secs = QTime::currentTime().secsTo(booking.stopTime);
@@ -178,21 +158,46 @@ void QuickRecord::updateDurationLabel()
   );
 }
 
+void QuickRecord::on_decreaseTimeBy20Button_pressed()
+{
+  QTime newStopTime = booking.stopTime.addSecs(60 * -20);
+
+  if (newStopTime <= booking.startTime) {
+    // Widgets::okDialog->display("Invalid time");
+    return;
+  }
+
+  if (newStopTime > QTime(23, 0)) {
+    // Widgets::okDialog->display(
+    //   Backend::language != ELanguage::German ? 
+    //   "Recordings can't extend beyond 23:00" :
+    //   "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
+    // );
+
+    return;
+  }
+
+  booking.stopTime = newStopTime;
+  updateStopTimeLabel();
+  updateExistingBookingsLabel(booking.date);
+  updateDurationLabel();
+}
+
 void QuickRecord::on_decreaseTimeBy05Button_pressed()
 {
   QTime newStopTime = booking.stopTime.addSecs(60 * -5);
 
   if (newStopTime <= booking.startTime) {
-    Widgets::okDialog->display("Invalid time");
+    // Widgets::okDialog->display("Invalid time");
     return;
   }
 
   if (newStopTime > QTime(23, 0)) {
-    Widgets::okDialog->display(
-      Backend::language != ELanguage::German ? 
-      "Recordings can't extend beyond 23:00" :
-      "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
-    );
+    // Widgets::okDialog->display(
+    //   Backend::language != ELanguage::German ? 
+    //   "Recordings can't extend beyond 23:00" :
+    //   "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
+    // );
     
     return;
   }
@@ -208,7 +213,7 @@ void QuickRecord::on_increaseTimeBy05Button_pressed()
   QTime newStopTime = booking.stopTime.addSecs(60 * 5);
 
   if (newStopTime > QTime(23, 0)) {
-    Widgets::okDialog->display("Recording can't extend beyond 23:00");
+    // Widgets::okDialog->display("Recording can't extend beyond 23:00");
     return;
   }
 
@@ -223,7 +228,7 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
   QTime newStopTime = booking.stopTime.addSecs(60 * 20);
 
   if (newStopTime > QTime(23, 0)) {
-    Widgets::okDialog->display("Recordings can't extend beyond 23:00");
+   //  Widgets::okDialog->display("Recordings can't extend beyond 23:00");
     return;
   }
 
