@@ -44,12 +44,11 @@ ModeSelect::~ModeSelect()
 
 void ModeSelect::reload()
 {
-  // Backend::currentBooking.date = QDate::currentDate();
-  // Backend::currentBooking.startTime = QTime::currentTime();
-  // Backend::currentBooking.stopTime = Backend::currentBooking.startTime.addSecs(60 * 60);
-  // Backend::currentBooking.email = Backend::currentEmail;
-  // Backend::currentBooking.index = JsonParser::availableIndex();
-
+  if (!Backend::mailAddressIsValid) {
+    Widgets::loginDialog->reload();
+    return;
+  }
+  
   raise();
   center(ui->masterWidget);
 }

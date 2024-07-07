@@ -46,6 +46,11 @@ BookingManager::~BookingManager()
 
 void BookingManager::reload()
 {
+  if (!Backend::mailAddressIsValid) {
+    Widgets::loginDialog->reload();
+    return;
+  }
+  
   raise();
   center(ui->masterWidget);
 
