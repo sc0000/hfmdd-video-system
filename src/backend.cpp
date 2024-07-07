@@ -10,6 +10,7 @@
 #include "backend.hpp"
 
 QString Backend::currentEmail = "";
+bool Backend::mailAddressIsValid = false;
 const QString Backend::adminEmail = "oliver.fenk@hfmdd.de";
 const QString Backend::adminPassword = "pw";
 EMode Backend::mode = EMode::Default;

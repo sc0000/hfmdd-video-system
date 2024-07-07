@@ -21,13 +21,10 @@ private:
   Ui::LoginDialog* ui;
 
 private:
-  bool mailAddressIsValid;
   bool verifyMailAddress();
 
   QString reminderLabelText;
   QString passwordLineEditPlaceholderText;
-
-  // virtual void paintEvent(QPaintEvent* event) override;
 
 private slots:
   void on_mailAddressLineEdit_textChanged(const QString& text);

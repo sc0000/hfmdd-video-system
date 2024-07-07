@@ -22,7 +22,6 @@ LoginDialog* LoginDialog::instance = NULL;
 LoginDialog::LoginDialog(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
-    mailAddressIsValid(false),
     reminderLabelText("Please log in with your HfMDD email address! Only admin accounts require a password."),
     passwordLineEditPlaceholderText("Password")
 {
@@ -124,7 +123,7 @@ void LoginDialog::translate(ELanguage language)
 
 bool LoginDialog::verifyMailAddress()
 {
-  if (!mailAddressIsValid) {
+  if (!Backend::mailAddressIsValid) {
     ui->reminderLabel->show();
     ui->reminderLabel->setText(reminderLabelText);
     ui->mailAddressLineEdit->setStyleSheet(
@@ -146,9 +145,9 @@ bool LoginDialog::verifyMailAddress()
 void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 {
   Backend::currentEmail = text;
-  mailAddressIsValid = false;
+  Backend::mailAddressIsValid = false;
   
-  if (mailAddressIsValid)
+  if (Backend::mailAddressIsValid)
     ui->reminderLabel->setText("");
 
   else 
@@ -158,8 +157,8 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
   {
     if (Backend::currentEmail.endsWith(suffix))
     {
-      mailAddressIsValid = true;
-      ui->reminderLabel->setText(" ");
+      Backend::mailAddressIsValid = true;
+      ui->reminderLabel->setText("");
       break;
     }
 
