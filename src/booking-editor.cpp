@@ -195,7 +195,7 @@ void BookingEditor::on_decreaseTimeBy60Button_pressed()
   if (timeToSet == ETimeToSet::StartTime) {
     QTime newStartTime = booking.startTime.addSecs(60 * -60);
 
-    if (newStartTime < QTime(7, 0)) 
+    if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
       return;
 
     booking.startTime = newStartTime;
@@ -203,6 +203,9 @@ void BookingEditor::on_decreaseTimeBy60Button_pressed()
 
   if (timeToSet == ETimeToSet::StopTime) {
     QTime newStopTime = booking.stopTime.addSecs(60 * -60);
+
+    if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
+      return;
 
     if (newStopTime <= booking.startTime) {
       QTime newStartTime = newStopTime.addSecs(60 * -60);
@@ -220,7 +223,7 @@ void BookingEditor::on_decreaseTimeBy05Button_pressed()
   if (timeToSet == ETimeToSet::StartTime) {
     QTime newStartTime = booking.startTime.addSecs(60 * -5);
 
-    if (newStartTime < QTime(7, 0)) 
+   if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
       return;
 
     booking.startTime = newStartTime;
@@ -228,6 +231,9 @@ void BookingEditor::on_decreaseTimeBy05Button_pressed()
 
   if (timeToSet == ETimeToSet::StopTime) {
     QTime newStopTime = booking.stopTime.addSecs(60 * -5);
+
+    if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
+      return;
 
     if (newStopTime <= booking.startTime) {
       QTime newStartTime = newStopTime.addSecs(60 * -5);
@@ -245,6 +251,9 @@ void BookingEditor::on_increaseTimeBy05Button_pressed()
   if (timeToSet == ETimeToSet::StartTime) {
     QTime newStartTime = booking.startTime.addSecs(60 * 5);
 
+    if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
+      return;
+
     if (newStartTime >= booking.stopTime) {
       QTime newStopTime = newStartTime.addSecs(60 * 5);
       booking.stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
@@ -256,7 +265,7 @@ void BookingEditor::on_increaseTimeBy05Button_pressed()
   if (timeToSet == ETimeToSet::StopTime) {
     QTime newStopTime = booking.stopTime.addSecs(60 * 5);
 
-    if (newStopTime > QTime(23, 0))
+    if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
       return;
 
     booking.stopTime = newStopTime;
@@ -270,6 +279,9 @@ void BookingEditor::on_increaseTimeBy60Button_pressed()
   if (timeToSet == ETimeToSet::StartTime) {
     QTime newStartTime = booking.startTime.addSecs(60 * 60);
 
+    if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
+      return;
+
     if (newStartTime >= booking.stopTime) {
       QTime newStopTime = newStartTime.addSecs(60 * 60);
       booking.stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
@@ -281,7 +293,7 @@ void BookingEditor::on_increaseTimeBy60Button_pressed()
   if (timeToSet == ETimeToSet::StopTime) {
     QTime newStopTime = booking.stopTime.addSecs(60 * 60);
 
-    if (newStopTime > QTime(23, 0))
+    if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
       return;
 
     booking.stopTime = newStopTime;
