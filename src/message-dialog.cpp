@@ -26,14 +26,21 @@ OkDialog::OkDialog(QWidget* parent)
   hide();
 }
 
-void OkDialog::display(const QString& message)
+void OkDialog::display(const QString& message, bool triggerLogout)
 {
+  m_triggerLogout = triggerLogout;
   ui->messageLabel->setText(message);
   show();
+  raise();
 }
 
 void OkDialog::on_okButton_pressed()
 {
+  if (m_triggerLogout) {
+    m_triggerLogout = false;
+    Widgets::ptzControls->logout();
+  }
+  
   hide();
 }
 

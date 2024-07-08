@@ -153,7 +153,7 @@ private slots:
 	void settingsChanged(OBSData settings);
 	void updateMoveControls();
 
-	void presetUpdateActions();
+	// void presetUpdateActions();
 	void on_presetListView_activated(QModelIndex index);
 	void on_presetListView_customContextMenuRequested(const QPoint &pos);
 	void on_cameraList_doubleClicked(const QModelIndex &index);
@@ -213,7 +213,8 @@ public:
   void loadUserPresets();
   void connectSignalItemSelect();
   void startRecording();
-  void stopRecording();
+  void stopRecording(bool manual);
+  void logout();
   // void loginTimeOut();
 
   QString currCameraName = "Birddog1";

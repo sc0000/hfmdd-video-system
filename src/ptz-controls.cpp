@@ -53,7 +53,7 @@ void timeOut()
 {
   if (!Widgets::ptzControls) return;
 
-  Widgets::ptzControls->stopRecording();
+  Widgets::ptzControls->stopRecording(false);
 }
 
 PTZControls *PTZControls::instance = NULL;
@@ -212,7 +212,7 @@ void PTZControls::startRecording()
     );
 }
 
-void PTZControls::stopRecording()
+void PTZControls::stopRecording(bool manual)
 {
   obs_frontend_recording_stop();
 
@@ -226,7 +226,26 @@ void PTZControls::stopRecording()
   );
 
   const QString sendFilesMsg = Backend::sendFiles(booking);
-  Widgets::okDialog->display(sendFilesMsg);
+
+  if (manual)
+    Widgets::okDialog->display(sendFilesMsg, true);
+
+  else
+    logout();
+}
+
+void PTZControls::logout()
+{
+  if (Backend::mode == EMode::QuickMode && !hasRecorded)
+    JsonParser::removeBooking(Backend::currentBooking);
+
+  SettingsManager::deleteTempFiles();
+  
+  Widgets::showFullScreenDialogs(true);
+  
+  // This is a dirty hack to get the logout from camera controls to work
+  Widgets::bookingManager->toLoginDialog();
+  hide();
 }
 
 void PTZControls::translate(ELanguage language)
@@ -291,7 +310,6 @@ PTZControls::PTZControls(QWidget *parent)
   selectCamera();
 
   ui->presetListView->setModel(presetModel());
-  presetUpdateActions();
   updateMoveControls();
   //----------------------------------------------------
 
@@ -470,6 +488,9 @@ PTZControls::PTZControls(QWidget *parent)
 
 PTZControls::~PTZControls()
 {
+  if (!hasRecorded)
+    JsonParser::removeBooking(Backend::currentBooking);
+
 	while (!hotkeys.isEmpty())
 		obs_hotkey_unregister(hotkeys.takeFirst());
 
@@ -1218,7 +1239,7 @@ void PTZControls::on_recordButton_pressed()
     startRecording();
   
   else 
-    stopRecording();
+    stopRecording(true);
 }
 
 void PTZControls::on_toBookingManagerButton_clicked()
@@ -1249,16 +1270,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
 
 void PTZControls::on_logoutButton_clicked()
 {
-  if (Backend::mode == EMode::QuickMode && !hasRecorded)
-    JsonParser::removeBooking(Backend::currentBooking);
-
-  SettingsManager::deleteTempFiles();
-  
-  Widgets::showFullScreenDialogs(true);
-  
-  // This is a dirty hack to get the logout from camera controls to work
-  Widgets::bookingManager->toLoginDialog();
-  hide();
+  logout();
 }
 
 void PTZControls::setCurrent(uint32_t device_id)
@@ -1351,13 +1363,12 @@ void PTZControls::currentChanged(QModelIndex current, QModelIndex previous)
   ptz = ptzDeviceList.getDevice(current);
 	if (ptz) {
 		// ui->presetListView->setModel(ptz->presetModel());
-		presetUpdateActions();
-		auto *selectionModel = ui->presetListView->selectionModel();
-		if (selectionModel)
-			connect(selectionModel,
-				SIGNAL(currentChanged(QModelIndex,
-						      QModelIndex)),
-				this, SLOT(presetUpdateActions()));
+		// auto *selectionModel = ui->presetListView->selectionModel();
+		// if (selectionModel)
+		// 	connect(selectionModel,
+		// 		SIGNAL(currentChanged(QModelIndex,
+		// 				      QModelIndex)),
+		// 		this, SLOT(presetUpdateActions()));
 		ptz->connect(ptz, SIGNAL(settingsChanged(OBSData)), this,
 			     SLOT(settingsChanged(OBSData)));
 
@@ -1481,20 +1492,6 @@ void PTZControls::savePresets()
   //----------------------------------------------------
 }
 
-// ! DEPRECATED !
-void PTZControls::presetUpdateActions()
-{
-	auto index = ui->presetListView->currentIndex();
-	auto model = ui->presetListView->model();
-	int count = model ? model->rowCount() : 0;
-	// ui->actionPresetAdd->setEnabled(model != nullptr);
-	// ui->actionPresetRemove->setEnabled(index.isValid());
-	// ui->actionPresetMoveUp->setEnabled(index.isValid() && count > 1 &&
-	// 				   index.row() > 0);
-	// ui->actionPresetMoveDown->setEnabled(index.isValid() && count > 1 &&
-	// 				     index.row() < count - 1);
-}
-
 void PTZControls::selectCamera()
 {
   ui->currentCameraLabel->setText(currCameraName);
@@ -1517,7 +1514,6 @@ void PTZControls::selectCamera()
       }
   }
 }
-
 
 void PTZControls::on_presetListView_activated(QModelIndex index)
 {
@@ -1633,7 +1629,7 @@ void PTZControls::on_actionPresetAdd_triggered()
 		ui->presetListView->setCurrentIndex(index);
 		ui->presetListView->edit(index);
 	}
-	presetUpdateActions();
+	// presetUpdateActions();
 }
 
 void PTZControls::on_actionPresetRemove_triggered()
@@ -1641,7 +1637,7 @@ void PTZControls::on_actionPresetRemove_triggered()
 	auto model = ui->presetListView->model();
 	auto index = ui->presetListView->currentIndex();
 	model->removeRows(index.row(), 1);
-	presetUpdateActions();
+	// presetUpdateActions();
 }
 
 void PTZControls::on_actionPresetMoveUp_triggered()
@@ -1650,7 +1646,7 @@ void PTZControls::on_actionPresetMoveUp_triggered()
 	auto index = ui->presetListView->currentIndex();
 	model->moveRow(QModelIndex(), index.row(), QModelIndex(),
 		       index.row() - 1);
-	presetUpdateActions();
+	// presetUpdateActions();
 }
 
 void PTZControls::on_actionPresetMoveDown_triggered()
@@ -1659,5 +1655,5 @@ void PTZControls::on_actionPresetMoveDown_triggered()
 	auto index = ui->presetListView->currentIndex();
 	model->moveRow(QModelIndex(), index.row(), QModelIndex(),
 		       index.row() + 2);
-	presetUpdateActions();
+	// presetUpdateActions();
 }

@@ -20,10 +20,11 @@ class OkDialog : public QDialog
 
 private:
   Ui::OkDialog* ui;
+  bool m_triggerLogout = false;
 
 public:
   explicit OkDialog(QWidget* parent = nullptr);
-  void display(const QString& message);
+  void display(const QString& message, bool triggerLogout = false);
 
 private slots:
   void on_okButton_pressed();
