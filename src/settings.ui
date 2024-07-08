@@ -35,7 +35,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
@@ -158,7 +158,7 @@
         <rect>
          <x>11</x>
          <y>295</y>
-         <width>549</width>
+         <width>721</width>
          <height>207</height>
         </rect>
        </property>
@@ -167,7 +167,7 @@
          <widget class="QComboBox" name="qualityComboBox"/>
         </item>
         <item row="4" column="0">
-         <widget class="QPushButton" name="saveButton">
+         <widget class="QPushButton" name="saveButton0">
           <property name="text">
            <string>Save</string>
           </property>
@@ -498,7 +498,7 @@
          <x>10</x>
          <y>10</y>
          <width>721</width>
-         <height>431</height>
+         <height>481</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
@@ -508,26 +508,15 @@
         <property name="verticalSpacing">
          <number>21</number>
         </property>
-        <item row="3" column="0">
-         <widget class="QLabel" name="nasPasswordLabel">
+        <item row="5" column="0">
+         <widget class="QLabel" name="mailUserNameLabel">
           <property name="text">
-           <string>NAS Password</string>
+           <string>Mail User Name</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="nasUserNameLabel">
-          <property name="text">
-           <string>NAS User Name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="nasIpLabel">
-          <property name="text">
-           <string>NAS IP</string>
-          </property>
-         </widget>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="nasUserNameLineEdit"/>
         </item>
         <item row="4" column="1">
          <widget class="QLineEdit" name="mailHostLineEdit"/>
@@ -539,8 +528,12 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
-         <widget class="QLineEdit" name="mailPasswordLineEdit"/>
+        <item row="0" column="0">
+         <widget class="QLabel" name="nasIpLabel">
+          <property name="text">
+           <string>NAS IP</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="mailHostLabel">
@@ -549,18 +542,6 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="nasUserNameLineEdit"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="nasIpLineEdit"/>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="mailUserNameLineEdit"/>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="nasPasswordLineEdit"/>
-        </item>
         <item row="1" column="0">
          <widget class="QLabel" name="nasPortLabel">
           <property name="text">
@@ -568,13 +549,57 @@
           </property>
          </widget>
         </item>
+        <item row="6" column="1">
+         <widget class="QLineEdit" name="mailPasswordLineEdit">
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="nasIpLineEdit"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="nasUserNameLabel">
+          <property name="text">
+           <string>NAS User Name</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="nasPortLineEdit"/>
         </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="mailUserNameLabel">
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="mailUserNameLineEdit"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="nasPasswordLineEdit">
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="saveButton1">
           <property name="text">
-           <string>Mail User Name</string>
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="nasPasswordLabel">
+          <property name="text">
+           <string>NAS Password</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLineEdit" name="mailSenderAddressLineEdit"/>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="mailSenderAddressLabel">
+          <property name="text">
+           <string>Sender Address</string>
           </property>
          </widget>
         </item>

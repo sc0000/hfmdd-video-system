@@ -86,7 +86,8 @@ public slots:
 	void on_livemoveCheckBox_stateChanged(int state);
 	void on_enableDebugLogCheckBox_stateChanged(int state);
 
-  void on_saveButton_pressed();
+  void on_saveButton0_pressed();
+  void on_saveButton1_pressed();
   void on_sourcesButton_pressed();
   void on_sourcesButton_released();
 
@@ -97,7 +98,9 @@ public slots:
 	void updateProperties(OBSData old_settings, OBSData new_settings);
 	void showDevice(uint32_t device_id);
   void getAdditionalProperties();
+  void getCredentials();
   void updateAdditionalProperties();
+  void updateCredentials();
 };
 
 void ptz_settings_show(uint32_t device_id = 0);

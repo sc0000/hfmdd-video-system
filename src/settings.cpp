@@ -165,6 +165,7 @@ PTZSettings::PTZSettings()
     ui->recFormatComboBox->addItem(recFormat);
 
   getAdditionalProperties();
+  getCredentials();
   //----------------------------------------------------
 }
 
@@ -326,9 +327,14 @@ void PTZSettings::on_enableDebugLogCheckBox_stateChanged(int state)
 	ptz_debug_level = (state == Qt::Unchecked) ? LOG_DEBUG : LOG_INFO;
 }
 
-void PTZSettings::on_saveButton_pressed()
+void PTZSettings::on_saveButton0_pressed()
 {
   updateAdditionalProperties();
+}
+
+void PTZSettings::on_saveButton1_pressed()
+{
+  updateCredentials();
 }
 
 void PTZSettings::on_sourcesButton_pressed()
@@ -419,7 +425,7 @@ void PTZSettings::showDevice(uint32_t device_id)
 
 void PTZSettings::getAdditionalProperties()
 {
-  SettingsManager::load();
+  SettingsManager::loadSettings();
 
   ui->baseDirectoryLineEdit->setText(SettingsManager::baseDirectory);
   ui->filenameFormattingLineEdit->setText(SettingsManager::filenameFormatting);
@@ -431,6 +437,20 @@ void PTZSettings::getAdditionalProperties()
       break;
     }
   }  
+}
+
+void PTZSettings::getCredentials()
+{
+  SettingsManager::loadCredentials();
+
+  ui->nasIpLineEdit->setText(SettingsManager::nasIP);
+  ui->nasPortLineEdit->setText(SettingsManager::nasPort);
+  ui->nasUserNameLineEdit->setText(SettingsManager::nasUser);
+  ui->nasPasswordLineEdit->setText(SettingsManager::nasPassword);
+  ui->mailHostLineEdit->setText(SettingsManager::mailHost);
+  ui->mailUserNameLineEdit->setText(SettingsManager::mailUser);
+  ui->mailPasswordLineEdit->setText(SettingsManager::mailPassword);
+  ui->mailSenderAddressLineEdit->setText(SettingsManager::mailSenderAddress);
 }
 
 void PTZSettings::updateAdditionalProperties()
@@ -446,8 +466,21 @@ void PTZSettings::updateAdditionalProperties()
   SettingsManager::recFormat = ui->recFormatComboBox->currentText();
 
   SettingsManager::resetFilterSettings();
+  SettingsManager::saveSettings();
+}
 
-  SettingsManager::save();
+void PTZSettings::updateCredentials()
+{
+  SettingsManager::nasIP = ui->nasIpLineEdit->text();
+  SettingsManager::nasPort = ui->nasPortLineEdit->text();
+  SettingsManager::nasUser = ui->nasUserNameLineEdit->text();
+  SettingsManager::nasPassword = ui->nasPasswordLineEdit->text();
+  SettingsManager::mailHost = ui->mailHostLineEdit->text();
+  SettingsManager::mailUser = ui->mailUserNameLineEdit->text();
+  SettingsManager::mailPassword = ui->mailPasswordLineEdit->text();
+  SettingsManager::mailSenderAddress = ui->mailSenderAddressLineEdit->text();
+
+  SettingsManager::saveCredentials();
 }
 
 /* ----------------------------------------------------------------- */

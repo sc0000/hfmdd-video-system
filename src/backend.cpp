@@ -183,10 +183,22 @@ QString Backend::sendFiles(const Booking& booking)
   jsonObj["basePath"] = apiBasePath;
   jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
   jsonObj["receiver"] = booking.email;
+
   jsonObj["subject"] = (Backend::language != ELanguage::German ? 
     "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
     booking.date.toString("ddd MMM dd yyyy");
 
+  jsonObj["nasIP"] = SettingsManager::nasIP;
+  jsonObj["nasPort"] = SettingsManager::nasPort;
+  jsonObj["nasUser"] = SettingsManager::nasUser;
+  jsonObj["nasPassword"] = SettingsManager::nasPassword;
+
+  jsonObj["mailHost"] = SettingsManager::mailHost;
+  jsonObj["mailUser"] = SettingsManager::mailUser;
+  jsonObj["mailPassword"] = SettingsManager::mailPassword;
+  jsonObj["mailSenderAddress"] = SettingsManager::mailSenderAddress;
+  jsonObj["german"] = (language == ELanguage::German);
+  
   QJsonDocument jsonDoc(jsonObj);
 
   nodeProcess->write(jsonDoc.toJson());

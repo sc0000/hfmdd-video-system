@@ -13,7 +13,8 @@ QString SettingsManager::baseDirectory = "V:/sb-terminal-test/";
 QString SettingsManager::outerDirectory = "";
 QString SettingsManager::innerDirectory = "";
 
-QVector<QString> SettingsManager::mailSuffices = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net" };
+// TODO: Remove gmx and gmail suffices (only for testing)!
+QVector<QString> SettingsManager::mailSuffices = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net", "@gmail.com", "@gmail.de" };
 
 QString SettingsManager::filenameFormatting = "";
 QString SettingsManager::recFormat = "";
@@ -27,6 +28,7 @@ QString SettingsManager::nasPassword = "";
 QString SettingsManager::mailHost = "";
 QString SettingsManager::mailUser = "";
 QString SettingsManager::mailPassword = "";
+QString SettingsManager::mailSenderAddress = "";
 
 QVector<obs_source_t*> SettingsManager::sources;
 
@@ -159,7 +161,7 @@ void SettingsManager::resetFilterSettings()
     sourceRecordFilterInfo->get_defaults(settings);
 
     QString sourceName = obs_source_get_name(source);
-    QString newFormatting = SettingsManager::filenameFormatting + "-" + sourceName;
+    QString newFormatting = SettingsManager::filenameFormatting + " " + sourceName;
 
     QString filterName = sourceRecordFilterName + "-" + sourceName;
 
@@ -194,7 +196,8 @@ void SettingsManager::resetFilterSettings()
   }
 }
 
-void SettingsManager::save()
+// TODO: Use custom JSON interface
+void SettingsManager::saveSettings()
 {
   char* file = obs_module_config_path("config2.json");
 
@@ -222,7 +225,39 @@ void SettingsManager::save()
 	bfree(file);
 }
 
-void SettingsManager::load()
+void SettingsManager::saveCredentials()
+{
+  char* file = obs_module_config_path("config3.json");
+
+	if (!file) return;
+
+  OBSData savedata = obs_data_create();
+	obs_data_release(savedata);
+
+  obs_data_set_string(savedata, "nas_ip", nasIP.toUtf8().constData());
+  obs_data_set_string(savedata, "nas_port", nasPort.toUtf8().constData());
+  obs_data_set_string(savedata, "nas_user", nasUser.toUtf8().constData());
+  obs_data_set_string(savedata, "nas_password", nasPassword.toUtf8().constData());
+  obs_data_set_string(savedata, "mail_host", mailHost.toUtf8().constData());
+  obs_data_set_string(savedata, "mail_user", mailUser.toUtf8().constData());
+  obs_data_set_string(savedata, "mail_password", mailPassword.toUtf8().constData());
+  obs_data_set_string(savedata, "sender_address", mailSenderAddress.toUtf8().constData());
+
+  if (!obs_data_save_json_safe(savedata, file, "tmp", "bak")) {
+		char *path = obs_module_config_path("");
+
+		if (path) {
+			os_mkdirs(path);
+			bfree(path);
+		}
+
+		obs_data_save_json_safe(savedata, file, "tmp", "bak");
+  }
+
+	bfree(file);
+}
+
+void SettingsManager::loadSettings()
 {
   char *file = obs_module_config_path("config2.json");
 
@@ -236,15 +271,39 @@ void SettingsManager::load()
   
 	obs_data_release(loaddata);
 
-  SettingsManager::baseDirectory = obs_data_get_string(loaddata, "base_directory");
-  SettingsManager::filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
-  SettingsManager::recFormat = obs_data_get_string(loaddata, "rec_format");
-  SettingsManager::qualityPreset = obs_data_get_string(loaddata, "quality_preset");
+  baseDirectory = obs_data_get_string(loaddata, "base_directory");
+  filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
+  recFormat = obs_data_get_string(loaddata, "rec_format");
+  qualityPreset = obs_data_get_string(loaddata, "quality_preset");
 
   JsonParser::bookingsPath = baseDirectory + "bookings.json";
   JsonParser::presetsPath = baseDirectory + "presets.json";
 
   setTempPath();
+}
+
+void SettingsManager::loadCredentials()
+{
+  char *file = obs_module_config_path("config3.json");
+
+  if (!file) return;
+
+	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
+
+  bfree(file);
+
+	if (!loaddata) return;
+  
+	obs_data_release(loaddata);
+
+  nasIP = obs_data_get_string(loaddata, "nas_ip");
+  nasPort = obs_data_get_string(loaddata, "nas_port");
+  nasUser = obs_data_get_string(loaddata, "nas_user");
+  nasPassword = obs_data_get_string(loaddata, "nas_password");
+  mailHost = obs_data_get_string(loaddata, "mail_host");
+  mailUser = obs_data_get_string(loaddata, "mail_user");
+  mailPassword = obs_data_get_string(loaddata, "mail_password");
+  mailSenderAddress = obs_data_get_string(loaddata, "sender_address");
 }
 
 void SettingsManager::setTempPath()
