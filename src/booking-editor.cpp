@@ -43,6 +43,8 @@ void BookingEditor::reload(Booking* bookingToEdit)
   }
 
   else {
+    isEditing = false;
+
     booking.date = QDate::currentDate();
     booking.email = Backend::currentEmail;
     booking.event = "";
@@ -56,7 +58,14 @@ void BookingEditor::reload(Booking* bookingToEdit)
     ui->eventTypeLineEdit->setText("");
   }
 
+  timeToSet = ETimeToSet::StartTime;
+
   ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; }");
+  ui->setStopTimeButton->setStyleSheet(
+    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px;  }"
+    "QPushButton:hover {background-color: #ffbf00; font-size: 16px;}"  
+  );
+
   ui->calendarWidget->setSelectedDate(booking.date);
   updateExistingBookingsLabel(booking.date);
 
@@ -140,8 +149,8 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
     if (isConflicting) {
       str += Backend::language != ELanguage::German ?
-        " CONFLICTING!</span>" : 
-        " BUCHUNGSKONFLIKT!</span>";
+        " --CONFLICTING!</span>" : 
+        " --BUCHUNGSKONFLIKT!</span>";
     }
 
     str += "<br/>";
@@ -162,9 +171,6 @@ void BookingEditor::drawTimespan()
 void BookingEditor::on_calendarWidget_clicked(QDate date)
 {
   booking.date = date;
-
-  if (!ui->bookingsOnSelectedDateLabel) return;
-
   updateExistingBookingsLabel(date);
 }
 
@@ -215,6 +221,7 @@ void BookingEditor::on_decreaseTimeBy60Button_pressed()
     booking.stopTime = newStopTime;
   }
 
+  updateExistingBookingsLabel(booking.date);
   drawTimespan();
 }
 
@@ -243,6 +250,7 @@ void BookingEditor::on_decreaseTimeBy05Button_pressed()
     booking.stopTime = newStopTime;
   }
 
+  updateExistingBookingsLabel(booking.date);
   drawTimespan();
 }
 
@@ -271,6 +279,7 @@ void BookingEditor::on_increaseTimeBy05Button_pressed()
     booking.stopTime = newStopTime;
   }
 
+  updateExistingBookingsLabel(booking.date);
   drawTimespan();
 }
 
@@ -299,6 +308,7 @@ void BookingEditor::on_increaseTimeBy60Button_pressed()
     booking.stopTime = newStopTime;
   }
 
+  updateExistingBookingsLabel(booking.date);
   drawTimespan();
 }
 
@@ -329,16 +339,20 @@ void BookingEditor::on_saveButton_clicked()
     return;
   }
   
-  Backend::updateConflictingBookings(booking.date);
+  Backend::updateConflictingBookings(booking);
+
+  if (booking.isConflicting)
+    Widgets::okDialog->display("This booking is conflicting.");
 
   if (isEditing) 
     JsonParser::updateBooking(booking);
   
   else 
     JsonParser::addBooking(booking);
-
+  
   Widgets::bookingManager->loadBookings();
 
+  isEditing = false;
   hide();
 }
 

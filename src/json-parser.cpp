@@ -10,10 +10,8 @@
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
 
-QString JsonParser::bookingsPath = "V:/sb-terminal-test/bookings.json";
-QString JsonParser::presetsPath = "V:/sb-terminal-test/presets.json";
-// QString JsonParser::presetsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/presets.json";
-// QString JsonParser::bookingsPath = "C:/Users/sebas/OneDrive/Dokumente/OBS-RecordingsTEST/bookings.json";
+QString JsonParser::bookingsPath = "";
+QString JsonParser::presetsPath = "";
 
 void JsonParser::addBooking(const Booking& booking)
 {

@@ -109,6 +109,11 @@ void BookingManager::translate(ELanguage language)
   }
 }
 
+void BookingManager::on_bookingsList_currentRowChanged()
+{
+  // Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
+}
+
 void BookingManager::on_newBookingButton_clicked()
 {
   Widgets::bookingEditor->reload(nullptr);
@@ -164,11 +169,14 @@ void BookingManager::on_deleteBookingButton_clicked()
   if (!confirmed) return;
 
   int rowIndex = ui->bookingsList->currentRow();
-  const Booking& selectedBooking = bookings[rowIndex];
+  Booking& selectedBooking = bookings[rowIndex];
+  Backend::updateConflictingBookings(selectedBooking, false);
   JsonParser::removeBooking(selectedBooking);
-  bookings.removeAt(rowIndex);
-  QListWidgetItem* item = ui->bookingsList->takeItem(rowIndex);
-  if (item) delete item;
+  // bookings.removeAt(rowIndex);
+  // QListWidgetItem* item = ui->bookingsList->takeItem(rowIndex);
+  // if (item) delete item;
+
+  loadBookings();
 }
 
 void BookingManager::on_toPTZControlsButton_clicked()

@@ -12,6 +12,13 @@ enum class EMode
   Default
 };
 
+enum class EMailType
+{
+  SendFiles,
+  BookingConflictWarning,
+  Default
+};
+
 class Backend
 {
 public:
@@ -28,7 +35,8 @@ public:
   static QVector<Booking> loadedBookings;
   static QVector<Booking> bookingsOnSelectedDate;
 
-  static void updateConflictingBookings(const QDate& date);
+  static void updateConflictingBookings(const QDate& date, const bool setConflicting = true);
+  static void updateConflictingBookings(Booking& booking, const bool setConflicting = true);
   static bool bookingsAreConflicting(const Booking& booking0, const Booking& booking1);
   static void updateBookingsOnSelectedDate(const QDate& date);
   static void loadBookings();
@@ -38,4 +46,5 @@ public:
   static QString makeEntry(const Booking& booking);
 
   static QString sendFiles(const Booking& booking);
+  static QString sendMail(const Booking& booking, EMailType mailType);
 };

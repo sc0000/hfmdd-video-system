@@ -22,25 +22,52 @@ Booking Backend::currentBooking = {0};
 QVector<Booking> Backend::loadedBookings = {};
 QVector<Booking> Backend::bookingsOnSelectedDate = {};
 
-void Backend::updateConflictingBookings(const QDate& date)
+void Backend::updateConflictingBookings(const QDate& date, const bool setConflicting)
 {
   updateBookingsOnSelectedDate(date);
+
+  currentBooking.isConflicting = false;
 
   for (Booking& b : bookingsOnSelectedDate) {
     if (bookingsAreConflicting(currentBooking, b)) {
       currentBooking.isConflicting = true;
-      b.isConflicting = true;
+      b.isConflicting = setConflicting;
     }
 
     else {
-      currentBooking.isConflicting = false;
       b.isConflicting = false;
     }
 
-    // ??? b.date = date;
+    b.date = date;
 
     JsonParser::updateBooking(b);
   }
+
+  JsonParser::updateBooking(currentBooking);
+}
+
+void Backend::updateConflictingBookings(Booking& booking, const bool setConflicting)
+{
+  updateBookingsOnSelectedDate(booking.date);
+
+  booking.isConflicting = false;
+
+  for (Booking& other : bookingsOnSelectedDate) {
+    if (bookingsAreConflicting(booking, other)) {
+      booking.isConflicting = true;
+      other.isConflicting = setConflicting;
+    }
+
+    else {
+      other.isConflicting = false;
+    }
+
+    other.date = booking.date;
+
+    JsonParser::updateBooking(other);
+  }
+
+  JsonParser::updateBooking(booking);
 }
 
 bool Backend::bookingsAreConflicting(const Booking& b0, const Booking& b1)
@@ -180,6 +207,82 @@ QString Backend::sendFiles(const Booking& booking)
     QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
 
   QJsonObject jsonObj;
+  jsonObj["basePath"] = apiBasePath;
+  jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
+  jsonObj["receiver"] = booking.email;
+
+  jsonObj["subject"] = (Backend::language != ELanguage::German ? 
+    "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
+    booking.date.toString("ddd MMM dd yyyy");
+
+  jsonObj["nasIP"] = SettingsManager::nasIP;
+  jsonObj["nasPort"] = SettingsManager::nasPort;
+  jsonObj["nasUser"] = SettingsManager::nasUser;
+  jsonObj["nasPassword"] = SettingsManager::nasPassword;
+
+  jsonObj["mailHost"] = SettingsManager::mailHost;
+  jsonObj["mailUser"] = SettingsManager::mailUser;
+  jsonObj["mailPassword"] = SettingsManager::mailPassword;
+  jsonObj["mailSenderAddress"] = SettingsManager::mailSenderAddress;
+  jsonObj["german"] = (language == ELanguage::German);
+  
+  QJsonDocument jsonDoc(jsonObj);
+
+  nodeProcess->write(jsonDoc.toJson());
+  nodeProcess->closeWriteChannel();
+
+  if (!nodeProcess->waitForFinished())
+    return "Process finished with error: " + nodeProcess->errorString();
+
+  const QByteArray output = nodeProcess->readAllStandardOutput();
+  return QString::fromUtf8(output);
+}
+
+QString Backend::sendMail(const Booking& booking, EMailType mailType)
+{
+  const QString dllFilePath = QCoreApplication::applicationFilePath();
+  const QString dllDir = QFileInfo(dllFilePath).absolutePath();
+
+  const QString scriptPath = QDir::toNativeSeparators(dllDir + "/../../node-scripts/mail-sender.js");
+
+  const QStringList nodeArgs = QStringList() << scriptPath;
+
+  QProcess* nodeProcess = new QProcess();
+  nodeProcess->setEnvironment(QProcess::systemEnvironment());
+  nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
+
+  nodeProcess->start("node", nodeArgs);
+
+  if (!nodeProcess->waitForStarted()) 
+    return "Process started with error: " + nodeProcess->errorString();
+
+  const QString& baseDir = SettingsManager::baseDirectory;
+
+  const QString apiBasePath = 
+    QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
+
+  QString type = "";
+
+  switch (mailType) {
+    case EMailType::SendFiles:
+      type = "send-files";
+      break;
+
+    case EMailType::BookingConflictWarning:
+      type = "booking-conflict-warning";
+      break;
+
+    case EMailType::Default:
+      break;
+  }
+
+  if (type.isEmpty())
+    return "Mail type specification invalid. ";
+
+  QJsonObject jsonObj;
+
+  jsonObj["type"] = type;
+
   jsonObj["basePath"] = apiBasePath;
   jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
   jsonObj["receiver"] = booking.email;
