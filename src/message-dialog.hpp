@@ -27,7 +27,7 @@ public:
   void display(const QString& message, bool triggerLogout = false);
 
 private slots:
-  void on_okButton_pressed();
+  void on_okButton_clicked();
 };
 
 QT_BEGIN_NAMESPACE
@@ -42,15 +42,14 @@ class OkCancelDialog : public QDialog
 
 private:
   Ui::OkCancelDialog* ui;
-  bool decision;  
 
 public:
   explicit OkCancelDialog(QWidget* parent = nullptr);
-  void display(const QString& message, bool& out);
+  int display(const QString& message, const bool colorBlack = false);
 
 private slots:
-  void on_okButton_pressed();
-  void on_cancelButton_pressed();
+  void on_okButton_clicked();
+  void on_cancelButton_clicked();
 };
 
 QT_BEGIN_NAMESPACE
@@ -73,8 +72,8 @@ public:
   inline bool isValid() { return valid; } 
 
 private slots:
-  void on_okButton_pressed();
-  void on_cancelButton_pressed();  
+  void on_okButton_clicked();
+  void on_cancelButton_clicked();  
 };
 
 QT_BEGIN_NAMESPACE
@@ -95,6 +94,6 @@ public:
   void display(Booking* booking = nullptr); 
 
 private slots:
-  void on_okButton_pressed();
-  void on_cancelButton_pressed();  
+  void on_okButton_clicked();
+  void on_cancelButton_clicked();  
 };

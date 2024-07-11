@@ -44,14 +44,20 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
   else {
     isEditing = false;
+    QTime currentTime = QTime::currentTime();
 
     booking.date = QDate::currentDate();
     booking.email = Backend::currentEmail;
     booking.event = "";
     booking.index = JsonParser::availableIndex();
-    booking.startTime = QTime::currentTime();
+
+    booking.startTime = currentTime < QTime(23, 0) && currentTime > QTime(7, 0) ?
+      currentTime :
+      QTime(8, 0);
+
     Backend::roundTime(booking.startTime);
-    booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) ? 
+    
+    booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) && booking.startTime.addSecs(60 * 60) > QTime(7, 0) ? 
       booking.startTime.addSecs(60 * 60) : 
       QTime(23, 0);
 
@@ -117,20 +123,26 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
   const QVector<Booking>& bosd = Backend::bookingsOnSelectedDate;
 
+  QLocale germanLocale(QLocale::German);
+
+  QString dateStr = Backend::language != ELanguage::German ?
+    date.toString() :
+    germanLocale.toString(date); 
+
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText(
           Backend::language != ELanguage::German ?
-          "There are no other bookings yet on " + date.toString() + "." :
-          "Es gibt keine anderen Buchungen am " + date.toString() + "."
+          "There are no other bookings yet on " + dateStr + "." :
+          "Es gibt keine anderen Buchungen am " + dateStr + "."
         );
 
         return;
   }
 
   QString str = Backend::language != ELanguage::German ?
-    "The following times have been booked on " + date.toString() + ":\n" :
-    "Am " + date.toString() + " wurden folgende Zeiten gebucht:\n";
+    "The following times have been booked on " + dateStr + ":\n" :
+    "Am " + dateStr + " wurden folgende Zeiten gebucht:\n";
 
   str += "<html><head/><body>";
 
@@ -341,9 +353,15 @@ void BookingEditor::on_saveButton_clicked()
   
   Backend::updateConflictingBookings(booking);
 
-  if (booking.isConflicting)
-    Widgets::okDialog->display("This booking is conflicting.");
+  if (booking.isConflicting) {
+    int result = Widgets::okCancelDialog->display("This booking is conflicting. Proceed?", true);
+    
+    if (result == QDialog::Rejected)
+      return;
 
+    const QString sendMail = Backend::sendMail(booking, EMailType::BookingConflictWarning);
+  }
+    
   if (isEditing) 
     JsonParser::updateBooking(booking);
   

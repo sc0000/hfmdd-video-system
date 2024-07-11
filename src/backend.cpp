@@ -6,7 +6,9 @@
 #include <QJsonDocument>
 
 #include "json-parser.hpp"
-#include "settings-manager.hpp" // TODO: Rename!
+#include "settings-manager.hpp"
+#include "widgets.hpp"
+#include "message-dialog.hpp"
 #include "backend.hpp"
 
 QString Backend::currentEmail = "";
@@ -290,6 +292,12 @@ QString Backend::sendMail(const Booking& booking, EMailType mailType)
   jsonObj["subject"] = (Backend::language != ELanguage::German ? 
     "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
     booking.date.toString("ddd MMM dd yyyy");
+
+  jsonObj["dateTime"] = booking.date.toString("ddd MMM dd yyyy\n") + 
+    booking.startTime.toString("HH:mm") + " - " +
+    booking.stopTime.toString("HH:mm");
+
+  jsonObj["event"] = booking.event;
 
   jsonObj["nasIP"] = SettingsManager::nasIP;
   jsonObj["nasPort"] = SettingsManager::nasPort;

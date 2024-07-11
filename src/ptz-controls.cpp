@@ -488,8 +488,8 @@ PTZControls::PTZControls(QWidget *parent)
 
 PTZControls::~PTZControls()
 {
-  if (!hasRecorded)
-    JsonParser::removeBooking(Backend::currentBooking);
+  // if (Backend::mode == EMode::QuickMode && !hasRecorded)
+  //   JsonParser::removeBooking(Backend::currentBooking);
 
 	while (!hotkeys.isEmpty())
 		obs_hotkey_unregister(hotkeys.takeFirst());
@@ -1200,15 +1200,14 @@ void PTZControls::on_deletePresetButton_clicked()
     return;
   }
 
-  bool confirmed;
-  Widgets::okCancelDialog->display(
+  int result = Widgets::okCancelDialog->display(
     Backend::language != ELanguage::German ?
     "Do you really want to delete the selected preset? This cannot be undone." : 
-    "Möchten Sie das ausgewählte Preset wirklich unwiderruflich löschen?", 
-    confirmed
+    "Möchten Sie das ausgewählte Preset wirklich unwiderruflich löschen?"
   );
   
-  if (!confirmed) return;
+  if (result == QDialog::Rejected) 
+    return;
 
   JsonParser::removePreset(
     Backend::currentEmail,

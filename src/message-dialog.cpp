@@ -22,6 +22,15 @@ OkDialog::OkDialog(QWidget* parent)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
+
+  ui->okButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
   setModal(true);
   hide();
 }
@@ -34,7 +43,7 @@ void OkDialog::display(const QString& message, bool triggerLogout)
   raise();
 }
 
-void OkDialog::on_okButton_pressed()
+void OkDialog::on_okButton_clicked()
 {
   if (m_triggerLogout) {
     m_triggerLogout = false;
@@ -46,30 +55,75 @@ void OkDialog::on_okButton_pressed()
 
 OkCancelDialog::OkCancelDialog(QWidget* parent)
   : QDialog(parent),
-    ui(new Ui::OkCancelDialog),
-    decision(false)
+    ui(new Ui::OkCancelDialog)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+
+  ui->okButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  ui->cancelButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
   setModal(true);
   hide();
 }
 
-void OkCancelDialog::display(const QString& message, bool& out)
+int OkCancelDialog::display(const QString& message, const bool colorBlack)
 {
+  // if (colorBlack) {
+  //   setStyleSheet("QDialog { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
+  //   ui->masterWidget->setStyleSheet("QWidget { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
+  //   // ui->messageLabel->setStyleSheet("QLabel { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
+  //   ui->okButton->setStyleSheet(
+  //     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }"
+  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
+  //   );
+
+  //   ui->cancelButton->setStyleSheet(
+  //     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }"
+  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
+  //   );
+  // }
+
+  // else {
+  //   setStyleSheet("QDialog { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }");
+  //   ui->masterWidget->setStyleSheet("QWidget { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }");
+  //   // ui->messageLabel->setStyleSheet("QLabel { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
+  //   ui->okButton->setStyleSheet(
+  //     "QPushButton { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }"
+  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
+  //   );
+
+  //   ui->cancelButton->setStyleSheet(
+  //     "QPushButton { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }"
+  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
+  //   );
+  // }
+
   ui->messageLabel->setText(message);
-  decision = out;
+  raise();
+  return exec();
 }
 
-void OkCancelDialog::on_okButton_pressed()
+void OkCancelDialog::on_okButton_clicked()
 {
-  decision = true;
+  accept();
   hide();
 }
 
-void OkCancelDialog::on_cancelButton_pressed()
+void OkCancelDialog::on_cancelButton_clicked()
 {
-  decision = false;
+  reject();
   hide();
 }
 
@@ -89,7 +143,7 @@ void PasswordDialog::display()
   exec();
 }
 
-void PasswordDialog::on_okButton_pressed()
+void PasswordDialog::on_okButton_clicked()
 {
   if (ui->passwordLineEdit->text() == Backend::adminPassword) {
     valid = true;
@@ -102,7 +156,7 @@ void PasswordDialog::on_okButton_pressed()
   }
 }
 
-void PasswordDialog::on_cancelButton_pressed()
+void PasswordDialog::on_cancelButton_clicked()
 {
   valid = false;
   hide();
@@ -135,7 +189,7 @@ void PresetDialog::display(Booking* booking)
   show();
 }
 
-void PresetDialog::on_okButton_pressed()
+void PresetDialog::on_okButton_clicked()
 {
   PTZControls* ptzControls = PTZControls::getInstance();
 
@@ -146,7 +200,7 @@ void PresetDialog::on_okButton_pressed()
   hide();
 }
 
-void PresetDialog::on_cancelButton_pressed()
+void PresetDialog::on_cancelButton_clicked()
 {
   hide();
 }

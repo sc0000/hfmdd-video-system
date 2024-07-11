@@ -31,6 +31,7 @@ private:
   void updateDurationLabel();
   
 private slots:
+  void on_infoButton_pressed();
   void on_decreaseTimeBy20Button_pressed();
   void on_decreaseTimeBy05Button_pressed();
   void on_increaseTimeBy05Button_pressed();

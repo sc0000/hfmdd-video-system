@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>120</height>
+    <width>360</width>
+    <height>140</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -20,20 +20,39 @@
    <font>
     <family>DaxOT</family>
     <pointsize>12</pointsize>
+    <italic>false</italic>
+    <bold>false</bold>
+    <strikeout>false</strikeout>
+    <kerning>true</kerning>
    </font>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT';</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>10</y>
-     <width>261</width>
-     <height>91</height>
+     <width>341</width>
+     <height>121</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
     <item>
      <widget class="QLabel" name="messageLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>TextLabel</string>
       </property>
@@ -47,8 +66,14 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="bottomMargin">
+      <property name="spacing">
+       <number>36</number>
+      </property>
+      <property name="topMargin">
        <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>8</number>
       </property>
       <item>
        <widget class="QPushButton" name="okButton">

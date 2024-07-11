@@ -29,6 +29,16 @@ QuickRecord::QuickRecord(QWidget* parent)
   ui->setupUi(this);
   center(ui->masterWidget);
 
+  ui->infoButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(31, 30, 31); }"
+  );
+
+  ui->infoLabel->setStyleSheet(
+    "QLabel { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+  );
+
   setModal(false);
   hide();
   
@@ -46,6 +56,8 @@ void QuickRecord::reload()
     Widgets::loginDialog->reload();
     return;
   }
+
+  ui->infoLabel->hide();
 
   raise();
   center(ui->masterWidget);
@@ -96,8 +108,8 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText(Backend::language != ELanguage::German ? 
-          "There are no bookings yet on " + date.toString() + "." : 
-          "Es gibt noch keine Buchungen am " + date.toString() + ".");
+          "There are no bookings yet today." : 
+          "Es gibt noch keine Buchungen am heutigen Tag.");
         return;
   }
 
@@ -156,6 +168,29 @@ void QuickRecord::updateDurationLabel()
     "( " + hours + "h " + minutes + "min from now )" : 
     "( " + hours + "h " + minutes + "min ab jetzt )" 
   );
+}
+
+void QuickRecord::on_infoButton_pressed()
+{
+  if (ui->infoLabel->isHidden()) {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); }"
+      "QPushButton:pressed { background-color: rgb(42,130,218); }"
+    );
+
+    ui->infoLabel->show();
+  }
+    
+  else {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+      "QPushButton:pressed { background-color: rgb(31, 30, 31); }"
+    );
+
+    ui->infoLabel->hide();
+  }
 }
 
 void QuickRecord::on_decreaseTimeBy20Button_pressed()

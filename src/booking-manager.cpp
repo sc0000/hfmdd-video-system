@@ -33,6 +33,31 @@ BookingManager::BookingManager(QWidget* parent)
   ui->setupUi(this);
   center(ui->masterWidget);
 
+  ui->infoButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(31, 30, 31); }"
+  );
+
+  ui->infoLabel->setStyleSheet(
+    "QLabel { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+  );
+
+  ui->infoLabel->setText(
+    QString("<html><head/><body>") + 
+      "From this screen, you can book video recording sessions, or edit existing ones.<br/><br/>" +
+      "Please note the following:<br/><br/>--You have to select a booking to continue to camera controls. " +
+      "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
+      "that these might be subject to adjustments by the admin.<br/><br/>" +
+      "--You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
+      "you can already set up your cameras and save presets before.<br/><br/>" +
+      "--You can stop the recording whenever you want, but:<br/><br/>" +
+      "<span style=\"font-weight: bold;\">" +
+      "--The recording will stop automatically 10 minutes after the designated time!</span><br/><br/>" +
+      "--No matter how the recording was stopped, you will receive a download link via email afterwards." +
+      "</body></html>"
+  );
+
   ui->bookingsList->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
 
   setModal(false);
@@ -50,13 +75,14 @@ void BookingManager::reload()
     Widgets::loginDialog->reload();
     return;
   }
+
+  ui->infoLabel->hide();
   
   raise();
   center(ui->masterWidget);
 
   Backend::reevaluateConflicts();
   loadBookings();
-  
 }
 
 void BookingManager::toLoginDialog()
@@ -94,6 +120,23 @@ void BookingManager::translate(ELanguage language)
     ui->deleteBookingButton->setText("Buchung löschen");
     ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
     ui->toModeSelectButton->setText("Zurück");
+
+    ui->infoLabel->setFont(QFont("DaxOT", 11));
+    ui->infoLabel->setText(
+      QString("<html><head/><body>") + 
+        "Auf diesem Bildschirm können Sie Videosessions buchen oder vorhandene Buchungen bearbeiten.<br/><br/>" +
+        "Bitte beachten Sie folgendes:<br/><br/>--Sie müssen eine Buchung auswählen, um zur Kamerasteuerung fortzufahren. " +
+        "Grundsätzlich können Sie auch Sessions buchen und nutzen, die mit anderen kollidieren. Beachten Sie jedoch, " +
+        "dass diese überprüft und ggf. angepasst werden.<br/><br/>" +
+        "--Sie können eine Aufnahme frühestens 15 Minuten vor der angegeben Zeit starten. Allerdings " +
+        "können Sie jederzeit die Kameras konfigurieren und diese Einstellung als Preset speichern.<br/><br/>" +
+        "--Sie können die Aufnahme jederzeit stoppen, aber:<br/><br/>" +
+        "<span style=\"font-weight: bold;\">" +
+        "--10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!</span><br/><br/>" +
+        "--Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
+        "</body></html>"
+    );
+
     break;
 
     case ELanguage::English:
@@ -102,6 +145,23 @@ void BookingManager::translate(ELanguage language)
     ui->deleteBookingButton->setText("Delete Booking");
     ui->toPTZControlsButton->setText("Go to Camera Controls");
     ui->toModeSelectButton->setText("Go back to Mode Selection");
+
+    ui->infoLabel->setFont(QFont("DaxOT", 12));
+    ui->infoLabel->setText(
+      QString("<html><head/><body>") + 
+        "From this screen, you can book video recording sessions, or edit existing bookings.<br/><br/>" +
+        "Please note the following:<br/><br/>--You have to select a booking to continue to camera controls. " +
+        "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
+        "that these might be subject to adjustments by the admin.<br/><br/>" +
+        "--You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
+        "you can set up your cameras and save presets anytime.<br/><br/>" +
+        "--You can stop the recording whenever you want, but:<br/><br/>" +
+        "<span style=\"font-weight: bold;\">" +
+        "--The recording will stop automatically 10 minutes after the designated time!</span><br/><br/>" +
+        "--No matter how the recording was stopped, you will receive a download link via email afterwards." +
+        "</body></html>"
+    );
+
     break;
 
     case ELanguage::Default:
@@ -112,6 +172,29 @@ void BookingManager::translate(ELanguage language)
 void BookingManager::on_bookingsList_currentRowChanged()
 {
   // Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
+}
+
+void BookingManager::on_infoButton_pressed()
+{
+  if (ui->infoLabel->isHidden()) {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); }"
+      "QPushButton:pressed { background-color: rgb(42,130,218); }"
+    );
+
+    ui->infoLabel->show();
+  }
+    
+  else {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+      "QPushButton:pressed { background-color: rgb(31, 30, 31); }"
+    );
+
+    ui->infoLabel->hide();
+  }
 }
 
 void BookingManager::on_newBookingButton_clicked()
@@ -158,16 +241,15 @@ void BookingManager::on_deleteBookingButton_clicked()
 
   // TODO: Select more than one booking for deletion?
 
-  bool confirmed;
-  Widgets::okCancelDialog->display(
+  int result = Widgets::okCancelDialog->display(
     Backend::language != ELanguage::German ?
     "Do you really want to delete the selected booking? This cannot be undone." :
-    "Wollen Sie diese Buchung wirklich unwiderruflich löschen?", 
-    confirmed
+    "Wollen Sie diese Buchung wirklich unwiderruflich löschen?"
   );
 
-  if (!confirmed) return;
-
+  if (result == QDialog::Rejected) 
+    return;
+  
   int rowIndex = ui->bookingsList->currentRow();
   Booking& selectedBooking = bookings[rowIndex];
   Backend::updateConflictingBookings(selectedBooking, false);

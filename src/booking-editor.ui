@@ -37,6 +37,12 @@
     </property>
     <item>
      <widget class="QCalendarWidget" name="calendarWidget">
+      <property name="minimumSize">
+       <size>
+        <width>595</width>
+        <height>336</height>
+       </size>
+      </property>
       <property name="locale">
        <locale language="English" country="Germany"/>
       </property>
@@ -93,6 +99,12 @@
           <width>0</width>
           <height>67</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>DaxOT</family>
+          <pointsize>10</pointsize>
+         </font>
         </property>
         <property name="text">
          <string>No date selected.</string>
