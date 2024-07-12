@@ -24,6 +24,7 @@ OkDialog* Widgets::okDialog;
 OkCancelDialog* Widgets::okCancelDialog;
 PasswordDialog* Widgets::passwordDialog;
 PresetDialog* Widgets::presetDialog;
+InfoDialog* Widgets::infoDialog;
 
 void Widgets::load()
 {
@@ -41,6 +42,7 @@ void Widgets::load()
   okCancelDialog = new OkCancelDialog(mainWindow);
   passwordDialog = new PasswordDialog(mainWindow);
   presetDialog = new PresetDialog(mainWindow);
+  infoDialog = new InfoDialog(mainWindow);
 
   // assert(
   //   login &&

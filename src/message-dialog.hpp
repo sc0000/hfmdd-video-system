@@ -6,8 +6,6 @@
 #include "language.hpp"
 #include "booking.h"
 
-
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class OkDialog;
@@ -96,4 +94,26 @@ public:
 private slots:
   void on_okButton_clicked();
   void on_cancelButton_clicked();  
+};
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class InfoDialog;
+}
+QT_END_NAMESPACE
+
+class InfoDialog : public QDialog
+{
+  Q_OBJECT
+
+private:
+  Ui::InfoDialog* ui;
+  QPushButton* button;
+
+public:
+  explicit InfoDialog(QWidget* parent = nullptr);
+  void display(const QString& message, QPushButton* activatingButton = nullptr, const int offsetX = 0, const int offsetY = 0);
+
+private slots:
+  void on_closeButton_clicked();
 };

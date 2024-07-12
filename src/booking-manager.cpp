@@ -34,27 +34,31 @@ BookingManager::BookingManager(QWidget* parent)
   center(ui->masterWidget);
 
   ui->infoButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(31, 30, 31); }"
+    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+    "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
   );
 
   ui->infoLabel->setStyleSheet(
-    "QLabel { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+    "QLabel { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
   );
 
   ui->infoLabel->setText(
-    QString("<html><head/><body>") + 
-      "From this screen, you can book video recording sessions, or edit existing ones.<br/><br/>" +
-      "Please note the following:<br/><br/>--You have to select a booking to continue to camera controls. " +
+    QString("<html><head/><body>") +
+      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" + 
+      "From this screen, you can book video recording sessions, or edit existing ones. " + 
+      "Please note that you have to select a booking to continue to camera controls.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">I got a conflict warning when I made my booking..?</span><br/>"
       "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
       "that these might be subject to adjustments by the admin.<br/><br/>" +
-      "--You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
-      "you can already set up your cameras and save presets before.<br/><br/>" +
-      "--You can stop the recording whenever you want, but:<br/><br/>" +
-      "<span style=\"font-weight: bold;\">" +
-      "--The recording will stop automatically 10 minutes after the designated time!</span><br/><br/>" +
-      "--No matter how the recording was stopped, you will receive a download link via email afterwards." +
+      "<span style=\"font-weight: bold;\">Anything else I need to know?</span><br/>" +
+      "You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
+      "you can set up your cameras and save presets anytime. " +
+      "You can stop the recording whenever you want, but " +
+      "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
+      "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
+      "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
+      "No matter how the recording was stopped, you will receive a download link via email afterwards." +
       "</body></html>"
   );
 
@@ -123,19 +127,36 @@ void BookingManager::translate(ELanguage language)
 
     ui->infoLabel->setFont(QFont("DaxOT", 11));
     ui->infoLabel->setText(
-      QString("<html><head/><body>") + 
-        "Auf diesem Bildschirm können Sie Videosessions buchen oder vorhandene Buchungen bearbeiten.<br/><br/>" +
-        "Bitte beachten Sie folgendes:<br/><br/>--Sie müssen eine Buchung auswählen, um zur Kamerasteuerung fortzufahren. " +
-        "Grundsätzlich können Sie auch Sessions buchen und nutzen, die mit anderen kollidieren. Beachten Sie jedoch, " +
-        "dass diese überprüft und ggf. angepasst werden.<br/><br/>" +
-        "--Sie können eine Aufnahme frühestens 15 Minuten vor der angegeben Zeit starten. Allerdings " +
-        "können Sie jederzeit die Kameras konfigurieren und diese Einstellung als Preset speichern.<br/><br/>" +
-        "--Sie können die Aufnahme jederzeit stoppen, aber:<br/><br/>" +
-        "<span style=\"font-weight: bold;\">" +
-        "--10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!</span><br/><br/>" +
-        "--Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
-        "</body></html>"
+     QString("<html><head/><body>") +
+      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" + 
+      "From this screen, you can book video recording sessions, or edit existing ones. " + 
+      "Please note that you have to select a booking to continue to camera controls.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">I got a conflict warning when I made my booking..?</span><br/>"
+      "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
+      "that these might be subject to adjustments by the admin.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">Anything else I need to know?</span><br/>" +
+      "You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
+      "you can set up your cameras and save presets anytime. " +
+      "You can stop the recording whenever you want, but " +
+      "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
+      "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
+      "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
+      "No matter how the recording was stopped, you will receive a download link via email afterwards." +
+      "</body></html>"
     );
+
+    // QString("<html><head/><body>") + 
+    // "Auf diesem Bildschirm können Sie Videosessions buchen oder vorhandene Buchungen bearbeiten.<br/><br/>" +
+    // "Bitte beachten Sie folgendes:<br/><br/>--Sie müssen eine Buchung auswählen, um zur Kamerasteuerung fortzufahren. " +
+    // "Grundsätzlich können Sie auch Sessions buchen und nutzen, die mit anderen kollidieren. Beachten Sie jedoch, " +
+    // "dass diese überprüft und ggf. angepasst werden.<br/><br/>" +
+    // "--Sie können eine Aufnahme frühestens 15 Minuten vor der angegeben Zeit starten. Allerdings " +
+    // "können Sie jederzeit die Kameras konfigurieren und diese Einstellung als Preset speichern.<br/><br/>" +
+    // "--Sie können die Aufnahme jederzeit stoppen, aber:<br/><br/>" +
+    // "<span style=\"font-weight: bold;\">" +
+    // "--10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!</span><br/><br/>" +
+    // "--Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
+    // "</body></html>"
 
     break;
 
@@ -148,18 +169,22 @@ void BookingManager::translate(ELanguage language)
 
     ui->infoLabel->setFont(QFont("DaxOT", 12));
     ui->infoLabel->setText(
-      QString("<html><head/><body>") + 
-        "From this screen, you can book video recording sessions, or edit existing bookings.<br/><br/>" +
-        "Please note the following:<br/><br/>--You have to select a booking to continue to camera controls. " +
-        "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
-        "that these might be subject to adjustments by the admin.<br/><br/>" +
-        "--You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
-        "you can set up your cameras and save presets anytime.<br/><br/>" +
-        "--You can stop the recording whenever you want, but:<br/><br/>" +
-        "<span style=\"font-weight: bold;\">" +
-        "--The recording will stop automatically 10 minutes after the designated time!</span><br/><br/>" +
-        "--No matter how the recording was stopped, you will receive a download link via email afterwards." +
-        "</body></html>"
+      QString("<html><head/><body>") +
+      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" + 
+      "From this screen, you can book video recording sessions, or edit existing ones. " + 
+      "Please note that you have to select a booking to continue to camera controls.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">I got a conflict warning when I made my booking..?</span><br/>"
+      "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
+      "that these might be subject to adjustments by the admin.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">Anything else I need to know?</span><br/>" +
+      "You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
+      "you can set up your cameras and save presets anytime. " +
+      "You can stop the recording whenever you want, but " +
+      "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
+      "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
+      "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
+      "No matter how the recording was stopped, you will receive a download link via email afterwards." +
+      "</body></html>"
     );
 
     break;
@@ -178,9 +203,9 @@ void BookingManager::on_infoButton_pressed()
 {
   if (ui->infoLabel->isHidden()) {
     ui->infoButton->setStyleSheet(
-      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); }"
-      "QPushButton:pressed { background-color: rgb(42,130,218); }"
+      "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+      "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
     );
 
     ui->infoLabel->show();
@@ -188,9 +213,9 @@ void BookingManager::on_infoButton_pressed()
     
   else {
     ui->infoButton->setStyleSheet(
-      "QPushButton { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-      "QPushButton:pressed { background-color: rgb(31, 30, 31); }"
+      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+      "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
     );
 
     ui->infoLabel->hide();

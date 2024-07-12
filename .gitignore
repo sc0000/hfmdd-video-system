@@ -16,6 +16,10 @@
 !LICENSE
 !README.md
 !*.qss
+#!/node-scripts
+
+#/node-scripts/node_modules
+
 
 # Exclude lock files
 *.lock.json
@@ -25,5 +29,3 @@
 
 # Exclude CMake build number cache
 /cmake/.CMakeBuildNumber
-
-/node-scripts

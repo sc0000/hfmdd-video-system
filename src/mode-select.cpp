@@ -30,7 +30,7 @@ ModeSelect::ModeSelect(QWidget *parent)
   
   center(ui->masterWidget);
 
-  ui->bookModeButton->setStyleSheet("QPushButton:hover { background-color: rgb(42,130,218); }"
+  ui->bookModeButton->setStyleSheet("QPushButton:hover { background-color: rgb(42, 130, 218); }"
                                     "QPushButton:pressed  { background-color: rgb(31, 30, 31); }");
 
   setModal(false);

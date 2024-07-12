@@ -59,6 +59,7 @@ private:
   
   QDialog* savePresetDialog;
   QString newPresetName;
+  QString infoDialogText;
   // QString savePresetLineEditText;
 
 	void copyActionsDynamicProperties();
@@ -138,6 +139,7 @@ private slots:
   void on_nextCamButton_pressed();
   void on_overviewButton_clicked();
 
+  void on_infoButton_pressed();
   void on_savePresetButton_clicked();
   void on_loadPresetButton_clicked();
   void on_deletePresetButton_clicked();

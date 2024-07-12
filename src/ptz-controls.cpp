@@ -471,12 +471,27 @@ PTZControls::PTZControls(QWidget *parent)
 	}
 
   //----------------------------------------------------
+  infoDialogText = QString("<html><head/><body>") + 
+      "<span style=\"font-weight: bold;\">What can I do here?</span><br/>" +
+      "With the arrow keys and the surrounding ones, you can configure each camera. Cycle through them with the topmost buttons. " +
+      "Save your current configuration as a preset, or load previously saved presets. Finally, you can start and stop the recording.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">What's with the presets already in the list?</span><br/>" +
+      "Additional to your own presets, you have access to a couple of standard presets provided by the admin.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">What do the numbers behind the preset names mean?</span><br/>"
+      "Nothing of significance, just the (global) order in which the presets where saved. The numbers will be removed at some point.<br/><br/>" +
+      "</body></html>";
+  //----------------------------------------------------
   ui->recordButton->setStyleSheet(
     "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); font-size: 20px; }"
   );
-  //----------------------------------------------------
 
+  ui->infoButton->setStyleSheet(
+    "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
+    "QPushButton:hover { background-color: rgb(42,130,218); }"
+  );
+  
   ui->presetListView->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
+  //----------------------------------------------------
 
   m_timeObserver = new TimeObserver(QDateTime(booking.date, booking.stopTime), &timeOut, this);
 
@@ -1141,6 +1156,28 @@ void PTZControls::on_overviewButton_clicked()
   showOverview = !showOverview;
 
   setViewportMode();
+}
+
+void PTZControls::on_infoButton_pressed()
+{
+  if (Widgets::infoDialog->isHidden()) {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); }"
+    );
+
+    Widgets::infoDialog->display(infoDialogText, ui->infoButton);
+  }
+    
+
+  else {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); }"
+    );
+
+    Widgets::infoDialog->hide();
+  }
 }
 
 void PTZControls::on_savePresetButton_clicked()

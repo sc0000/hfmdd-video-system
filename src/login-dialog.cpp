@@ -22,8 +22,9 @@ LoginDialog* LoginDialog::instance = NULL;
 LoginDialog::LoginDialog(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
-    reminderLabelText("Please log in with your HfMDD email address! Only admin accounts require a password."),
-    passwordLineEditPlaceholderText("Password")
+    reminderLabelText("Please log in with your HfMDD email address!"),
+    passwordLineEditPlaceholderText("Only admin accounts require a password."),
+    infoDialogText("")
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setWindowTitle("Login Dialog");
@@ -32,6 +33,21 @@ LoginDialog::LoginDialog(QWidget *parent)
   instance = this;
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
+
+  infoDialogText = QString("<html><head/><body>") + 
+      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
+      "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your HfMDD email address. Only admin accounts require a password.<br/>" +
+      "Then, you have two options: You could make a recording right away, only setting the stop time.<br/>"
+      "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>" +
+      "No matter which route you'll take, the system will let you know of any other planned recordings that might be in conflict with what you're planning.<br/>" +
+      "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot.<br/>" +
+      "Therefore, it is all the more important to communicate with whomever you're colliding with. Conflicting bookings might also be reviewed by the admin, and, if needed, adjusted.<br/><br/>" +
+      "<span style=\"font-weight: bold;\">Who can I talk to about this?</span><br/>For questions and feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de)." +
+      "</body></html>";
+
+  ui->reminderLabel->setText(reminderLabelText);
 
   // Construct the stylesheet strings with actual values
   QString backgroundWidgetStyleSheet = QString("background-image: url(../../assets/sidebar.png);");
@@ -58,6 +74,11 @@ LoginDialog::LoginDialog(QWidget *parent)
 
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
   ui->passwordLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
+
+  ui->infoButton->setStyleSheet(
+    "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
+    "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+  );
 
   center(ui->masterWidget);
   setModal(false);
@@ -90,9 +111,15 @@ void LoginDialog::reload()
     24 + ui->languageComboBox->height()
   );
 
+  QPoint infoButtonPos = QPoint(
+    screenWidth - (ui->infoButton->width() + 20),
+    screenHeight - (ui->infoButton->height() + 20)
+  );
+
   ui->logoWidget->move(logoWidgetPos);
   ui->nameLabel->move(nameLabelPos);
   ui->languageComboBox->move(languageComboBoxPos);
+  ui->infoButton->move(infoButtonPos);
 
   ui->backgroundWidget->setFixedWidth(160);
   ui->backgroundWidget->setFixedHeight(screenHeight);
@@ -101,19 +128,20 @@ void LoginDialog::reload()
   
   ui->mailAddressLineEdit->clear();
   ui->passwordLineEdit->clear();
+  // ui->passwordLineEdit->hide();
 }
 
 void LoginDialog::translate(ELanguage language)
 {
   switch (language) {
     case ELanguage::German:
-    reminderLabelText = "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein! Nur Administratorkonten erfordern ein Passwort.";
-    passwordLineEditPlaceholderText = "Passwort";
+    reminderLabelText = "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein!";
+    passwordLineEditPlaceholderText = "Nur Administratorenkonten erfordern ein Passwort.";
     break;
 
     case ELanguage::English:
-    reminderLabelText = "Please log in with your HfMDD email address! Only admin accounts require a password.";
-    passwordLineEditPlaceholderText = "Password";
+    reminderLabelText = "Please log in with your HfMDD email address!";
+    passwordLineEditPlaceholderText = "Only admin accounts require a password.";
     break;
   }
 
@@ -147,29 +175,31 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
   Backend::currentEmail = text;
   Backend::mailAddressIsValid = false;
   
-  if (Backend::mailAddressIsValid)
-    ui->reminderLabel->setText("");
+  // if (Backend::mailAddressIsValid)
+  //   ui->reminderLabel->setText("");
 
-  else 
-    ui->reminderLabel->setText(reminderLabelText);
+  // else 
+  //   ui->reminderLabel->setText(reminderLabelText);
 
   for (const QString& suffix : SettingsManager::mailSuffices)
   {
     if (Backend::currentEmail.endsWith(suffix))
     {
       Backend::mailAddressIsValid = true;
-      ui->reminderLabel->setText("");
+      // ui->reminderLabel->setText("");
       break;
     }
 
-    else ui->reminderLabel->setText(reminderLabelText);
+    // else ui->reminderLabel->setText(reminderLabelText);
   }
 
   if (Backend::currentEmail == Backend::adminEmail) 
     ui->passwordLineEdit->setDisabled(false);
+    // ui->passwordLineEdit->show();
 
   else 
     ui->passwordLineEdit->setDisabled(true);
+    // ui->passwordLineEdit->hide();
 
   QFont font = ui->mailAddressLineEdit->font();
 
@@ -208,5 +238,27 @@ void LoginDialog::on_languageComboBox_currentTextChanged(const QString& text)
 
     for (Translatable* t : Widgets::translatables)
       t->translate(ELanguage::German);
+  }
+}
+
+void LoginDialog::on_infoButton_pressed()
+{
+  if (Widgets::infoDialog->isHidden()) {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    );
+
+    Widgets::infoDialog->display(infoDialogText, ui->infoButton);
+  }
+    
+
+  else {
+    ui->infoButton->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    );
+
+    Widgets::infoDialog->hide();
   }
 }

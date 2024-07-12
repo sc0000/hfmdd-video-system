@@ -25,11 +25,13 @@ private:
 
   QString reminderLabelText;
   QString passwordLineEditPlaceholderText;
+  QString infoDialogText;
 
 private slots:
   void on_mailAddressLineEdit_textChanged(const QString& text);
   void on_manageBookingsButton_clicked();
   void on_languageComboBox_currentTextChanged(const QString& text);
+  void on_infoButton_pressed();
     
 public:
   LoginDialog(QWidget *parent = nullptr);

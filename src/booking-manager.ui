@@ -72,15 +72,21 @@
              <height>34</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>34</width>
+             <height>34</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>DaxOT</family>
-             <pointsize>12</pointsize>
+             <pointsize>14</pointsize>
              <bold>true</bold>
             </font>
            </property>
            <property name="text">
-            <string>INFO</string>
+            <string>?</string>
            </property>
           </widget>
          </item>

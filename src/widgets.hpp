@@ -20,6 +20,7 @@ public:
   static class OkCancelDialog* okCancelDialog;
   static class PasswordDialog* passwordDialog;
   static class PresetDialog* presetDialog;
+  static class InfoDialog* infoDialog;
 
   static QVector<FullScreenDialog*> fullScreenDialogs;
   static QVector<Translatable*> translatables;

@@ -10,6 +10,7 @@
 #include "ui_ok-cancel-dialog.h"
 #include "ui_password-dialog.h"
 #include "ui_preset-dialog.h"
+#include "ui_info-dialog.h"
 
 #include "message-dialog.hpp"
 
@@ -80,36 +81,6 @@ OkCancelDialog::OkCancelDialog(QWidget* parent)
 
 int OkCancelDialog::display(const QString& message, const bool colorBlack)
 {
-  // if (colorBlack) {
-  //   setStyleSheet("QDialog { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
-  //   ui->masterWidget->setStyleSheet("QWidget { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
-  //   // ui->messageLabel->setStyleSheet("QLabel { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
-  //   ui->okButton->setStyleSheet(
-  //     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }"
-  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
-  //   );
-
-  //   ui->cancelButton->setStyleSheet(
-  //     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }"
-  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
-  //   );
-  // }
-
-  // else {
-  //   setStyleSheet("QDialog { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }");
-  //   ui->masterWidget->setStyleSheet("QWidget { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }");
-  //   // ui->messageLabel->setStyleSheet("QLabel { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); font: 12pt 'DaxOT'; }");
-  //   ui->okButton->setStyleSheet(
-  //     "QPushButton { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }"
-  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
-  //   );
-
-  //   ui->cancelButton->setStyleSheet(
-  //     "QPushButton { color: rgb(31, 30, 31); background-color: rgb(229, 230, 230); font: 12pt 'DaxOT'; }"
-  //     "QPushButton:hover { color: rgb(31, 30, 31); background-color: #ffbf00; }"
-  //   );
-  // }
-
   ui->messageLabel->setText(message);
   raise();
   return exec();
@@ -202,5 +173,51 @@ void PresetDialog::on_okButton_clicked()
 
 void PresetDialog::on_cancelButton_clicked()
 {
+  hide();
+}
+
+InfoDialog::InfoDialog(QWidget* parent)
+ : QDialog(parent),
+    ui(new Ui::InfoDialog),
+    button(nullptr)
+{
+  ui->setupUi(this);
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+  
+  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+
+  ui->closeButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); }"
+  );
+
+  setModal(false);
+  hide();
+}
+
+void InfoDialog::display(const QString& message, QPushButton* activatingButton, const int offsetX, const int offsetY)
+{
+  if (activatingButton) 
+    button = activatingButton;
+
+  ui->messageLabel->setText(message);
+  show();
+  raise();
+}
+
+void InfoDialog::on_closeButton_clicked()
+{
+  if (button) {
+    button->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
+      // "QPushButton:hover { background-color: rgb(42,130,218); }"
+    );
+
+    button = nullptr;
+  }
+
   hide();
 }

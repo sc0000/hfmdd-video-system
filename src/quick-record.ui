@@ -58,7 +58,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>64</height>
+         <height>56</height>
         </size>
        </property>
       </spacer>
@@ -103,15 +103,27 @@
            </item>
            <item>
             <widget class="QPushButton" name="infoButton">
+             <property name="minimumSize">
+              <size>
+               <width>34</width>
+               <height>34</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>34</width>
+               <height>34</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <family>DaxOT</family>
-               <pointsize>12</pointsize>
+               <pointsize>14</pointsize>
                <bold>true</bold>
               </font>
              </property>
              <property name="text">
-              <string>INFO</string>
+              <string>?</string>
              </property>
             </widget>
            </item>
@@ -128,7 +140,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>32</height>
+             <height>36</height>
             </size>
            </property>
           </spacer>
@@ -170,7 +182,7 @@
            <property name="font">
             <font>
              <family>DaxOT</family>
-             <pointsize>48</pointsize>
+             <pointsize>52</pointsize>
              <bold>true</bold>
             </font>
            </property>
@@ -212,7 +224,7 @@
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
-             <height>32</height>
+             <height>36</height>
             </size>
            </property>
           </spacer>
@@ -521,7 +533,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>64</height>
+         <height>56</height>
         </size>
        </property>
       </spacer>
