@@ -20,7 +20,8 @@ QuickRecord* QuickRecord::instance = nullptr;
 QuickRecord::QuickRecord(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::QuickRecord),
-    booking(Backend::currentBooking)
+    booking(Backend::currentBooking),
+    infoLabelVisible(false)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   
@@ -39,10 +40,15 @@ QuickRecord::QuickRecord(QWidget* parent)
     "QLabel { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
   );
 
+  infoLabelAnimation = new QPropertyAnimation(ui->infoLabel, "maximumWidth");
+  infoLabelAnimation->setDuration(100);
+
+  // ui->infoLabel->setFont(QFont("DaxOT", 11));
+
   ui->infoLabel->setText(
     QString("<html><head/><body>") + 
       "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
-      "From this screen, you can just set a stop time and move on to record a video right away. " +
+      "From this screen, you can set a stop time and move on to record a video right away. " +
       "Just take other booked recordings happening today into account.<br/><br/>" +
       "<span style=\"font-weight: bold;\">Why do I even have to set a stop time?</span><br/>" +
       "You can stop the recording whenever you want, but " +
@@ -71,7 +77,7 @@ void QuickRecord::reload()
     return;
   }
 
-  ui->infoLabel->hide();
+  // ui->infoLabel->hide();
 
   raise();
   center(ui->masterWidget);
@@ -91,52 +97,59 @@ void QuickRecord::reload()
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
   updateDurationLabel();
+
+  ui->infoLabel->setMaximumWidth(0);
+  infoLabelVisible = false;
 }
 
 void QuickRecord::translate(ELanguage language)
 {
   switch (language) {
     case ELanguage::German:
-    ui->recordUntilLabel->setText("Aufnehmen bis...");
-    ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
-    ui->toModeSelectButton->setText("Zurück");
+      ui->recordUntilLabel->setText("Aufnehmen bis...");
+      ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
+      ui->toModeSelectButton->setText("Zurück");
 
-    ui->infoLabel->setFont(QFont("DaxOT", 11));
-    ui->infoLabel->setText(
-      QString("<html><head/><body>") + 
-        "Von diesem Bildschirm können Sie direkt weiter zur Videoaufnahme.<br/><br/>" +
-        "--Dafür müssen Sie lediglich die Zeit bestimmen, zu der die Aufnahme voraussichtlich endet. " +
-        "Bitte berücksichtigen Sie dabei weitere für heute gebuchte Aufnahmen.<br/><br/>" +
-        "--Sie können die Aufnahme jederzeit stoppen, aber:<br/><br/>" +
-        "<span style=\"font-weight: bold;\">" +
-        "--10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!</span><br/><br/>" +
-        "--Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
-        "</body></html>"
-    );
-    break;
+      // ui->infoLabel->setFont(QFont("DaxOT", 11));
+      ui->infoLabel->setText(
+        QString("<html><head/><body>") + 
+          "<span style=\"font-weight: bold;\">Was kann ich hier machen?</span><br/>" +
+          "Von diesem Bildschirm können Sie direkt weiter zur Videoaufnahme. " +
+          "Dafür müssen Sie lediglich die Zeit bestimmen, zu der die Aufnahme voraussichtlich endet.<br/><br/>" +
+          "<span style=\"font-weight: bold;\">Warum muss ich überhaupt die Stoppzeit angeben?</span><br/>" +
+          "Sie können die Aufnahme jederzeit stoppen, aber " +
+          "<span style=\"font-weight: bold;\">(WICHTIG) </span>" +
+          "10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!<br/><br/>" +
+          "<span style=\"font-weight: bold;\">Was passiert danach?</span><br/>" +
+          "Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
+          "</body></html>"
+        );
+      break;
 
     case ELanguage::English:
-    ui->recordUntilLabel->setText("Record until...");
-    ui->toPTZControlsButton->setText("Go to Camera Controls");
-    ui->toModeSelectButton->setText("Go back to Mode Selection");
+      ui->recordUntilLabel->setText("Record until...");
+      ui->toPTZControlsButton->setText("Go to Camera Controls");
+      ui->toModeSelectButton->setText("Go back to Mode Selection");
 
-    ui->infoLabel->setFont(QFont("DaxOT", 12));
-    ui->infoLabel->setText(
-      QString("<html><head/><body>") + 
-        "From this screen, you can move on to record a video right away.<br/><br/>" +
-        "--Just set the time at which you estimate the recording to end. " +
-        "Please take other booked recordings happening today into account.<br/><br/>" +
-        "--You can stop the recording whenever you want, but:<br/><br/>" +
-        "<span style=\"font-weight: bold;\">" +
-        "--The recording will stop automatically 10 minutes after the designated time!</span><br/><br/>" +
-        "--No matter how the recording was stopped, you will receive a download link via email afterwards." +
-        "</body></html>"
-    );
+      // ui->infoLabel->setFont(QFont("DaxOT", 12));
+      ui->infoLabel->setText(
+        QString("<html><head/><body>") + 
+          "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
+          "From this screen, you can set a stop time and move on to record a video right away. " +
+          "Just take other booked recordings happening today into account.<br/><br/>" +
+          "<span style=\"font-weight: bold;\">Why do I even have to set a stop time?</span><br/>" +
+          "You can stop the recording whenever you want, but " +
+          "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
+          "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
+          "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
+          "No matter how the recording was stopped, you will receive a download link via email afterwards." +
+          "</body></html>"
+      );
 
-    break;
+      break;
 
     case ELanguage::Default:
-    break;
+      break;
   }
 }
 
@@ -213,25 +226,34 @@ void QuickRecord::updateDurationLabel()
 
 void QuickRecord::on_infoButton_pressed()
 {
-  if (ui->infoLabel->isHidden()) {
-    ui->infoButton->setStyleSheet(
-      "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-      "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-    );
+   infoLabelAnimation->stop();
 
-    ui->infoLabel->show();
-  }
+    if (infoLabelVisible) {
+        infoLabelAnimation->setStartValue(420);
+        infoLabelAnimation->setEndValue(0);
+        infoLabelVisible = false;
+
+        ui->infoButton->setStyleSheet(
+          "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+          "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+          "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
+        );
+    } 
     
-  else {
-    ui->infoButton->setStyleSheet(
-      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-      "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-    );
+    else {
+        // ui->infoLabel->setMaximumWidth(420);
+        infoLabelAnimation->setStartValue(0);
+        infoLabelAnimation->setEndValue(420);
+        infoLabelVisible = true;
 
-    ui->infoLabel->hide();
-  }
+        ui->infoButton->setStyleSheet(
+          "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+          "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+          "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
+        );
+    }
+
+    infoLabelAnimation->start();
 }
 
 void QuickRecord::on_decreaseTimeBy20Button_pressed()

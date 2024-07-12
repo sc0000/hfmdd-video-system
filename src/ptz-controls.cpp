@@ -252,31 +252,55 @@ void PTZControls::translate(ELanguage language)
 {
   switch (language) {
     case ELanguage::German:
-    ui->cameraControlsLabel->setText("Kamerasteuerung");
-    ui->previousCamButton->setText("Vorherige\nKamera");
-    ui->nextCamButton->setText("Nächste\nKamera");
-    ui->overviewButton->setText("Gesamtansicht");
-    ui->savePresetButton->setText("Speichern");
-    ui->loadPresetButton->setText("Laden");
-    ui->deletePresetButton->setText("Löschen");
-    ui->recordButton->setText("Record");
-    ui->toBookingManagerButton->setText("Zurück");
-    break;
+      ui->cameraControlsLabel->setText("Kamerasteuerung");
+      ui->previousCamButton->setText("Vorherige\nKamera");
+      ui->nextCamButton->setText("Nächste\nKamera");
+      ui->overviewButton->setText("Gesamtansicht");
+      ui->savePresetButton->setText("Speichern");
+      ui->loadPresetButton->setText("Laden");
+      ui->deletePresetButton->setText("Löschen");
+      ui->recordButton->setText("Record");
+      ui->toBookingManagerButton->setText("Zurück");
+
+      infoDialogText = QString("<html><head/><body>") + 
+        "<span style=\"font-weight: bold;\">Was kann ich hier machen?</span><br/>" +
+        "Mit den Pfeiltasten können Sie die Kameras ausrichten, außerdem rein- und rauszoomen, sowie den Fokus justieren. " +
+        "Sie können mithilfe der obersten Knöpfe zwischen den Kameras hin- und herschalten, oder indem Sie im Übersichtsmodus auf das jeweilige Bild klicken.<br/>" +
+        "Sie können ihre aktuelle Konfiguration als Preset speichern, oder ein bereits vorhandenes Preset laden. " +
+        "Außerdem können Sie die Aufnahme hier natürlich starten und stoppen.<br/><br/>" +
+        "<span style=\"font-weight: bold;\">In der Liste sind ja bereits einige Presets..?</span><br/>" +
+        "Zusätzlich zu Ihren eigenen Presets finden Sie ein paar vom Administrator bereit gestellte.<br/><br/>" +
+        "<span style=\"font-weight: bold;\">Was bedeuten die Nummern hinter den Presets?</span><br/>"
+        "Die Nummern zeigen lediglich die Reihenfolge an, in der die Presets gespeichert wurden, und werden voraussichtlich in einem kommenden Update entfernt." +
+        "</body></html>";
+
+      break;
 
     case ELanguage::English:
-    ui->cameraControlsLabel->setText("Camera Controls");
-    ui->previousCamButton->setText("Previous\nCamera");
-    ui->nextCamButton->setText("Next\nCamera");
-    ui->overviewButton->setText("Camera Overview");
-    ui->savePresetButton->setText("Save");
-    ui->loadPresetButton->setText("Load");
-    ui->deletePresetButton->setText("Delete");
-    ui->recordButton->setText("Record");
-    ui->toBookingManagerButton->setText("To Booking Manager");
-    break;
+      ui->cameraControlsLabel->setText("Camera Controls");
+      ui->previousCamButton->setText("Previous\nCamera");
+      ui->nextCamButton->setText("Next\nCamera");
+      ui->overviewButton->setText("Camera Overview");
+      ui->savePresetButton->setText("Save");
+      ui->loadPresetButton->setText("Load");
+      ui->deletePresetButton->setText("Delete");
+      ui->recordButton->setText("Record");
+      ui->toBookingManagerButton->setText("To Booking Manager");
+
+      infoDialogText = QString("<html><head/><body>") + 
+        "<span style=\"font-weight: bold;\">What can I do here?</span><br/>" +
+        "With the arrow keys and the surrounding ones, you can configure each camera. Cycle through them with the topmost buttons, " +
+        "or by clicking on the preview in overview mode.<br/>" +
+        "Save your current configuration as a preset, or load previously saved presets. Finally, you can start and stop the recording.<br/><br/>" +
+        "<span style=\"font-weight: bold;\">What's with the presets already in the list?</span><br/>" +
+        "Additional to your own presets, you have access to a couple of standard presets provided by the admin.<br/><br/>" +
+        "<span style=\"font-weight: bold;\">What do the numbers behind the preset names mean?</span><br/>"
+        "Nothing of significance, just the (global) order in which the presets where saved. The numbers will be removed at some point.<br/><br/>" +
+        "</body></html>";
+      break;
 
     case ELanguage::Default:
-    break;
+      break;
   }
 }
 
@@ -487,7 +511,7 @@ PTZControls::PTZControls(QWidget *parent)
 
   ui->infoButton->setStyleSheet(
     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: rgb(42,130,218); }"
+    "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
   );
   
   ui->presetListView->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");

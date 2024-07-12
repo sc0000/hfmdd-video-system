@@ -21,6 +21,8 @@ class BookingManager : public FullScreenDialog, public Translatable
 private:
   static BookingManager* instance;
   Ui::BookingManager* ui;
+  QPropertyAnimation* infoLabelAnimation;
+  bool infoLabelVisible;
 
   QVector<Booking>& bookings;
   

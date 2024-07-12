@@ -43,7 +43,7 @@
       <x>10</x>
       <y>11</y>
       <width>1081</width>
-      <height>559</height>
+      <height>551</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -58,7 +58,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>56</height>
+         <height>48</height>
         </size>
        </property>
       </spacer>
@@ -75,7 +75,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>96</width>
+           <width>64</width>
            <height>20</height>
           </size>
          </property>
@@ -484,9 +484,21 @@
        </item>
        <item>
         <widget class="QLabel" name="infoLabel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>320</width>
+           <width>420</width>
            <height>16777215</height>
           </size>
          </property>
@@ -514,7 +526,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>96</width>
+           <width>64</width>
            <height>20</height>
           </size>
          </property>
@@ -533,7 +545,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>56</height>
+         <height>48</height>
         </size>
        </property>
       </spacer>

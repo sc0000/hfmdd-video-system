@@ -21,6 +21,8 @@ class QuickRecord : public FullScreenDialog, public Translatable
 private:
   static QuickRecord* instance;
   Ui::QuickRecord* ui;
+  QPropertyAnimation* infoLabelAnimation;
+  bool infoLabelVisible;
 
   Booking& booking;
 
