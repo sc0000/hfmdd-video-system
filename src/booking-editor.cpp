@@ -16,21 +16,9 @@ BookingEditor::BookingEditor(QWidget* parent)
     timeToSet(ETimeToSet::StartTime)
 {
   ui->setupUi(this);
-  
-  ui->handlebar->move(QPoint(0, 0));
-  ui->handlebar->setFixedWidth(width());
-  ui->handlebar->setFixedHeight(40);
 
-  ui->handlebar->setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
-
-  ui->closeButton->move(QPoint(width() - 32, 8));
-
-  ui->closeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
-    "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
-  );
-
+  Handlebar* handlebar = new Handlebar(this);
+ 
   ui->masterWidget->setFixedWidth(width() - 16);
   ui->masterWidget->setFixedHeight(height() - 56);
   ui->masterWidget->move(QPoint(8, 48));
@@ -38,7 +26,7 @@ BookingEditor::BookingEditor(QWidget* parent)
   ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
 
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
-  // setWindowTitle("Booking Editor");
+  setModal(true);
 }
 
 BookingEditor::~BookingEditor()
@@ -196,7 +184,6 @@ void BookingEditor::drawTimespan()
 {
   ui->timeLabel->setText(booking.startTime.toString("HH:mm") + " – " + booking.stopTime.toString("HH:mm"));
 }
-
 
 void BookingEditor::on_calendarWidget_clicked(QDate date)
 {
@@ -409,11 +396,6 @@ void BookingEditor::on_saveButton_clicked()
 }
 
 void BookingEditor::on_cancelButton_clicked()
-{
-  fade(&bookingEditorReject);
-}
-
-void BookingEditor::on_closeButton_clicked()
 {
   fade(&bookingEditorReject);
 }

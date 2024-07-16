@@ -203,7 +203,7 @@ InfoDialog::InfoDialog(QWidget* parent)
     "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); }"
   );
 
-  setModal(false);
+  setModal(true);
   hide();
 }
 

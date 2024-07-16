@@ -1,10 +1,66 @@
 #include "animated-dialog.hpp"
 
+Handlebar::Handlebar(QWidget* parent) 
+  : QFrame(parent),
+    animatedDialogParent(static_cast<AnimatedDialog*>(parent)) 
+{
+  setFixedHeight(40);
+  
+  if (parent)
+    setFixedWidth(parent->width());
+
+  setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
+  move(QPoint(0, 0));
+
+  closeButton = new QPushButton(this);
+
+  closeButton->setFixedSize(24, 24);
+  closeButton->move(QPoint(width() - 32, 8));
+
+  closeButton->setStyleSheet(
+    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
+    "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
+  );
+
+  closeButton->setText("x");
+
+  QObject::connect(closeButton, &QPushButton::clicked, this, &Handlebar::onCloseButtonClicked);
+
+  show();
+}
+
+void Handlebar::mousePressEvent(QMouseEvent *event) 
+{
+  if (event->button() == Qt::LeftButton) {
+      dragStartPosition = event->globalPosition().toPoint();
+      dragStartParentPosition = parentWidget()->pos();
+  }
+}
+
+void Handlebar::mouseMoveEvent(QMouseEvent *event) 
+{
+  if (event->buttons() & Qt::LeftButton) {
+      const QPoint globalMousePos = event->globalPosition().toPoint();
+      const QPoint diff = globalMousePos - dragStartPosition;
+      parentWidget()->move(dragStartParentPosition + diff);
+  }
+}
+
+void Handlebar::onCloseButtonClicked()
+{
+  if (animatedDialogParent)
+    animatedDialogParent->fade();
+}
+
+//----------------------------------------------------
+
 AnimatedDialog::AnimatedDialog(QWidget* parent)
   : QDialog(parent),
     visible(false),
     fadeAnimation(new QPropertyAnimation(this, "windowOpacity")),
-    m_sendResultCode(nullptr)
+    sendResultCode(nullptr)
 {
   fadeAnimation->setDuration(100);
   connect(fadeAnimation, &QPropertyAnimation::finished, this, &AnimatedDialog::onFinished);
@@ -15,12 +71,14 @@ void AnimatedDialog::onFinished()
   if (!visible) {
     hide();
     
-    if (m_sendResultCode)
-      m_sendResultCode();
+    if (sendResultCode)
+      sendResultCode();
+
+    else QDialog::reject();
   }
 }
 
-void AnimatedDialog::fade(void (*sendResultCode)(void))
+void AnimatedDialog::fade(void (*result)(void))
 {
   fadeAnimation->stop();
 
@@ -36,7 +94,7 @@ void AnimatedDialog::fade(void (*sendResultCode)(void))
   }
 
   visible = !visible;
-  m_sendResultCode = sendResultCode;
+  sendResultCode = result;
 
   fadeAnimation->start();
 }

@@ -1,3 +1,5 @@
+#include <QMouseEvent>
+
 #include "animated-dialog.hpp"
 #include "language.hpp"
 #include "booking.h"
@@ -27,6 +29,9 @@ private:
 
   ETimeToSet timeToSet;
 
+  bool mousePressed = false;
+  QPoint dragPosition;
+
 private:
   void updateExistingBookingsLabel(const QDate& date);
   void drawTimespan();
@@ -45,7 +50,6 @@ private slots:
   void on_eventTypeLineEdit_textChanged(const QString& text);
   void on_saveButton_clicked();
   void on_cancelButton_clicked();
-  void on_closeButton_clicked();
   
 public:
   BookingEditor(QWidget* parent = nullptr);
