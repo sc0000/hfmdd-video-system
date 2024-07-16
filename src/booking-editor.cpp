@@ -10,17 +10,35 @@
 #include "booking-editor.hpp"
 
 BookingEditor::BookingEditor(QWidget* parent)
-  : QDialog(parent),
+  : AnimatedDialog(parent),
     ui(new Ui::BookingEditor),
     booking(Backend::currentBooking),
     timeToSet(ETimeToSet::StartTime)
 {
   ui->setupUi(this);
+  
+  ui->handlebar->move(QPoint(0, 0));
+  ui->handlebar->setFixedWidth(width());
+  ui->handlebar->setFixedHeight(40);
+
+  ui->handlebar->setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
+
+  ui->closeButton->move(QPoint(width() - 32, 8));
+
+  ui->closeButton->setStyleSheet(
+    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
+    "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
+  );
+
+  ui->masterWidget->setFixedWidth(width() - 16);
+  ui->masterWidget->setFixedHeight(height() - 56);
+  ui->masterWidget->move(QPoint(8, 48));
 
   ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
-  
-  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
-  setWindowTitle("Booking Editor");
+
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+  // setWindowTitle("Booking Editor");
 }
 
 BookingEditor::~BookingEditor()
@@ -66,10 +84,10 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
   timeToSet = ETimeToSet::StartTime;
 
-  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; }");
+  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; border: 1px solid rgb(31, 30, 31); }");
   ui->setStopTimeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px;  }"
-    "QPushButton:hover {background-color: #ffbf00; font-size: 16px;}"  
+    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px; border: 1px solid rgb(31, 30, 31); }"
+    "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
   ui->calendarWidget->setSelectedDate(booking.date);
@@ -79,8 +97,8 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
   drawTimespan();
 
+  fade();
   exec();
-  raise();
 }
 
 void BookingEditor::translate(ELanguage language)
@@ -188,10 +206,10 @@ void BookingEditor::on_calendarWidget_clicked(QDate date)
 
 void BookingEditor::on_setStartTimeButton_pressed()
 {
-  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px;  }");
+  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; border: 1px solid rgb(31, 30, 31); }");
   ui->setStopTimeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px;  }"
-    "QPushButton:hover {background-color: #ffbf00; font-size: 16px;}"  
+    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px; border: 1px solid rgb(31, 30, 31); }"
+    "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
   timeToSet = ETimeToSet::StartTime;
@@ -199,10 +217,10 @@ void BookingEditor::on_setStartTimeButton_pressed()
   
 void BookingEditor::on_setStopTimeButton_pressed()
 {
-  ui->setStopTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px;  }");
+  ui->setStopTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; border: 1px solid rgb(31, 30, 31); }");
   ui->setStartTimeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px;  }"
-    "QPushButton:hover {background-color: #ffbf00; font-size: 16px;}"  
+    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px; border: 1px solid rgb(31, 30, 31); }"
+    "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
   timeToSet = ETimeToSet::StopTime;
@@ -329,6 +347,18 @@ void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
   booking.event = text;
 }
 
+void bookingEditorAccept()
+{
+  if (Widgets::bookingEditor)
+    Widgets::bookingEditor->accept();
+}
+
+void bookingEditorReject()
+{
+  if (Widgets::bookingEditor)
+    Widgets::bookingEditor->reject();
+}
+
 void BookingEditor::on_saveButton_clicked()
 {
   if (booking.event == "") {
@@ -354,7 +384,11 @@ void BookingEditor::on_saveButton_clicked()
   Backend::updateConflictingBookings(booking);
 
   if (booking.isConflicting) {
-    int result = Widgets::okCancelDialog->display("This booking is conflicting. Proceed?", true);
+    int result = Widgets::okCancelDialog->display(
+      Backend::language != ELanguage::German ?
+      "This booking is conflicting. Proceed?" :
+      "Diese Buchung kollidiert mit einer anderen. Fortfahren?", true
+    );
     
     if (result == QDialog::Rejected)
       return;
@@ -371,10 +405,15 @@ void BookingEditor::on_saveButton_clicked()
   Widgets::bookingManager->loadBookings();
 
   isEditing = false;
-  hide();
+  fade(&bookingEditorAccept);
 }
 
 void BookingEditor::on_cancelButton_clicked()
 {
-  hide();
+  fade(&bookingEditorReject);
+}
+
+void BookingEditor::on_closeButton_clicked()
+{
+  fade(&bookingEditorReject);
 }

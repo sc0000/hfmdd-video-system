@@ -3,12 +3,24 @@
 AnimatedDialog::AnimatedDialog(QWidget* parent)
   : QDialog(parent),
     visible(false),
-    fadeAnimation(new QPropertyAnimation(this, "windowOpacity"))
+    fadeAnimation(new QPropertyAnimation(this, "windowOpacity")),
+    m_sendResultCode(nullptr)
 {
   fadeAnimation->setDuration(100);
+  connect(fadeAnimation, &QPropertyAnimation::finished, this, &AnimatedDialog::onFinished);
 }
 
-void AnimatedDialog::fade()
+void AnimatedDialog::onFinished()
+{
+  if (!visible) {
+    hide();
+    
+    if (m_sendResultCode)
+      m_sendResultCode();
+  }
+}
+
+void AnimatedDialog::fade(void (*sendResultCode)(void))
 {
   fadeAnimation->stop();
 
@@ -18,11 +30,13 @@ void AnimatedDialog::fade()
   }
 
   else {
+    show();
     fadeAnimation->setStartValue(0.0);
     fadeAnimation->setEndValue(1.0);
   }
 
   visible = !visible;
+  m_sendResultCode = sendResultCode;
 
   fadeAnimation->start();
 }

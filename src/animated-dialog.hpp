@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QDialog>
 #include <QPropertyAnimation>
 
@@ -11,8 +13,13 @@ private:
   QPropertyAnimation* fadeAnimation;
   int fadeDuration;
 
+  void (* m_sendResultCode)(void);
+
+private slots:
+  void onFinished();
+
 public:
-  void fade();
-  inline bool isVisible() { return visible; }
+  void fade(void (*sendResultCode)(void) = nullptr);
   void setFadeDuration(int fadeDuration);
+  // inline bool isVisible() { return visible; }
 };

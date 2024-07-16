@@ -1,4 +1,4 @@
-#include <QDialog>
+#include "animated-dialog.hpp"
 #include "language.hpp"
 #include "booking.h"
 
@@ -15,7 +15,7 @@ class BookingEditor;
 }
 QT_END_NAMESPACE
 
-class BookingEditor : public QDialog, public Translatable
+class BookingEditor : public AnimatedDialog, public Translatable
 {
   Q_OBJECT
 
@@ -45,6 +45,7 @@ private slots:
   void on_eventTypeLineEdit_textChanged(const QString& text);
   void on_saveButton_clicked();
   void on_cancelButton_clicked();
+  void on_closeButton_clicked();
   
 public:
   BookingEditor(QWidget* parent = nullptr);

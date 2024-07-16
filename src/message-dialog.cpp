@@ -18,7 +18,7 @@
 // TODO: Setup some form of inheritance structure here?
 
 OkDialog::OkDialog(QWidget* parent)
-  : QDialog(parent),
+  : AnimatedDialog(parent),
     ui(new Ui::OkDialog)
 {
   ui->setupUi(this);
@@ -40,8 +40,7 @@ void OkDialog::display(const QString& message, bool triggerLogout)
 {
   m_triggerLogout = triggerLogout;
   ui->messageLabel->setText(message);
-  show();
-  raise();
+  fade();
 }
 
 void OkDialog::on_okButton_clicked()
@@ -51,11 +50,11 @@ void OkDialog::on_okButton_clicked()
     Widgets::ptzControls->logout();
   }
   
-  hide();
+  fade();
 }
 
 OkCancelDialog::OkCancelDialog(QWidget* parent)
-  : QDialog(parent),
+  : AnimatedDialog(parent),
     ui(new Ui::OkCancelDialog)
 {
   ui->setupUi(this);
@@ -82,20 +81,30 @@ OkCancelDialog::OkCancelDialog(QWidget* parent)
 int OkCancelDialog::display(const QString& message, const bool colorBlack)
 {
   ui->messageLabel->setText(message);
-  raise();
+  fade();
   return exec();
+}
+
+void okCancelDialogAccept()
+{
+  if (Widgets::okCancelDialog)
+    Widgets::okCancelDialog->accept();
+}
+
+void okCancelDialogReject()
+{
+  if (Widgets::okCancelDialog)
+    Widgets::okCancelDialog->reject();
 }
 
 void OkCancelDialog::on_okButton_clicked()
 {
-  accept();
-  hide();
+  fade(&okCancelDialogAccept);
 }
 
 void OkCancelDialog::on_cancelButton_clicked()
 {
-  reject();
-  hide();
+  fade(&okCancelDialogReject);
 }
 
 PasswordDialog::PasswordDialog(QWidget* parent)
@@ -134,7 +143,7 @@ void PasswordDialog::on_cancelButton_clicked()
 }
 
 PresetDialog::PresetDialog(QWidget* parent)
-  : QDialog(parent),
+  : AnimatedDialog(parent),
     ui(new Ui::PresetDialog)
 {
   ui->setupUi(this);
@@ -157,7 +166,7 @@ void PresetDialog::display(Booking* booking)
     ui->presetNameLineEdit->setPlaceholderText("New Preset Name");
   }
 
-  show();
+  fade();
 }
 
 void PresetDialog::on_okButton_clicked()
@@ -168,12 +177,12 @@ void PresetDialog::on_okButton_clicked()
 
   ptzControls->setNewPresetName(ui->presetNameLineEdit->text());
   ptzControls->savePreset();
-  hide();
+  fade();
 }
 
 void PresetDialog::on_cancelButton_clicked()
 {
-  hide();
+  fade();
 }
 
 InfoDialog::InfoDialog(QWidget* parent)
@@ -204,8 +213,6 @@ void InfoDialog::display(const QString& message, QPushButton* activatingButton, 
     button = activatingButton;
 
   ui->messageLabel->setText(message);
-  show();
-  raise();
   fade();
 }
 

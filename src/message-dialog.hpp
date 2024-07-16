@@ -14,7 +14,7 @@ class OkDialog;
 }
 QT_END_NAMESPACE
 
-class OkDialog : public QDialog
+class OkDialog : public AnimatedDialog
 {
   Q_OBJECT
 
@@ -36,7 +36,7 @@ class OkCancelDialog;
 }
 QT_END_NAMESPACE
 
-class OkCancelDialog : public QDialog
+class OkCancelDialog : public AnimatedDialog
 {
   Q_OBJECT
 
@@ -82,7 +82,7 @@ class PresetDialog;
 }
 QT_END_NAMESPACE
 
-class PresetDialog : public QDialog
+class PresetDialog : public AnimatedDialog
 {
   Q_OBJECT
 

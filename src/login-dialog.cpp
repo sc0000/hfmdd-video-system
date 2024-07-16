@@ -77,7 +77,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 
   ui->infoButton->setStyleSheet(
     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(42, 130, 218); border: 1px solid rgb(254, 253, 254); }"
   );
 
   center(ui->masterWidget);
@@ -278,7 +278,7 @@ void LoginDialog::on_languageComboBox_currentTextChanged(const QString& text)
 
 void LoginDialog::on_infoButton_pressed()
 {
-  if (!Widgets::infoDialog->isVisible()) {
+  if (Widgets::infoDialog->isHidden()) {
     ui->infoButton->setStyleSheet(
       "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
       "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
