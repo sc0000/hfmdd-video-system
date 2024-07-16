@@ -177,7 +177,7 @@ void PresetDialog::on_cancelButton_clicked()
 }
 
 InfoDialog::InfoDialog(QWidget* parent)
- : QDialog(parent),
+ :  AnimatedDialog(parent),
     ui(new Ui::InfoDialog),
     button(nullptr)
 {
@@ -206,6 +206,7 @@ void InfoDialog::display(const QString& message, QPushButton* activatingButton, 
   ui->messageLabel->setText(message);
   show();
   raise();
+  fade();
 }
 
 void InfoDialog::on_closeButton_clicked()
@@ -213,11 +214,11 @@ void InfoDialog::on_closeButton_clicked()
   if (button) {
     button->setStyleSheet(
       "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
-      // "QPushButton:hover { background-color: rgb(42,130,218); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); }"
     );
 
     button = nullptr;
   }
 
-  hide();
+  fade();
 }

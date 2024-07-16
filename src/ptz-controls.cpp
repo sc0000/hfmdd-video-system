@@ -1184,7 +1184,7 @@ void PTZControls::on_overviewButton_clicked()
 
 void PTZControls::on_infoButton_pressed()
 {
-  if (Widgets::infoDialog->isHidden()) {
+  if (!Widgets::infoDialog->isVisible()) {
     ui->infoButton->setStyleSheet(
       "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
       "QPushButton:hover { background-color: rgb(42,130,218); }"
@@ -1192,7 +1192,6 @@ void PTZControls::on_infoButton_pressed()
 
     Widgets::infoDialog->display(infoDialogText, ui->infoButton);
   }
-    
 
   else {
     ui->infoButton->setStyleSheet(
@@ -1200,7 +1199,7 @@ void PTZControls::on_infoButton_pressed()
       "QPushButton:hover { background-color: rgb(42,130,218); }"
     );
 
-    Widgets::infoDialog->hide();
+    Widgets::infoDialog->fade();
   }
 }
 

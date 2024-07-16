@@ -46,6 +46,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # src/simple-recording.cpp
   # src/globals.cpp
   src/json-parser.cpp
+  src/animated-dialog.cpp
   src/fullscreen-dialog.cpp
   src/message-dialog.cpp
   src/booking-editor.cpp
@@ -95,6 +96,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/login-dialog.hpp
   src/mode-select.hpp
   src/time-observer.hpp
+  src/animated-dialog.hpp
   src/fullscreen-dialog.hpp
   src/message-dialog.hpp
   src/booking-editor.hpp

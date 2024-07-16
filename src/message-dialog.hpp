@@ -2,7 +2,9 @@
 #include <QString>
 #include <QWidget>
 #include <QLineEdit>
+#include <QPropertyAnimation>
 
+#include "animated-dialog.hpp"
 #include "language.hpp"
 #include "booking.h"
 
@@ -102,7 +104,7 @@ class InfoDialog;
 }
 QT_END_NAMESPACE
 
-class InfoDialog : public QDialog
+class InfoDialog : public AnimatedDialog
 {
   Q_OBJECT
 
