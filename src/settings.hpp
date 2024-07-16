@@ -12,6 +12,8 @@
 #include <imported/properties-view.hpp>
 #include "imported/qjoysticks/QJoysticks.h"
 
+#include "animated-dialog.hpp"
+
 class Ui_PTZSettings;
 
 class SourceNameDelegate : public QStyledItemDelegate {
@@ -24,7 +26,7 @@ public:
 				    const QLocale &locale) const;
 };
 
-class PTZSettings : public QWidget {
+class PTZSettings : public AnimatedDialog {
 	Q_OBJECT
 
 private:
@@ -60,7 +62,7 @@ private:
 	void current_device_changed();
 
 public:
-	PTZSettings();
+	PTZSettings(QWidget* parent);
 	~PTZSettings();
 	void set_selected(uint32_t device_id);
 

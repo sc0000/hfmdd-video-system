@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PTZSettings</class>
- <widget class="QWidget" name="PTZSettings">
+ <widget class="QDialog" name="PTZSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>743</width>
-    <height>537</height>
+    <height>580</height>
    </rect>
   </property>
   <property name="font">
@@ -33,75 +33,96 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
+    <widget class="QWidget" name="masterWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <widget class="QWidget" name="generalTab">
-      <attribute name="title">
-       <string>General</string>
-      </attribute>
-      <widget class="QGroupBox" name="joystickGroupBox">
-       <property name="geometry">
-        <rect>
-         <x>11</x>
-         <y>11</y>
-         <width>721</width>
-         <height>211</height>
-        </rect>
-       </property>
-       <property name="title">
-        <string>Joystick Control</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0" colspan="2">
-           <widget class="QListView" name="joystickNamesListView"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="joystickSpeedLabel">
-            <property name="text">
-             <string>Speed</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="DoubleSlider" name="joystickSpeedSlider">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="joystickDeadzoneLabel">
-            <property name="text">
-             <string>Deadzone size</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="DoubleSlider" name="joystickDeadzoneSlider">
-            <property name="toolTip">
-             <string>Set this value higher if the camera position drifts when the joysticks are centered</string>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="joystickBindingsLabel">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Joysitck Bindings:&lt;/p&gt;
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>40</y>
+        <width>741</width>
+        <height>681</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="generalTab">
+       <attribute name="title">
+        <string>General</string>
+       </attribute>
+       <widget class="QGroupBox" name="joystickGroupBox">
+        <property name="geometry">
+         <rect>
+          <x>11</x>
+          <y>11</y>
+          <width>721</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Joystick Control</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0" colspan="2">
+            <widget class="QListView" name="joystickNamesListView"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="joystickSpeedLabel">
+             <property name="text">
+              <string>Speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="DoubleSlider" name="joystickSpeedSlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="joystickDeadzoneLabel">
+             <property name="text">
+              <string>Deadzone size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="DoubleSlider" name="joystickDeadzoneSlider">
+             <property name="toolTip">
+              <string>Set this value higher if the camera position drifts when the joysticks are centered</string>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="joystickBindingsLabel">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Joysitck Bindings:&lt;/p&gt;
 &lt;p&gt;
 &lt;table&gt;
 &lt;tr&gt;&lt;th&gt;Control&lt;/th&gt;&lt;th&gt;Action&lt;/th&gt;&lt;/tr&gt;
@@ -113,495 +134,520 @@
 &lt;/table&gt;
 &lt;/p&gt;
 &lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="gridLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>230</y>
+          <width>721</width>
+          <height>262</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="recOptionsLayout">
+         <item row="4" column="0">
+          <widget class="QLabel" name="filenameFormattingLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>124</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Filename Formatting</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QComboBox" name="recFormatComboBox"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="enableDebugLogCheckBox">
+           <property name="text">
+            <string>Enable debug logging</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="recFormatLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>124</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Recording Format</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="filenameFormattingLineEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="baseDirectoryLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>124</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Base Directory</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QComboBox" name="qualityComboBox"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="baseDirectoryLineEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>DaxOT</family>
+             <pointsize>9</pointsize>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="text">
+            <string notr="true"/>
+           </property>
+           <property name="placeholderText">
+            <string notr="true">Set base directory for all saved videos, bookings, and presets</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>124</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Quality Preset</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QPushButton" name="saveButton0">
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="livemoveCheckBox">
+           <property name="toolTip">
+            <string>Disable movement controls for cameras in the currently active program scene. This protects against accidental camera moves on the live stream.</string>
+           </property>
+           <property name="text">
+            <string>Lockout live PTZ moves in studio mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="sendConflictWarningsCheckBox">
+           <property name="text">
+            <string>Send Booking Conflict Warnings</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="camerasTab">
+       <attribute name="title">
+        <string>Cameras</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QWidget" name="widget_1" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinimumSize</enum>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Devices</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListView" name="deviceList">
+              <property name="contextMenuPolicy">
+               <enum>Qt::CustomContextMenu</enum>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QPushButton" name="addPTZ">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Add PTZ Device</string>
+                </property>
+                <property name="accessibleName">
+                 <string>Add PTZ Device</string>
+                </property>
+                <property name="text">
+                 <string notr="true">+</string>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <property name="themeID" stdset="0">
+                 <string notr="true">addIconSmall</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="removePTZ">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>24</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>RemoveScripts</string>
+                </property>
+                <property name="accessibleName">
+                 <string>RemoveScripts</string>
+                </property>
+                <property name="text">
+                 <string notr="true">-</string>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <property name="themeID" stdset="0">
+                 <string notr="true">removeIconSmall</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="sourcesButton">
+                <property name="text">
+                 <string>Edit Sources</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="widget" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="propertiesLayout">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="sizeConstraint">
+               <enum>QLayout::SetNoConstraint</enum>
+              </property>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="aboutTab">
+       <attribute name="title">
+        <string>About</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="versionLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
           </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="gridLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>230</y>
-         <width>721</width>
-         <height>262</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="recOptionsLayout">
-        <item row="4" column="0">
-         <widget class="QLabel" name="filenameFormattingLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>140</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>124</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Filename Formatting</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QComboBox" name="recFormatComboBox"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="enableDebugLogCheckBox">
-          <property name="text">
-           <string>Enable debug logging</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="recFormatLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>140</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>124</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Recording Format</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="filenameFormattingLineEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>400</width>
-            <height>0</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="baseDirectoryLabel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>140</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>124</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Base Directory</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QComboBox" name="qualityComboBox"/>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="baseDirectoryLineEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>400</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>DaxOT</family>
-            <pointsize>9</pointsize>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="text">
-           <string notr="true"/>
-          </property>
-          <property name="placeholderText">
-           <string notr="true">Set base directory for all saved videos, bookings, and presets</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>140</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>124</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Quality Preset</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QPushButton" name="saveButton0">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="livemoveCheckBox">
-          <property name="toolTip">
-           <string>Disable movement controls for cameras in the currently active program scene. This protects against accidental camera moves on the live stream.</string>
-          </property>
-          <property name="text">
-           <string>Lockout live PTZ moves in studio mode</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="sendConflictWarningsCheckBox">
-          <property name="text">
-           <string>Send Booking Conflict Warnings</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="camerasTab">
-      <attribute name="title">
-       <string>Cameras</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QSplitter" name="splitter">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QWidget" name="widget_1" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetMinimumSize</enum>
-           </property>
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Devices</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QListView" name="deviceList">
-             <property name="contextMenuPolicy">
-              <enum>Qt::CustomContextMenu</enum>
-             </property>
-             <property name="editTriggers">
-              <set>QAbstractItemView::NoEditTriggers</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QPushButton" name="addPTZ">
-               <property name="maximumSize">
-                <size>
-                 <width>22</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Add PTZ Device</string>
-               </property>
-               <property name="accessibleName">
-                <string>Add PTZ Device</string>
-               </property>
-               <property name="text">
-                <string notr="true"/>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-               <property name="themeID" stdset="0">
-                <string notr="true">addIconSmall</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="removePTZ">
-               <property name="maximumSize">
-                <size>
-                 <width>22</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>RemoveScripts</string>
-               </property>
-               <property name="accessibleName">
-                <string>RemoveScripts</string>
-               </property>
-               <property name="text">
-                <string notr="true"/>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-               <property name="themeID" stdset="0">
-                <string notr="true">removeIconSmall</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="sourcesButton">
-               <property name="text">
-                <string>Edit Sources</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="widget" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" name="propertiesLayout">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="sizeConstraint">
-              <enum>QLayout::SetNoConstraint</enum>
-             </property>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="aboutTab">
-      <attribute name="title">
-       <string>About</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLabel" name="versionLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="synologyTab">
-      <attribute name="title">
-       <string>NAS/Mail</string>
-      </attribute>
-      <widget class="QWidget" name="gridLayoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>721</width>
-         <height>481</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <property name="horizontalSpacing">
-         <number>14</number>
+      <widget class="QWidget" name="synologyTab">
+       <attribute name="title">
+        <string>NAS/Mail</string>
+       </attribute>
+       <widget class="QWidget" name="gridLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>721</width>
+          <height>481</height>
+         </rect>
         </property>
-        <property name="verticalSpacing">
-         <number>21</number>
-        </property>
-        <item row="5" column="0">
-         <widget class="QLabel" name="mailUserNameLabel">
-          <property name="text">
-           <string>Mail User Name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="nasUserNameLineEdit"/>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="mailHostLineEdit"/>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="mailPasswordLabel">
-          <property name="text">
-           <string>Mail Password</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="nasIpLabel">
-          <property name="text">
-           <string>NAS IP</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="mailHostLabel">
-          <property name="text">
-           <string>Mail Host</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="nasPortLabel">
-          <property name="text">
-           <string>NAS PORT</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QLineEdit" name="mailPasswordLineEdit">
-          <property name="echoMode">
-           <enum>QLineEdit::Password</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="nasIpLineEdit"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="nasUserNameLabel">
-          <property name="text">
-           <string>NAS User Name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="nasPortLineEdit"/>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="mailUserNameLineEdit"/>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="nasPasswordLineEdit">
-          <property name="echoMode">
-           <enum>QLineEdit::Password</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QPushButton" name="saveButton1">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="nasPasswordLabel">
-          <property name="text">
-           <string>NAS Password</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <widget class="QLineEdit" name="mailSenderAddressLineEdit"/>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="mailSenderAddressLabel">
-          <property name="text">
-           <string>Sender Address</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <property name="horizontalSpacing">
+          <number>14</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>21</number>
+         </property>
+         <item row="5" column="0">
+          <widget class="QLabel" name="mailUserNameLabel">
+           <property name="text">
+            <string>Mail User Name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="nasUserNameLineEdit"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="mailHostLineEdit"/>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="mailPasswordLabel">
+           <property name="text">
+            <string>Mail Password</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="nasIpLabel">
+           <property name="text">
+            <string>NAS IP</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="mailHostLabel">
+           <property name="text">
+            <string>Mail Host</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="nasPortLabel">
+           <property name="text">
+            <string>NAS PORT</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="mailPasswordLineEdit">
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="nasIpLineEdit"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="nasUserNameLabel">
+           <property name="text">
+            <string>NAS User Name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="nasPortLineEdit"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="mailUserNameLineEdit"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="nasPasswordLineEdit">
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0">
+          <widget class="QPushButton" name="saveButton1">
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="nasPasswordLabel">
+           <property name="text">
+            <string>NAS Password</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="mailSenderAddressLineEdit"/>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="mailSenderAddressLabel">
+           <property name="text">
+            <string>Sender Address</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </widget>

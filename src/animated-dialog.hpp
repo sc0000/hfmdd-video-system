@@ -27,6 +27,8 @@ private:
   void onCloseButtonClicked();
 };
 
+//----------------------------------------------------
+
 class AnimatedDialog : public QDialog
 {
   Q_OBJECT

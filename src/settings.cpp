@@ -117,8 +117,8 @@ void PTZSettings::updateProperties(OBSData old_settings, OBSData new_settings)
 	Q_UNUSED(old_settings);
 }
 
-PTZSettings::PTZSettings() 
-  : QWidget(nullptr), 
+PTZSettings::PTZSettings(QWidget* parent) 
+  : AnimatedDialog(parent), 
     ui(new Ui_PTZSettings),
     sourcesDockIsOpen(false)
 {
@@ -126,6 +126,15 @@ PTZSettings::PTZSettings()
 	obs_data_release(settings);
 
 	ui->setupUi(this);
+
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+  //setModal(true);
+
+  ui->tabWidget->move(QPoint(0, 41));
+  ui->tabWidget->setFixedWidth(width());
+  ui->tabWidget->setFixedHeight(height() - 41);
+
+  Handlebar* handlebar = new Handlebar(this);
 
 	ui->livemoveCheckBox->setChecked(
 		PTZControls::getInstance()->liveMovesDisabled());
@@ -408,6 +417,7 @@ void PTZSettings::settingsChanged(OBSData changed)
 	propertiesView->RefreshProperties();
 }
 
+// TODO: Rename: reload()
 void PTZSettings::showDevice(uint32_t device_id)
 {
 	if (device_id) {
@@ -419,8 +429,9 @@ void PTZSettings::showDevice(uint32_t device_id)
 		ui->tabWidget->setCurrentWidget(ui->generalTab);
 	}
 
-	show();
-	raise();
+	// show();
+	// raise();
+  fade();
 }
 
 void PTZSettings::getAdditionalProperties()
@@ -495,8 +506,12 @@ void ptz_settings_show(uint32_t device_id)
 {
 	obs_frontend_push_ui_translation(obs_module_get_string);
 
+  QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
+
+  if (!mainWindow) return;
+
 	if (!ptzSettingsWindow)
-		ptzSettingsWindow = new PTZSettings();
+		ptzSettingsWindow = new PTZSettings(mainWindow);
 	ptzSettingsWindow->showDevice(device_id);
 
 	obs_frontend_pop_ui_translation();
