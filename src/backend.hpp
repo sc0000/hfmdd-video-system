@@ -24,8 +24,8 @@ class Backend
 public:
   static QString currentEmail;
   static bool mailAddressIsValid;
-  const static QString adminEmail;
-  const static QString adminPassword;
+  static QString adminEmail;
+  static QString adminPassword;
   static EMode mode;
   static ELanguage language;
 

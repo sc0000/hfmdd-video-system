@@ -25,12 +25,13 @@
 #include <obs-properties.h>
 #include "imported/qjoysticks/QJoysticks.h"
 
+#include "backend.hpp"
+#include "settings-manager.hpp"
 #include "ptz.h"
 #include "ptz-device.hpp"
 #include "ptz-controls.hpp"
 #include "settings.hpp"
 #include "ui_settings.h"
-#include "settings-manager.hpp"
 
 /* ----------------------------------------------------------------- */
 
@@ -454,6 +455,9 @@ void PTZSettings::getCredentials()
 {
   SettingsManager::loadCredentials();
 
+  ui->adminEmailLineEdit->setText(Backend::adminEmail);
+  ui->adminPasswordLineEdit->setText(Backend::adminPassword);
+
   ui->nasIpLineEdit->setText(SettingsManager::nasIP);
   ui->nasPortLineEdit->setText(SettingsManager::nasPort);
   ui->nasUserNameLineEdit->setText(SettingsManager::nasUser);
@@ -482,6 +486,9 @@ void PTZSettings::updateAdditionalProperties()
 
 void PTZSettings::updateCredentials()
 {
+  Backend::adminEmail = ui->adminEmailLineEdit->text();
+  Backend::adminPassword = ui->adminPasswordLineEdit->text();
+
   SettingsManager::nasIP = ui->nasIpLineEdit->text();
   SettingsManager::nasPort = ui->nasPortLineEdit->text();
   SettingsManager::nasUser = ui->nasUserNameLineEdit->text();

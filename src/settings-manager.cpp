@@ -234,6 +234,9 @@ void SettingsManager::saveCredentials()
   OBSData savedata = obs_data_create();
 	obs_data_release(savedata);
 
+  obs_data_set_string(savedata, "admin_email", Backend::adminEmail.toUtf8().constData());
+  obs_data_set_string(savedata, "admin_password", Backend::adminPassword.toUtf8().constData());
+
   obs_data_set_string(savedata, "nas_ip", nasIP.toUtf8().constData());
   obs_data_set_string(savedata, "nas_port", nasPort.toUtf8().constData());
   obs_data_set_string(savedata, "nas_user", nasUser.toUtf8().constData());
@@ -295,6 +298,9 @@ void SettingsManager::loadCredentials()
 	if (!loaddata) return;
   
 	obs_data_release(loaddata);
+
+  Backend::adminEmail = obs_data_get_string(loaddata, "admin_email");
+  Backend::adminPassword = obs_data_get_string(loaddata, "admin_password");
 
   nasIP = obs_data_get_string(loaddata, "nas_ip");
   nasPort = obs_data_get_string(loaddata, "nas_port");

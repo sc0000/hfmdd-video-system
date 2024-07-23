@@ -13,8 +13,8 @@
 
 QString Backend::currentEmail = "";
 bool Backend::mailAddressIsValid = false;
-const QString Backend::adminEmail = "oliver.fenk@hfmdd.de";
-const QString Backend::adminPassword = "pw";
+QString Backend::adminEmail = "";
+QString Backend::adminPassword = "";
 EMode Backend::mode = EMode::Default;
 ELanguage Backend::language = ELanguage::English;
 
