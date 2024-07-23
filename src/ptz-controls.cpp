@@ -684,8 +684,8 @@ void PTZControls::setViewportMode()
     );
 
     // ? Enable camera selection by clicking on preview ?
-    ui->previousCamButton->setDisabled(true);
-    ui->nextCamButton->setDisabled(true);
+    ui->previousCamButton->setDisabled(false);
+    ui->nextCamButton->setDisabled(false);
 
     for (qsizetype i = 0; i < size; ++i) {
       // ! New naming convention !
@@ -710,6 +710,7 @@ void PTZControls::setViewportMode()
         case 2:
           pos = { viewportSize.x - viewportSize.x / (i + 1.f), 0.f};
           bounds = { viewportSize.x / 2.f, viewportSize.y };
+          obs_sceneitem_set_bounds_alignment(item, OBS_ALIGN_CENTER);
           break;
 
         case 3:
@@ -721,7 +722,7 @@ void PTZControls::setViewportMode()
 
           bounds = { viewportSize.x / 2.f, viewportSize.y / 2.f };
 
-           if (i < 2) 
+          if (i < 2) 
             obs_sceneitem_set_bounds_alignment(item, OBS_ALIGN_BOTTOM);
 
           else 
@@ -749,7 +750,7 @@ void PTZControls::setViewportMode()
       obs_sceneitem_set_pos(item, &pos);
       obs_sceneitem_set_bounds_type(item, OBS_BOUNDS_SCALE_INNER);
       obs_sceneitem_set_bounds(item, &bounds);
-      obs_sceneitem_set_locked(item, false);
+      obs_sceneitem_set_locked(item, true);
     }
   }
 
