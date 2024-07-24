@@ -24,7 +24,6 @@ private:
   bool verifyMailAddress();
 
   QString reminderLabelText;
-  QString passwordLineEditPlaceholderText;
   QString infoDialogText;
 
 private slots:

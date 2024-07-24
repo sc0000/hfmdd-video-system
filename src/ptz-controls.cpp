@@ -636,13 +636,14 @@ void PTZControls::joystickButtonEvent(const QJoystickButtonEvent evt)
 
 void PTZControls::reload()
 {
+  hasRecorded = false;
+  showOverview = false;
+
   connectSignalItemSelect();
   loadUserPresets();
   setViewportMode();
   selectCamera();
   setFloating(false);
-
-  hasRecorded = false;
 
   if (Backend::language == ELanguage::English) {
     switch (Backend::mode) {
@@ -689,7 +690,7 @@ void PTZControls::setViewportMode()
 
     for (qsizetype i = 0; i < size; ++i) {
       // ! New naming convention !
-      QString name = "Birddog" + QString::number(i + 1);
+      QString name = "Camera " + QString::number(i + 1);
       obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
       
       if (name != currCameraName) 
@@ -772,7 +773,7 @@ void PTZControls::setViewportMode()
     vec2 scale = { 1.f, 1.f };
 
     for (qsizetype i = 0; i < size; ++i) {
-      QString name = "Birddog" + QString::number(i + 1);
+      QString name = "Camera " + QString::number(i + 1);
       obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
 
       obs_sceneitem_set_pos(item, &pos);
@@ -1159,7 +1160,7 @@ void PTZControls::on_previousCamButton_pressed()
   if (previousIndex < 1)
     return;
 
-  currCameraName = "Birddog" + QString::number(previousIndex);
+  currCameraName = "Camera " + QString::number(previousIndex);
   
   selectCamera();
 }
@@ -1171,7 +1172,7 @@ void PTZControls::on_nextCamButton_pressed()
   if (nextIndex > allCameras().size()) 
     return;
   
-  currCameraName = "Birddog" + QString::number(nextIndex);
+  currCameraName = "Camera " + QString::number(nextIndex);
 
   selectCamera();
 }
@@ -1561,7 +1562,7 @@ void PTZControls::selectCamera()
   // obs_sceneitem_t* item = obs_scene_find_source(scene, currCameraName.toUtf8().constData());
 
   for (qsizetype i = 0; i < allCameras().size(); ++i) {
-      QString name = "Birddog" + QString::number(i + 1);
+      QString name = "Camera " + QString::number(i + 1);
       obs_sceneitem_t* item = obs_scene_find_source(scene, name.toUtf8().constData());
       
       if (name != currCameraName) 

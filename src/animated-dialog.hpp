@@ -6,12 +6,19 @@
 #include <QMouseEvent>
 #include <QPropertyAnimation>
 
+enum class EHandlebarStyle
+{
+  Black,
+  Blue,
+  Default
+};
+
 class Handlebar : public QFrame
 {
   Q_OBJECT
 
 public:
-  explicit Handlebar(QWidget* parent = nullptr);
+  explicit Handlebar(QWidget* parent = nullptr, EHandlebarStyle HandlebarStyle = EHandlebarStyle::Black);
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -45,7 +52,7 @@ private slots:
   void onFinished();
 
 public:
-  void fade(void (*result)(void) = nullptr);
+  virtual void fade(void (*result)(void) = nullptr);
   void setFadeDuration(int fadeDuration);
   void (* sendResultCode)(void);
   // inline bool isVisible() { return visible; }

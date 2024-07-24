@@ -107,39 +107,62 @@ void OkCancelDialog::on_cancelButton_clicked()
   fade(&okCancelDialogReject);
 }
 
+void passwordDialogAccept()
+{
+  if (Widgets::passwordDialog)
+    Widgets::passwordDialog->accept();
+}
+
+void passwordDialogReject()
+{
+  if (Widgets::passwordDialog)
+    Widgets::passwordDialog->reject();
+}
+
 PasswordDialog::PasswordDialog(QWidget* parent)
-  : QDialog(parent),
+  : AnimatedDialog(parent),
     ui(new Ui::PasswordDialog)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
-  // setModal(true);
+
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+
+  ui->okButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  ui->cancelButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  setModal(true);
   hide();
 }
 
-void PasswordDialog::display()
+int PasswordDialog::display()
 {
-  valid = false;
-  exec();
+  ui->passwordLineEdit->clear();
+  fade();
+  return exec();
 }
 
 void PasswordDialog::on_okButton_clicked()
 {
-  if (ui->passwordLineEdit->text() == Backend::adminPassword) {
-    valid = true;
-    hide();
-  }
-
-  else {
+  if (ui->passwordLineEdit->text() == Backend::adminPassword) 
+    fade(&passwordDialogAccept);
+  
+  else 
     Widgets::okDialog->display("Invalid password.");
-    valid = false;
-  }
 }
 
 void PasswordDialog::on_cancelButton_clicked()
 {
-  valid = false;
-  hide();
+  fade(&passwordDialogReject);
 }
 
 PresetDialog::PresetDialog(QWidget* parent)
@@ -195,13 +218,19 @@ InfoDialog::InfoDialog(QWidget* parent)
 
   setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
   
-  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+  ui->masterWidget->setFixedWidth(width() - 4);
+  ui->masterWidget->setFixedHeight(height() - 32);
+  ui->masterWidget->move(QPoint(4, 32));
 
-  ui->closeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); }"
-  );
+  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+  
+  // ui->closeButton->setStyleSheet(
+  //   "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+  //   "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+  //   "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); }"
+  // );
+
+  Handlebar* handlebar = new Handlebar(this, EHandlebarStyle::Blue);
 
   setModal(true);
   hide();
@@ -213,7 +242,7 @@ void InfoDialog::display(const QString& message, QPushButton* activatingButton, 
     button = activatingButton;
 
   ui->messageLabel->setText(message);
-  fade();
+  AnimatedDialog::fade();
 }
 
 void InfoDialog::on_closeButton_clicked()
@@ -228,4 +257,18 @@ void InfoDialog::on_closeButton_clicked()
   }
 
   fade();
+}
+
+void InfoDialog::fade(void (*result)(void))
+{
+  if (button) {
+    button->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42,130,218); }"
+    );
+
+    button = nullptr;
+  }
+
+  AnimatedDialog::fade(result);
 }

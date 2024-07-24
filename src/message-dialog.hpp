@@ -58,7 +58,7 @@ class PasswordDialog;
 }
 QT_END_NAMESPACE
 
-class PasswordDialog : public QDialog
+class PasswordDialog : public AnimatedDialog
 {
   Q_OBJECT
 
@@ -68,7 +68,7 @@ private:
 
 public:
   explicit PasswordDialog(QWidget* parent = nullptr);
-  void display();
+  int display();
   inline bool isValid() { return valid; } 
 
 private slots:
@@ -91,8 +91,8 @@ private:
 
 public:
   explicit PresetDialog(QWidget* parent = nullptr);
-  void display(Booking* booking = nullptr); 
-
+  void display(Booking* booking = nullptr);
+  
 private slots:
   void on_okButton_clicked();
   void on_cancelButton_clicked();  
@@ -115,6 +115,8 @@ private:
 public:
   explicit InfoDialog(QWidget* parent = nullptr);
   void display(const QString& message, QPushButton* activatingButton = nullptr, const int offsetX = 0, const int offsetY = 0);
+
+  virtual void fade(void (*result)(void) = nullptr) override;
 
 private slots:
   void on_closeButton_clicked();

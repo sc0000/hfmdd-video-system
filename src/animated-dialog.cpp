@@ -1,6 +1,6 @@
 #include "animated-dialog.hpp"
 
-Handlebar::Handlebar(QWidget* parent) 
+Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle) 
   : QFrame(parent),
     animatedDialogParent(static_cast<AnimatedDialog*>(parent)) 
 {
@@ -10,7 +10,7 @@ Handlebar::Handlebar(QWidget* parent)
     setFixedWidth(parent->width());
 
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
+  
   move(QPoint(0, 0));
 
   closeButton = new QPushButton(this);
@@ -18,11 +18,26 @@ Handlebar::Handlebar(QWidget* parent)
   closeButton->setFixedSize(24, 24);
   closeButton->move(QPoint(width() - 32, 8));
 
-  closeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
-    "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
-  );
+  if (HandlebarStyle == EHandlebarStyle::Black) {
+    setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
+
+    closeButton->setStyleSheet(
+      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
+      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+      "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
+    );
+  }
+
+  else if (HandlebarStyle == EHandlebarStyle::Blue) {
+    setStyleSheet("QWidget { background-color: rgb(42, 130, 218); }");
+
+    closeButton->setStyleSheet(
+      "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
+      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+      "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
+    );
+  }
+  
 
   closeButton->setText("x");
 

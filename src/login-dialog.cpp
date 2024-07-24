@@ -23,7 +23,6 @@ LoginDialog::LoginDialog(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
     reminderLabelText("Please log in with your HfMDD email address!"),
-    passwordLineEditPlaceholderText("Only admin accounts require a password."),
     infoDialogText("")
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
@@ -37,7 +36,8 @@ LoginDialog::LoginDialog(QWidget *parent)
   infoDialogText = QString("<html><head/><body>") + 
       "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
       "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your HfMDD email. Only admin accounts require a password.<br/>" +
+      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdde.de or @mailbox.hfmdd.de). " +
+      "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos.<br/>" +
       "Then, you have two options: You could make a recording right away, only setting the stop time.<br/>"
       "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>" +
       "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>" +
@@ -73,7 +73,6 @@ LoginDialog::LoginDialog(QWidget *parent)
                           "QListView::item:hover { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: none; }");
 
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
-  ui->passwordLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
 
   ui->infoButton->setStyleSheet(
     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
@@ -127,8 +126,6 @@ void LoginDialog::reload()
   ui->reminderLabelWidget->move(180, screenHeight - (8 + ui->reminderLabelWidget->height()));
   
   ui->mailAddressLineEdit->clear();
-  ui->passwordLineEdit->clear();
-  // ui->passwordLineEdit->hide();
 }
 
 void LoginDialog::translate(ELanguage language)
@@ -136,11 +133,11 @@ void LoginDialog::translate(ELanguage language)
   switch (language) {
     case ELanguage::German:
     reminderLabelText = "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein!";
-    passwordLineEditPlaceholderText = "Nur Administratorenkonten erfordern ein Passwort.";
     infoDialogText = QString("<html><head/><body>") + 
       "<span style=\"font-weight: bold;\">Was ist das hier?</span><br/>" +
       "Das hier ist ein System, mit dem jedes Mitglied der HfMDD seine Konzertsaalauftritte selbstständig auf Video aufzeichnen kann.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Wie funktioniert das?</span><br/>Melden Sie sich zunächst mit Ihrer HfMDD-E-Mail-Adresse an. Nur Administratorkonten erfordern ein Passwort. " +
+      "<span style=\"font-weight: bold;\">Wie funktioniert das?</span><br/>Melden Sie sich zunächst mit Ihrer Hochschul-Mailadresse an (@hfmdd.de oder @mailbox.hfmdd.de). " +
+      "Bitte achten Sie auf die richtige Schreibweise, andernfalls kann der Downloadlink für Ihre Videos nicht zugestellt werden." +
       "Dann haben Sie zwei Möglichkeiten:<br/>Sie können direkt mit der Aufnahme beginnen und nur die Stoppzeit angeben, "
       "oder das Buchungssystem nutzen und ein Zeitfenster für eine Aufnahme reservieren.<br/><br/>" +
       "<span style=\"font-weight: bold;\">Gibt es etwas, worauf ich achten muss?</span><br/>" +
@@ -153,11 +150,11 @@ void LoginDialog::translate(ELanguage language)
 
     case ELanguage::English:
     reminderLabelText = "Please log in with your HfMDD email address!";
-    passwordLineEditPlaceholderText = "Only admin accounts require a password.";
     infoDialogText = QString("<html><head/><body>") + 
       "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
       "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your HfMDD email. Only admin accounts require a password.<br/>" +
+      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdde.de or @mailbox.hfmdd.de). " +
+      "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos.<br/>" +
       "Then, you have two options: You could make a recording right away, only setting the stop time.<br/>"
       "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>" +
       "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>" +
@@ -170,13 +167,11 @@ void LoginDialog::translate(ELanguage language)
   }
 
   ui->reminderLabel->setText(reminderLabelText);
-  ui->passwordLineEdit->setPlaceholderText(passwordLineEditPlaceholderText);
 }
 
 bool LoginDialog::verifyMailAddress()
 {
   if (!Backend::mailAddressIsValid) {
-    // ui->reminderLabel->show();
     ui->reminderLabel->setText(reminderLabelText);
     ui->mailAddressLineEdit->setStyleSheet(
       "QLineEdit { border: 2px solid #f21a1a; border-radius: 0px; background-color: rgb(254, 253, 254)}"
@@ -198,12 +193,6 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 {
   Backend::currentEmail = text;
   Backend::mailAddressIsValid = false;
-  
-  // if (Backend::mailAddressIsValid)
-  //   ui->reminderLabel->setText("");
-
-  // else 
-  //   ui->reminderLabel->setText(reminderLabelText);
 
   for (const QString& suffix : SettingsManager::mailSuffices)
   {
@@ -213,17 +202,7 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
       // ui->reminderLabel->setText("");
       break;
     }
-
-    // else ui->reminderLabel->setText(reminderLabelText);
   }
-
-  if (Backend::currentEmail == Backend::adminEmail) 
-    ui->passwordLineEdit->setDisabled(false);
-    // ui->passwordLineEdit->show();
-
-  else 
-    ui->passwordLineEdit->setDisabled(true);
-    // ui->passwordLineEdit->hide();
 
   QFont font = ui->mailAddressLineEdit->font();
 
@@ -247,14 +226,12 @@ void LoginDialog::on_manageBookingsButton_clicked()
     return;
   }
 
-  if (ui->passwordLineEdit->isEnabled() && ui->passwordLineEdit->text() != Backend::adminPassword) {
-    Widgets::okDialog->display(Backend::language != ELanguage::German ?
-      "The password is incorrect." :
-      "Das Passwort ist inkorrekt."
-    );
+  if (Backend::currentEmail == Backend::adminEmail) {
+    int result = Widgets::passwordDialog->display();
 
-    return;
-  }
+    if (result == QDialog::Rejected)    
+      return;
+  } 
 
   fade(Widgets::modeSelect);
 }
