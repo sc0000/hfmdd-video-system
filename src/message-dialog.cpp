@@ -140,6 +140,10 @@ PasswordDialog::PasswordDialog(QWidget* parent)
     "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
   );
 
+  ui->passwordLineEdit->setStyleSheet(
+    "QLineEdit { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
+  );
+
   setModal(true);
   hide();
 }
@@ -223,12 +227,6 @@ InfoDialog::InfoDialog(QWidget* parent)
   ui->masterWidget->move(QPoint(4, 32));
 
   ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
-  
-  // ui->closeButton->setStyleSheet(
-  //   "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-  //   "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-  //   "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); }"
-  // );
 
   Handlebar* handlebar = new Handlebar(this, EHandlebarStyle::Blue);
 
@@ -243,20 +241,6 @@ void InfoDialog::display(const QString& message, QPushButton* activatingButton, 
 
   ui->messageLabel->setText(message);
   AnimatedDialog::fade();
-}
-
-void InfoDialog::on_closeButton_clicked()
-{
-  if (button) {
-    button->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); }"
-    );
-
-    button = nullptr;
-  }
-
-  fade();
 }
 
 void InfoDialog::fade(void (*result)(void))
