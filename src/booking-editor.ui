@@ -355,6 +355,11 @@
       </item>
       <item>
        <widget class="QLineEdit" name="eventTypeLineEdit">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="toolTip">
          <string>For instance, rehearsal, concert, exam, demo recording...</string>
         </property>

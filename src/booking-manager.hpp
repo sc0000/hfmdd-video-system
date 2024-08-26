@@ -23,6 +23,7 @@ private:
   Ui::BookingManager* ui;
   QPropertyAnimation* infoLabelAnimation;
   bool infoLabelVisible;
+  int currentRow;
 
   QVector<Booking>& bookings;
   

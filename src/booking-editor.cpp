@@ -25,6 +25,8 @@ BookingEditor::BookingEditor(QWidget* parent)
 
   ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
 
+  ui->eventTypeLineEdit->setPlaceholderText("Exam? Concert? Rehearsal? Dedicated Video Recording?");
+
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setModal(true);
 }
@@ -68,6 +70,7 @@ void BookingEditor::reload(Booking* bookingToEdit)
       QTime(23, 0);
 
     ui->eventTypeLineEdit->setText("");
+    ui->eventTypeLineEdit->setStyleSheet("QLineEdit { font-style: italic; }");
   }
 
   timeToSet = ETimeToSet::StartTime;
@@ -97,6 +100,7 @@ void BookingEditor::translate(ELanguage language)
     ui->setStartTimeButton->setText("Startzeit ändern");
     ui->setStopTimeButton->setText("Stopzeit ändern");
     ui->eventTypeLabel->setText("Art der Veranstaltung");
+    ui->eventTypeLineEdit->setPlaceholderText("Prüfung? Konzert? Probe? Bewerbungsvideodreh?");
     ui->saveButton->setText("Speichern");
     ui->cancelButton->setText("Verwerfen");
     ui->calendarWidget->setLocale(QLocale::German);
@@ -107,6 +111,7 @@ void BookingEditor::translate(ELanguage language)
     ui->setStartTimeButton->setText("Edit Start Time");
     ui->setStopTimeButton->setText("Edit Stop Time");
     ui->eventTypeLabel->setText("Type of Event");
+    ui->eventTypeLineEdit->setPlaceholderText("Exam? Concert? Rehearsal? Dedicated Video Recording?");
     ui->saveButton->setText("Save");
     ui->cancelButton->setText("Cancel");
     ui->calendarWidget->setLocale(QLocale::English);
@@ -332,6 +337,12 @@ void BookingEditor::on_increaseTimeBy60Button_pressed()
 void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
 {
   booking.event = text;
+
+  if (text == "")
+    ui->eventTypeLineEdit->setStyleSheet("QLineEdit { font-style: italic; }");
+
+  else
+    ui->eventTypeLineEdit->setStyleSheet("QLineEdit { font-style: normal; }");
 }
 
 void bookingEditorAccept()
@@ -392,10 +403,12 @@ void BookingEditor::on_saveButton_clicked()
   Widgets::bookingManager->loadBookings();
 
   isEditing = false;
+  ui->saveButton->setAttribute(Qt::WA_UnderMouse, false);
   fade(&bookingEditorAccept);
 }
 
 void BookingEditor::on_cancelButton_clicked()
 {
+  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
   fade(&bookingEditorReject);
 }

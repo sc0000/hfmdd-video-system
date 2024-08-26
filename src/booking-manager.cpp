@@ -20,7 +20,8 @@ BookingManager* BookingManager::instance = nullptr;
 BookingManager::BookingManager(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::BookingManager),
-    bookings(Backend::loadedBookings)
+    bookings(Backend::loadedBookings),
+    currentRow(0)
 {
   setWindowFlags(
     windowFlags() | 
@@ -120,6 +121,10 @@ void BookingManager::loadBookings()
 
     ui->bookingsList->addItem(item);
   }
+
+  ui->bookingsList->item(currentRow)->setSelected(true);
+  ui->bookingsList->setCurrentRow(currentRow);
+  ui->bookingsList->setFocus();
 }
 
 void BookingManager::translate(ELanguage language)
@@ -190,7 +195,7 @@ void BookingManager::translate(ELanguage language)
 
 void BookingManager::on_bookingsList_currentRowChanged()
 {
-  // Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
+  // currentRow = ui->bookingsList->currentRow();
 }
 
 void BookingManager::on_infoButton_pressed()
@@ -252,7 +257,8 @@ void BookingManager::on_editBookingButton_clicked()
     return;
   }
 
-  Widgets::bookingEditor->reload(&bookings[ui->bookingsList->currentRow()]);
+  currentRow = ui->bookingsList->currentRow();
+  Widgets::bookingEditor->reload(&bookings[currentRow]);
 }
 
 void BookingManager::on_deleteBookingButton_clicked()
@@ -309,7 +315,8 @@ void BookingManager::on_toPTZControlsButton_clicked()
     return;
   }
 
-  Backend::currentBooking = bookings[ui->bookingsList->currentRow()];
+  Backend::currentBooking = bookings[currentRow];
+  // currentRow = -1;
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   SettingsManager::resetFilterSettings();
@@ -320,12 +327,14 @@ void BookingManager::on_toPTZControlsButton_clicked()
 
 void BookingManager::on_toModeSelectButton_clicked()
 {
+  // currentRow = -1;
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::modeSelect);
 }
 
 void BookingManager::on_logoutButton_clicked()
 {
+  // currentRow = -1;
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::loginDialog);
 }
