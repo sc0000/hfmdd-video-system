@@ -645,6 +645,16 @@ void PTZControls::reload()
   selectCamera();
   setFloating(false);
 
+  ui->currentBookingEmailLabel->setText(Backend::currentBooking.email);
+  ui->currentBookingDateLabel->setText(Backend::currentBooking.date.toString());
+  ui->currentBookingTimeLabel->setText(
+    Backend::currentBooking.startTime.toString("HH:mm") + " - " +
+    Backend::currentBooking.stopTime.toString("HH:mm")
+  );
+
+  ui->currentBookingEventLabel->setText(Backend::currentBooking.event);
+  
+  // ???
   if (Backend::language == ELanguage::English) {
     switch (Backend::mode) {
       case EMode::BookMode:
