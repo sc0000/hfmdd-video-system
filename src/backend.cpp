@@ -113,7 +113,7 @@ void Backend::sortBookings()
       QString dateTime1 = loadedBookings[j + 1].date.toString(Qt::ISODate) + "_" +
         loadedBookings[j + 1].startTime.toString("HH:mm");
 
-      if (dateTime0 > dateTime1) {
+      if (dateTime0 < dateTime1) {
         Booking tmp = loadedBookings[j];
         loadedBookings[j] = loadedBookings[j + 1];
         loadedBookings[j + 1] = tmp;
