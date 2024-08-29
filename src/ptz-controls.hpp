@@ -221,5 +221,5 @@ public:
 
   QString currCameraName = "Birddog1";
 
-  virtual void translate(ELanguage language) override; 
+  virtual void updateTexts() override; 
 };

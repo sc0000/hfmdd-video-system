@@ -46,6 +46,6 @@ public:
 
   void loadBookings();
 
-  virtual void translate(ELanguage language) override;
+  virtual void updateTexts() override;
 
 };

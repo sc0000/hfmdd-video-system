@@ -43,6 +43,7 @@ endif()
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE 
   src/plugin-main.cpp
   src/backend.cpp
+  src/text-manager.cpp
   # src/simple-recording.cpp
   # src/globals.cpp
   src/json-parser.cpp
@@ -90,6 +91,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/imported/spinbox-ignorewheel.cpp
   # src/ptz.h
   src/backend.hpp
+  src/text-manager.hpp
   # src/globals.hpp
   src/language.hpp
   src/login.hpp

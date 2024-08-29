@@ -63,7 +63,7 @@ void Widgets::load()
   };
 
   translatables = {
-    login, loginDialog, modeSelect, bookingEditor, bookingManager, quickRecord, 
+    loginDialog, modeSelect, bookingEditor, bookingManager, quickRecord, 
     ptzControls
   };
 }

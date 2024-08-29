@@ -22,7 +22,7 @@ private:
 
 private slots:
   void on_quickModeButton_clicked();
-  void on_bookModeButton_clicked();
+  void on_bookingModeButton_clicked();
     
 public:
   ModeSelect(QWidget *parent = nullptr);
@@ -31,6 +31,6 @@ public:
   static inline ModeSelect* getInstance() { return instance; }
   virtual void reload() override;
 
-  virtual void translate(ELanguage language) override; 
+  virtual void updateTexts() override; 
 };
 

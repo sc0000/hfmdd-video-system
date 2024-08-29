@@ -10,6 +10,7 @@
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
 #include "settings-manager.hpp"
+#include "text-manager.hpp"
 #include "mode-select.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
@@ -47,30 +48,11 @@ BookingManager::BookingManager(QWidget* parent)
   infoLabelAnimation = new QPropertyAnimation(ui->infoLabel, "maximumWidth");
   infoLabelAnimation->setDuration(100);
 
-
   ui->infoLabel->setFont(QFont("DaxOT", 11));
-
-  ui->infoLabel->setText(
-    QString("<html><head/><body>") +
-      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" + 
-      "From this screen, you can book video recording sessions, or edit existing ones. " + 
-      "Please note that you have to select a booking to continue to camera controls.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">I got a conflict warning when I made my booking..?</span><br/>"
-      "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
-      "that these might be subject to adjustments by the admin.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Anything else I need to know?</span><br/>" +
-      "You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
-      "you can set up your cameras and save presets anytime. " +
-      "You can stop the recording whenever you want, but " +
-      "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
-      "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
-      "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
-      "No matter how the recording was stopped, you will receive a download link via email afterwards." +
-      "</body></html>"
-  );
 
   ui->bookingsList->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
 
+  updateTexts();
   setModal(false);
   hide();
 }
@@ -127,75 +109,21 @@ void BookingManager::loadBookings()
   ui->bookingsList->setFocus();
 }
 
-void BookingManager::translate(ELanguage language)
+void BookingManager::updateTexts()
 {
-  switch (language) {
-    case ELanguage::German:
-      ui->newBookingButton->setText("Neue Buchung");
-      ui->editBookingButton->setText("Buchung bearbeiten");
-      ui->deleteBookingButton->setText("Buchung löschen");
-      ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
-      ui->toModeSelectButton->setText("Zurück");
+  ui->newBookingButton->setText(TextManager::getText(ID::OVERVIEW_NEW));
+  ui->editBookingButton->setText(TextManager::getText(ID::OVERVIEW_EDIT));
+  ui->deleteBookingButton->setText(TextManager::getText(ID::OVERVIEW_DELETE));
+  ui->toPTZControlsButton->setText(TextManager::getText(ID::OVERVIEW_TO_PTZ));
+  ui->toModeSelectButton->setText(TextManager::getText(ID::OVERVIEW_BACK));
 
-      // ui->infoLabel->setFont(QFont("DaxOT", 11));
-      ui->infoLabel->setText(
-      QString("<html><head/><body>") +
-        "<span style=\"font-weight: bold;\">Was kann ich hier machen?</span><br/>" + 
-        "Hier können Sie Videosessions buchen oder vorhandene Buchungen bearbeiten.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">Mir wurde eine Warnung angezeigt, als ich meine letzte Buchung abschließen wollte...?</span><br/>"
-        "Grundsätzlich können Sie auch Zeitfenster buchen und nutzen, die mit anderen kollidieren. " +
-        "Beachten Sie jedoch, dass diese möglicherweise vom Administrator etwas angepasst werden. " +
-        "Damit hier eine sinnvolle Entscheidung getroffen werden kann, müssen Sie die Art der Veranstaltung vermerken.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">Was muss ich noch wissen?</span><br/>" +
-        "Sie können eine Aufnahme frühestens 15 Minuten vor der angegeben Zeit starten. Allerdings " +
-        "können Sie jederzeit die Kameras konfigurieren und diese Einstellung als Preset speichern. " +
-        "Sie können die Aufnahme jederzeit stoppen, aber " +
-        "<span style=\"font-weight: bold;\">(WICHTIG) </span>" +
-        "10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!<br/><br/>" +
-        "<span style=\"font-weight: bold;\">Was passiert danach?</span><br/>" +
-        "Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
-        "</body></html>"
-      );
-
-      break;
-
-    case ELanguage::English:
-      ui->newBookingButton->setText("New Booking");
-      ui->editBookingButton->setText("Edit Booking");
-      ui->deleteBookingButton->setText("Delete Booking");
-      ui->toPTZControlsButton->setText("Go to Camera Controls");
-      ui->toModeSelectButton->setText("Go back to Mode Selection");
-
-      // ui->infoLabel->setFont(QFont("DaxOT", 12));
-      ui->infoLabel->setText(
-        QString("<html><head/><body>") +
-        "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" + 
-        "From this screen, you can book video recording sessions, or edit existing ones. " + 
-        "Please note that you have to select a booking to continue to camera controls.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">I got a conflict warning when I made my booking..?</span><br/>"
-        "In general, you can book and work with time slots that are conflicting with others, but please be aware " +
-        "that these might be subject to adjustments by the admin.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">Anything else I need to know?</span><br/>" +
-        "You are allowed to start a recording 15 minutes before the designated time at the earliest, however, " +
-        "you can set up your cameras and save presets anytime. " +
-        "You can stop the recording whenever you want, but " +
-        "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
-        "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
-        "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
-        "No matter how the recording was stopped, you will receive a download link via email afterwards." +
-        "</body></html>"
-      );
-
-      break;
-
-    case ELanguage::Default:
-      break;
-  }
+  // ui->infoLabel->setFont(QFont("DaxOT", 11));
+  ui->infoLabel->setText(TextManager::getText(ID::OVERVIEW_INFO));
 }
 
 void BookingManager::on_bookingsList_currentRowChanged()
 {
-  // currentRow = ui->bookingsList->currentRow();
+  
 }
 
 void BookingManager::on_infoButton_pressed()
@@ -239,9 +167,7 @@ void BookingManager::on_editBookingButton_clicked()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ? 
-      "Please select the booking you want to edit." :
-      "Bitte wählen Sie eine Buchung aus, die Sie bearbeiten wollen."  
+      TextManager::getText(ID::OVERVIEW_EDIT_NONE_SELECTED)
     );
 
     return;
@@ -249,9 +175,7 @@ void BookingManager::on_editBookingButton_clicked()
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please select only one booking to edit." :
-      "Bitte wählen Sie nur eine Buchung zur Bearbeitung aus."
+      TextManager::getText(ID::OVERVIEW_EDIT_TOO_MANY_SELECTED)
     );
 
     return;
@@ -265,9 +189,7 @@ void BookingManager::on_deleteBookingButton_clicked()
 {
   if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please select the booking you want to delete." :
-      "Bitte wählen Sie eine Buchung aus, die Sie löschen möchten."
+      TextManager::getText(ID::OVERVIEW_DELETE_NONE_SELECTED)
     );
 
     return;
@@ -276,9 +198,7 @@ void BookingManager::on_deleteBookingButton_clicked()
   // TODO: Select more than one booking for deletion?
 
   int result = Widgets::okCancelDialog->display(
-    Backend::language != ELanguage::German ?
-    "Do you really want to delete the selected booking? This cannot be undone." :
-    "Wollen Sie diese Buchung wirklich unwiderruflich löschen?"
+    TextManager::getText(ID::OVERVIEW_DELETE_CONFIRM)
   );
 
   if (result == QDialog::Rejected) 
@@ -288,9 +208,6 @@ void BookingManager::on_deleteBookingButton_clicked()
   Booking& selectedBooking = bookings[rowIndex];
   Backend::updateConflictingBookings(selectedBooking, false);
   JsonParser::removeBooking(selectedBooking);
-  // bookings.removeAt(rowIndex);
-  // QListWidgetItem* item = ui->bookingsList->takeItem(rowIndex);
-  // if (item) delete item;
 
   loadBookings();
 }
@@ -299,9 +216,7 @@ void BookingManager::on_toPTZControlsButton_clicked()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please select a booking to continue." :
-      "Bitte wählen Sie eine Buchung aus, um fortzufahren."
+      TextManager::getText(ID::OVERVIEW_TO_PTZ_NONE_SELECTED)
     );
 
     return;
@@ -309,14 +224,13 @@ void BookingManager::on_toPTZControlsButton_clicked()
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please select only one booking to continue." :
-      "Bitte wählen Sie nur eine Buchung aus, um fortzufahren.");
+      TextManager::getText(ID::OVERVIEW_TO_PTZ_TOO_MANY_SELECTED)
+    );
+
     return;
   }
 
   Backend::currentBooking = bookings[currentRow];
-  // currentRow = -1;
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   SettingsManager::resetFilterSettings();
@@ -327,14 +241,12 @@ void BookingManager::on_toPTZControlsButton_clicked()
 
 void BookingManager::on_toModeSelectButton_clicked()
 {
-  // currentRow = -1;
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::modeSelect);
 }
 
 void BookingManager::on_logoutButton_clicked()
 {
-  // currentRow = -1;
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::loginDialog);
 }

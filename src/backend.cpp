@@ -9,6 +9,7 @@
 #include "settings-manager.hpp"
 #include "widgets.hpp"
 #include "message-dialog.hpp"
+#include "text-manager.hpp"
 #include "backend.hpp"
 
 QString Backend::currentEmail = "";
@@ -170,17 +171,13 @@ void Backend::roundTime(QTime& time)
 
 QString Backend::makeEntry(const Booking& booking)
 {
-  QString conflictLabel = Backend::language != ELanguage::German ?
-    "\t--CONFLICTING!" :
-    "\t--BUCHUNGSKONFLIKT!";
-
   QString entry = 
     booking.date.toString("ddd MMM dd yyyy") + "\t" +
     booking.startTime.toString("HH:mm") + " - " +
     booking.stopTime.toString("HH:mm") + "\t" +
     booking.event.leftJustified(20, ' ') + "\t" +
     booking.email.leftJustified(20, ' ') +
-    (booking.isConflicting ? conflictLabel : "");
+    (booking.isConflicting ? TextManager::getText(ID::CONFLICT) : "");
 
   return entry;
 }
@@ -213,8 +210,7 @@ QString Backend::sendFiles(const Booking& booking)
   jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
   jsonObj["receiver"] = booking.email;
 
-  jsonObj["subject"] = (Backend::language != ELanguage::German ? 
-    "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
+  jsonObj["subject"] = TextManager::getText(ID::MAIL_SUBJECT) + 
     booking.date.toString("ddd MMM dd yyyy");
 
   jsonObj["nasIP"] = SettingsManager::nasIP;

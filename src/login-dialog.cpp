@@ -14,6 +14,7 @@
 #include "booking-manager.hpp"
 #include "settings-manager.hpp"
 #include "mode-select.hpp"
+#include "text-manager.hpp"
 #include "ui_login-dialog.h"
 #include "login-dialog.hpp"
 
@@ -33,22 +34,9 @@ LoginDialog::LoginDialog(QWidget *parent)
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
 
-  infoDialogText = QString("<html><head/><body>") + 
-      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
-      "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdde.de or @mailbox.hfmdd.de). " +
-      "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos.<br/>" +
-      "Then, you have two options: You could make a recording right away, only setting the stop time.<br/>"
-      "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>" +
-      "No matter which route you'll take, the system will let you know of any other planned recordings that might be in conflict with what you're planning.<br/>" +
-      "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot.<br/>" +
-      "Therefore, it is all the more important to communicate with whomever you're colliding with. Conflicting bookings might also be reviewed by the admin, and, if needed, adjusted.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Who can I talk to about this?</span><br/>For questions and feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de)." +
-      "</body></html>";
-
   ui->reminderLabel->setText(reminderLabelText);
   ui->reminderLabel->hide();
+  
   // Construct the stylesheet strings with actual values
   QString backgroundWidgetStyleSheet = QString("background-image: url(../../assets/sidebar.png);");
   ui->backgroundWidget->setStyleSheet(backgroundWidgetStyleSheet);
@@ -78,6 +66,8 @@ LoginDialog::LoginDialog(QWidget *parent)
     "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
     "QPushButton:hover { background-color: rgb(42, 130, 218); border: 1px solid rgb(254, 253, 254); }"
   );
+
+  updateTexts();
 
   center(ui->masterWidget);
   setModal(false);
@@ -128,45 +118,10 @@ void LoginDialog::reload()
   ui->mailAddressLineEdit->clear();
 }
 
-void LoginDialog::translate(ELanguage language)
+void LoginDialog::updateTexts()
 {
-  switch (language) {
-    case ELanguage::German:
-    reminderLabelText = "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein!";
-    infoDialogText = QString("<html><head/><body>") + 
-      "<span style=\"font-weight: bold;\">Was ist das hier?</span><br/>" +
-      "Das hier ist ein System, mit dem jedes Mitglied der HfMDD seine Konzertsaalauftritte selbstständig auf Video aufzeichnen kann.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Wie funktioniert das?</span><br/>Melden Sie sich zunächst mit Ihrer Hochschul-Mailadresse an (@hfmdd.de oder @mailbox.hfmdd.de). " +
-      "Bitte achten Sie auf die richtige Schreibweise, andernfalls kann der Downloadlink für Ihre Videos nicht zugestellt werden." +
-      "Dann haben Sie zwei Möglichkeiten:<br/>Sie können direkt mit der Aufnahme beginnen und nur die Stoppzeit angeben, "
-      "oder das Buchungssystem nutzen und ein Zeitfenster für eine Aufnahme reservieren.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Gibt es etwas, worauf ich achten muss?</span><br/>" +
-      "Das System weist Sie auf bereits existierende Buchungen hin, die möglicherweise mit Ihren Plänen kollidieren.<br/>" +
-      "Aktuell ist es durchaus möglich, kollierende Zeitfenster zu buchen, wie auch in reservierte Zeitfenster hinein aufzunehmen. " +
-      "In solchen Fällen ist es ratsam, ggf. den Kontakt zur betreffenden Person zu suchen. Kollidierende Buchungen werden außerdem vom Administrator überprüft und Umständen entsprechend angepasst.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">An wen kann ich mich bei Fragen und Problemen wenden?</span><br/>Oliver Fenk (oliver.fenk@hfmdd.de)." +
-      "</body></html>";
-    break;
-
-    case ELanguage::English:
-    reminderLabelText = "Please log in with your HfMDD email address!";
-    infoDialogText = QString("<html><head/><body>") + 
-      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
-      "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdde.de or @mailbox.hfmdd.de). " +
-      "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos.<br/>" +
-      "Then, you have two options: You could make a recording right away, only setting the stop time.<br/>"
-      "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>" +
-      "No matter which route you'll take, the system will let you know of any other planned recordings that might be in conflict with what you're planning.<br/>" +
-      "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot.<br/>" +
-      "Therefore, it is all the more important to communicate with whomever you're colliding with. Conflicting bookings might also be reviewed by the admin, and, if needed, adjusted.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Who can I talk to about this?</span><br/>For questions and feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de)." +
-      "</body></html>";
-    break;
-  }
-
-  ui->reminderLabel->setText(reminderLabelText);
+  ui->reminderLabel->setText(TextManager::getText(ID::LOGIN_REMINDER));
+  infoDialogText = TextManager::getText(ID::LOGIN_INFO);
 }
 
 bool LoginDialog::verifyMailAddress()
@@ -199,7 +154,6 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
     if (Backend::currentEmail.endsWith(suffix))
     {
       Backend::mailAddressIsValid = true;
-      // ui->reminderLabel->setText("");
       break;
     }
   }
@@ -218,11 +172,7 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 void LoginDialog::on_manageBookingsButton_clicked()
 {
   if (!verifyMailAddress()) {
-    Widgets::okDialog->display(Backend::language != ELanguage::German ?
-      "Please log in with your HfMDD email!" :
-      "Bitten loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein!"
-    );
-
+    Widgets::okDialog->display(TextManager::getText(ID::LOGIN_REMINDER));
     return;
   }
 
@@ -238,19 +188,10 @@ void LoginDialog::on_manageBookingsButton_clicked()
 
 void LoginDialog::on_languageComboBox_currentTextChanged(const QString& text)
 {
-  if (text == "English") {
-    Backend::language = ELanguage::English;
+  TextManager::translate(text);
 
-    for (Translatable* t : Widgets::translatables)
-        t->translate(ELanguage::English);
-  }
-
-  if (text == "Deutsch") {
-    Backend::language = ELanguage::German;
-
-    for (Translatable* t : Widgets::translatables)
-      t->translate(ELanguage::German);
-  }
+  for (Translatable* t : Widgets::translatables)
+    t->updateTexts();
 }
 
 void LoginDialog::on_infoButton_pressed()
@@ -261,7 +202,7 @@ void LoginDialog::on_infoButton_pressed()
       "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
     );
 
-    Widgets::infoDialog->display(infoDialogText, ui->infoButton);
+    Widgets::infoDialog->display(TextManager::getText(ID::LOGIN_INFO), ui->infoButton);
   }
     
 
@@ -272,6 +213,5 @@ void LoginDialog::on_infoButton_pressed()
     );
 
     Widgets::infoDialog->fade();
-    // Widgets::infoDialog->hide();
   }
 }

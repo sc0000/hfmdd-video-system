@@ -5,6 +5,7 @@
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
 #include "settings-manager.hpp"
+#include "text-manager.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
 #include "booking-editor.hpp"
@@ -25,8 +26,7 @@ BookingEditor::BookingEditor(QWidget* parent)
 
   ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
 
-  ui->eventTypeLineEdit->setPlaceholderText("Exam? Concert? Rehearsal? Dedicated Video Recording?");
-
+  updateTexts();
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setModal(true);
 }
@@ -92,34 +92,16 @@ void BookingEditor::reload(Booking* bookingToEdit)
   exec();
 }
 
-void BookingEditor::translate(ELanguage language)
+void BookingEditor::updateTexts()
 {
-  switch (language) {
-    case ELanguage::German:
-    ui->bookingsOnSelectedDateLabel->setText("Kein Datum ausgewählt");
-    ui->setStartTimeButton->setText("Startzeit ändern");
-    ui->setStopTimeButton->setText("Stopzeit ändern");
-    ui->eventTypeLabel->setText("Art der Veranstaltung");
-    ui->eventTypeLineEdit->setPlaceholderText("Prüfung? Konzert? Probe? Bewerbungsvideodreh?");
-    ui->saveButton->setText("Speichern");
-    ui->cancelButton->setText("Verwerfen");
-    ui->calendarWidget->setLocale(QLocale::German);
-    break;
-
-    case ELanguage::English:
-    ui->bookingsOnSelectedDateLabel->setText("No date selected.");
-    ui->setStartTimeButton->setText("Edit Start Time");
-    ui->setStopTimeButton->setText("Edit Stop Time");
-    ui->eventTypeLabel->setText("Type of Event");
-    ui->eventTypeLineEdit->setPlaceholderText("Exam? Concert? Rehearsal? Dedicated Video Recording?");
-    ui->saveButton->setText("Save");
-    ui->cancelButton->setText("Cancel");
-    ui->calendarWidget->setLocale(QLocale::English);
-    break;
-
-    case ELanguage::Default:
-    break;
-  }
+  ui->bookingsOnSelectedDateLabel->setText(TextManager::getText(ID::EDITOR_DATE_NONE_SELECTED));
+  ui->setStartTimeButton->setText(TextManager::getText(ID::EDITOR_TIME_START));
+  ui->setStopTimeButton->setText(TextManager::getText(ID::EDITOR_TIME_STOP));
+  ui->eventTypeLabel->setText(TextManager::getText(ID::EDITOR_EVENT));
+  ui->eventTypeLineEdit->setPlaceholderText(TextManager::getText(ID::EDITOR_EVENT_PLACEHOLDER));
+  ui->saveButton->setText(TextManager::getText(ID::EDITOR_SAVE));
+  ui->cancelButton->setText(TextManager::getText(ID::EDITOR_CANCEL));
+  ui->calendarWidget->setLocale(TextManager::locale);
 }
 
 void BookingEditor::instance(QWidget* parent)
@@ -136,6 +118,7 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
   QLocale germanLocale(QLocale::German);
 
+  // !!!!
   QString dateStr = Backend::language != ELanguage::German ?
     date.toString() :
     germanLocale.toString(date); 
@@ -143,17 +126,13 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText(
-          Backend::language != ELanguage::German ?
-          "There are no other bookings yet on " + dateStr + "." :
-          "Es gibt keine anderen Buchungen am " + dateStr + "."
+          TextManager::getText(ID::EDITOR_PREV_BOOKINGS_NONE) + dateStr + "."
         );
 
         return;
   }
 
-  QString str = Backend::language != ELanguage::German ?
-    "The following times have been booked on " + dateStr + ":\n" :
-    "Am " + dateStr + " wurden folgende Zeiten gebucht:\n";
+  QString str = TextManager::getText(ID::EDITOR_PREV_BOOKINGS) + dateStr + ":\n";
 
   str += "<html><head/><body>";
 
@@ -170,11 +149,8 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
     str += b.startTime.toString("HH:mm") + "-" + b.stopTime.toString("HH:mm") + ": " + b.event + " (" + b.email + ")";
 
-    if (isConflicting) {
-      str += Backend::language != ELanguage::German ?
-        " --CONFLICTING!</span>" : 
-        " --BUCHUNGSKONFLIKT!</span>";
-    }
+    if (isConflicting) 
+      str += TextManager::getText(ID::CONFLICT) + "</span>";
 
     str += "<br/>";
   }
@@ -361,9 +337,7 @@ void BookingEditor::on_saveButton_clicked()
 {
   if (booking.event == "") {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please specify the type of event!" :
-      "Bitte geben Sie die Art der Veranstaltung an"
+      TextManager::getText(ID::EDITOR_EVENT_MISSING)
     );
 
     return;
@@ -371,9 +345,7 @@ void BookingEditor::on_saveButton_clicked()
 
   if (booking.startTime.toString("HH:mm") == booking.stopTime.toString("HH:mm")) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Start and stop time are identical. Please select a reasonable time frame!" :
-      "Start- und Stopzeit sind identisch. Bitte wählen Sie einen geeigneten Zeitraum!"
+      TextManager::getText(ID::EDITOR_IDENTICAL_TIMES)
     );
 
     return;
@@ -383,9 +355,7 @@ void BookingEditor::on_saveButton_clicked()
 
   if (booking.isConflicting) {
     int result = Widgets::okCancelDialog->display(
-      Backend::language != ELanguage::German ?
-      "This booking is conflicting. Proceed?" :
-      "Diese Buchung kollidiert mit einer anderen. Fortfahren?", true
+      TextManager::getText(ID::EDITOR_CONFLICTING_BOOKINGS), true
     );
     
     if (result == QDialog::Rejected)

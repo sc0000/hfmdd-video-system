@@ -49,5 +49,5 @@ public:
   static inline QuickRecord* getInstance() { return instance; }
   
   virtual void reload() override;
-  virtual void translate(ELanguage language) override; 
+  virtual void updateTexts() override; 
 };

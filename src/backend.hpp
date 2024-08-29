@@ -19,6 +19,13 @@ enum class EMailType
   Default
 };
 
+enum class ELanguage
+{
+  English,
+  German,
+  Default
+};
+
 class Backend
 {
 public:

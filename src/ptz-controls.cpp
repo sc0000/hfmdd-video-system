@@ -34,6 +34,7 @@
 #include "quick-record.hpp"
 #include "json-parser.hpp"
 #include "settings-manager.hpp"
+#include "text-manager.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -248,60 +249,19 @@ void PTZControls::logout()
   hide();
 }
 
-void PTZControls::translate(ELanguage language)
+void PTZControls::updateTexts()
 {
-  switch (language) {
-    case ELanguage::German:
-      ui->cameraControlsLabel->setText("Kamerasteuerung");
-      ui->previousCamButton->setText("Vorherige\nKamera");
-      ui->nextCamButton->setText("Nächste\nKamera");
-      ui->overviewButton->setText("Gesamtansicht");
-      ui->savePresetButton->setText("Speichern");
-      ui->loadPresetButton->setText("Laden");
-      ui->deletePresetButton->setText("Löschen");
-      ui->recordButton->setText("Record");
-      ui->toBookingManagerButton->setText("Zurück");
+  ui->cameraControlsLabel->setText(TextManager::getText(ID::CONTROLS_TITLE));
+  ui->previousCamButton->setText(TextManager::getText(ID::CONTROLS_CAMERA_PREV));
+  ui->nextCamButton->setText(TextManager::getText(ID::CONTROLS_CAMERA_NEXT));
+  ui->overviewButton->setText(TextManager::getText(ID::CONTROLS_CAMERA_OVERVIEW));
+  ui->savePresetButton->setText(TextManager::getText(ID::CONTROLS_PRESET_SAVE));
+  ui->loadPresetButton->setText(TextManager::getText(ID::CONTROLS_PRESET_LOAD));
+  ui->deletePresetButton->setText(TextManager::getText(ID::CONTROLS_PRESET_DELETE));
+  ui->recordButton->setText(TextManager::getText(ID::CONTROLS_RECORD));
+  ui->toBookingManagerButton->setText(TextManager::getText(ID::CONTROLS_BACK_OVERVIEW));
 
-      infoDialogText = QString("<html><head/><body>") + 
-        "<span style=\"font-weight: bold;\">Was kann ich hier machen?</span><br/>" +
-        "Mit den Pfeiltasten können Sie die Kameras ausrichten, außerdem rein- und rauszoomen, sowie den Fokus justieren. " +
-        "Sie können mithilfe der obersten Knöpfe zwischen den Kameras hin- und herschalten, oder indem Sie im Übersichtsmodus auf das jeweilige Bild klicken.<br/>" +
-        "Sie können ihre aktuelle Konfiguration als Preset speichern, oder ein bereits vorhandenes Preset laden. " +
-        "Außerdem können Sie die Aufnahme hier natürlich starten und stoppen.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">In der Liste sind ja bereits einige Presets..?</span><br/>" +
-        "Zusätzlich zu Ihren eigenen Presets finden Sie ein paar vom Administrator bereit gestellte.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">Was bedeuten die Nummern hinter den Presets?</span><br/>"
-        "Die Nummern zeigen lediglich die Reihenfolge an, in der die Presets gespeichert wurden, und werden voraussichtlich in einem kommenden Update entfernt." +
-        "</body></html>";
-
-      break;
-
-    case ELanguage::English:
-      ui->cameraControlsLabel->setText("Camera Controls");
-      ui->previousCamButton->setText("Previous\nCamera");
-      ui->nextCamButton->setText("Next\nCamera");
-      ui->overviewButton->setText("Camera Overview");
-      ui->savePresetButton->setText("Save");
-      ui->loadPresetButton->setText("Load");
-      ui->deletePresetButton->setText("Delete");
-      ui->recordButton->setText("Record");
-      ui->toBookingManagerButton->setText("To Booking Manager");
-
-      infoDialogText = QString("<html><head/><body>") + 
-        "<span style=\"font-weight: bold;\">What can I do here?</span><br/>" +
-        "With the arrow keys and the surrounding ones, you can configure each camera. Cycle through them with the topmost buttons, " +
-        "or by clicking on the preview in overview mode.<br/>" +
-        "Save your current configuration as a preset, or load previously saved presets. Finally, you can start and stop the recording.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">What's with the presets already in the list?</span><br/>" +
-        "Additional to your own presets, you have access to a couple of standard presets provided by the admin.<br/><br/>" +
-        "<span style=\"font-weight: bold;\">What do the numbers behind the preset names mean?</span><br/>"
-        "Nothing of significance, just the (global) order in which the presets where saved. The numbers will be removed at some point.<br/><br/>" +
-        "</body></html>";
-      break;
-
-    case ELanguage::Default:
-      break;
-  }
+  infoDialogText = TextManager::getText(ID::CONTROLS_INFO);
 }
 
 PTZControls::PTZControls(QWidget *parent)
@@ -494,17 +454,7 @@ PTZControls::PTZControls(QWidget *parent)
 		preset_hotkey_map[hotkey] = i;
 	}
 
-  //----------------------------------------------------
-  infoDialogText = QString("<html><head/><body>") + 
-      "<span style=\"font-weight: bold;\">What can I do here?</span><br/>" +
-      "With the arrow keys and the surrounding ones, you can configure each camera. Cycle through them with the topmost buttons. " +
-      "Save your current configuration as a preset, or load previously saved presets. Finally, you can start and stop the recording.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">What's with the presets already in the list?</span><br/>" +
-      "Additional to your own presets, you have access to a couple of standard presets provided by the admin.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">What do the numbers behind the preset names mean?</span><br/>"
-      "Nothing of significance, just the (global) order in which the presets where saved. The numbers will be removed at some point.<br/><br/>" +
-      "</body></html>";
-  //----------------------------------------------------
+
   ui->recordButton->setStyleSheet(
     "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); font-size: 20px; }"
   );
@@ -519,6 +469,7 @@ PTZControls::PTZControls(QWidget *parent)
 
   m_timeObserver = new TimeObserver(QDateTime(booking.date, booking.stopTime), &timeOut, this);
 
+  updateTexts();
   setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
   setFeatures(QDockWidget::NoDockWidgetFeatures);
   obs_frontend_add_dock(this);
@@ -527,9 +478,6 @@ PTZControls::PTZControls(QWidget *parent)
 
 PTZControls::~PTZControls()
 {
-  // if (Backend::mode == EMode::QuickMode && !hasRecorded)
-  //   JsonParser::removeBooking(Backend::currentBooking);
-
 	while (!hotkeys.isEmpty())
 		obs_hotkey_unregister(hotkeys.takeFirst());
 
@@ -655,18 +603,17 @@ void PTZControls::reload()
   ui->currentBookingEventLabel->setText(Backend::currentBooking.event);
   
   // ???
-  if (Backend::language == ELanguage::English) {
-    switch (Backend::mode) {
-      case EMode::BookMode:
-        ui->toBookingManagerButton->setText("To Booking Manager");
-        break;
-      case EMode::QuickMode:
-        ui->toBookingManagerButton->setText("To Time Slot Setup");
-        break;
-      case EMode::Default:
-        ui->toBookingManagerButton->setText("ERROR");
-        break;
-    }
+  
+  switch (Backend::mode) {
+    case EMode::BookMode:
+      ui->toBookingManagerButton->setText(TextManager::getText(ID::CONTROLS_BACK_OVERVIEW));
+      break;
+    case EMode::QuickMode:
+      ui->toBookingManagerButton->setText(TextManager::getText(ID::CONTROLS_BACK_QUICK));
+      break;
+    case EMode::Default:
+      ui->toBookingManagerButton->setText("ERROR");
+      break;
   }
 
   show();
@@ -686,12 +633,9 @@ void PTZControls::setViewportMode()
 
   const qsizetype size = allCameras().size();
 
-  // TODO: Better layout for three and more cameras!
   if (showOverview) {
     ui->overviewButton->setText(
-      Backend::language != ELanguage::German ?
-      "Single Camera View" :
-      "Einzelansicht"
+      TextManager::getText(ID::CONTROLS_CAMERA_SINGLE)
     );
 
     // ? Enable camera selection by clicking on preview ?
@@ -767,9 +711,7 @@ void PTZControls::setViewportMode()
 
   else {
     ui->overviewButton->setText(
-      Backend::language != ELanguage::German ?
-      "Camera Overview" : 
-      "Gesamtansicht"
+      TextManager::getText(ID::CONTROLS_CAMERA_OVERVIEW)
     );
 
     if (size == 1)
@@ -918,11 +860,10 @@ void PTZControls::LoadConfig()
 	obs_data_array_release(array);
 	ptz_devices_set_config(array);
 
-  //----------------------------------------------------
   OBSDataArray preset_array = obs_data_get_array(loaddata, "global_presets");
   obs_data_array_release(preset_array);
   m_presetsModel.loadPresets(preset_array);
-  //----------------------------------------------------
+
   ui->presetListView->setModel(presetModel());
 }
 
@@ -1226,9 +1167,7 @@ void PTZControls::on_loadPresetButton_clicked()
 
   if (!index.isValid()) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please select the preset you want to load." :
-      "Bitte wählen Sie ein Preset aus,\ndas Sie laden möchten."
+      TextManager::getText(ID::CONTROLS_PRESET_LOAD_NONE_SELECTED)
     );
 
     return;
@@ -1248,9 +1187,7 @@ void PTZControls::on_deletePresetButton_clicked()
 
   if (!index.isValid()) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "Please select the preset you want to delete." :
-      "Bitte wählen Sie ein Preset aus,\ndas Sie löschen möchten."
+      TextManager::getText(ID::CONTROLS_PRESET_DELETE_NONE_SELECTED)
     );
 
     return;
@@ -1259,23 +1196,19 @@ void PTZControls::on_deletePresetButton_clicked()
   PTZPresetListModel* model = presetModel();
   int id = presetIndexToId(model, index);
 
-  QVector<int> oliversPresets;
-  JsonParser::getPresetsForEmail(Backend::adminEmail, oliversPresets);
+  QVector<int> adminPresets;
+  JsonParser::getPresetsForEmail(Backend::adminEmail, adminPresets);
 
-  if (Backend::currentEmail != Backend::adminEmail && oliversPresets.contains(id)) {
+  if (Backend::currentEmail != Backend::adminEmail && adminPresets.contains(id)) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "You don't have permission to delete this preset" : 
-      "Sie haben keine Befugnis, dieses Preset zu löschen."
+      TextManager::getText(ID::CONTROLS_PRESET_DELETE_DENIED)
     );
 
     return;
   }
 
   int result = Widgets::okCancelDialog->display(
-    Backend::language != ELanguage::German ?
-    "Do you really want to delete the selected preset? This cannot be undone." : 
-    "Möchten Sie das ausgewählte Preset wirklich unwiderruflich löschen?"
+    TextManager::getText(ID::CONTROLS_PRESET_DELETE_CONFIRM)
   );
   
   if (result == QDialog::Rejected) 
@@ -1433,13 +1366,6 @@ void PTZControls::currentChanged(QModelIndex current, QModelIndex previous)
 
   ptz = ptzDeviceList.getDevice(current);
 	if (ptz) {
-		// ui->presetListView->setModel(ptz->presetModel());
-		// auto *selectionModel = ui->presetListView->selectionModel();
-		// if (selectionModel)
-		// 	connect(selectionModel,
-		// 		SIGNAL(currentChanged(QModelIndex,
-		// 				      QModelIndex)),
-		// 		this, SLOT(presetUpdateActions()));
 		ptz->connect(ptz, SIGNAL(settingsChanged(OBSData)), this,
 			     SLOT(settingsChanged(OBSData)));
 
@@ -1550,7 +1476,6 @@ void PTZControls::savePreset()
     );
 	}
 
-	// presetUpdateActions();
   presetSetAll(id);
 
   SaveConfig();
@@ -1662,14 +1587,9 @@ void PTZControls::on_cameraList_customContextMenuRequested(const QPoint &pos)
 
 void PTZControls::on_actionPTZProperties_triggered()
 {
-  // Widgets::passwordDialog->display();
-  // if (!Widgets::passwordDialog->isValid()) return;
-
   if (Backend::currentEmail != Backend::adminEmail) {
     Widgets::okDialog->display(
-      Backend::language != ELanguage::German ?
-      "You don't have permission to access the settings menu." :
-      "Sie haben keine Befugnis, die Einstellungen zu öffnen."
+      TextManager::getText(ID::CONTROLS_SETTINGS_DENIED)
     );
 
     return;
@@ -1700,7 +1620,6 @@ void PTZControls::on_actionPresetAdd_triggered()
 		ui->presetListView->setCurrentIndex(index);
 		ui->presetListView->edit(index);
 	}
-	// presetUpdateActions();
 }
 
 void PTZControls::on_actionPresetRemove_triggered()
@@ -1708,7 +1627,6 @@ void PTZControls::on_actionPresetRemove_triggered()
 	auto model = ui->presetListView->model();
 	auto index = ui->presetListView->currentIndex();
 	model->removeRows(index.row(), 1);
-	// presetUpdateActions();
 }
 
 void PTZControls::on_actionPresetMoveUp_triggered()
@@ -1717,7 +1635,6 @@ void PTZControls::on_actionPresetMoveUp_triggered()
 	auto index = ui->presetListView->currentIndex();
 	model->moveRow(QModelIndex(), index.row(), QModelIndex(),
 		       index.row() - 1);
-	// presetUpdateActions();
 }
 
 void PTZControls::on_actionPresetMoveDown_triggered()
@@ -1726,5 +1643,4 @@ void PTZControls::on_actionPresetMoveDown_triggered()
 	auto index = ui->presetListView->currentIndex();
 	model->moveRow(QModelIndex(), index.row(), QModelIndex(),
 		       index.row() + 2);
-	// presetUpdateActions();
 }

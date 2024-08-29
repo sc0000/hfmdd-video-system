@@ -63,7 +63,7 @@
      <string>Record a video right now</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="bookModeButton">
+   <widget class="QPushButton" name="bookingModeButton">
     <property name="geometry">
      <rect>
       <x>540</x>

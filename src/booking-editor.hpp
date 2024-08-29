@@ -57,6 +57,6 @@ public:
   static void instance(QWidget* parent = nullptr);
 
   void reload(Booking* bookingToEdit = nullptr);
-  virtual void translate(ELanguage language) override;  
+  virtual void updateTexts() override;  
 
 };

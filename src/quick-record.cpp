@@ -11,6 +11,7 @@
 #include "ptz-controls.hpp"
 #include "settings-manager.hpp"
 #include "booking-manager.hpp"
+#include "text-manager.hpp"
 #include "mode-select.hpp"
 #include "ui_quick-record.h"
 #include "quick-record.hpp"
@@ -44,20 +45,7 @@ QuickRecord::QuickRecord(QWidget* parent)
   infoLabelAnimation->setDuration(100);
 
   // ui->infoLabel->setFont(QFont("DaxOT", 11));
-
-  ui->infoLabel->setText(
-    QString("<html><head/><body>") + 
-      "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
-      "From this screen, you can set a stop time and move on to record a video right away. " +
-      "Just take other booked recordings happening today into account.<br/><br/>" +
-      "<span style=\"font-weight: bold;\">Why do I even have to set a stop time?</span><br/>" +
-      "You can stop the recording whenever you want, but " +
-      "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
-      "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
-      "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
-      "No matter how the recording was stopped, you will receive a download link via email afterwards." +
-      "</body></html>"
-  );
+  updateTexts();
 
   setModal(false);
   hide();
@@ -76,8 +64,6 @@ void QuickRecord::reload()
     Widgets::loginDialog->reload();
     return;
   }
-
-  // ui->infoLabel->hide();
 
   raise();
   center(ui->masterWidget);
@@ -102,55 +88,14 @@ void QuickRecord::reload()
   infoLabelVisible = false;
 }
 
-void QuickRecord::translate(ELanguage language)
+void QuickRecord::updateTexts()
 {
-  switch (language) {
-    case ELanguage::German:
-      ui->recordUntilLabel->setText("Aufnehmen bis...");
-      ui->toPTZControlsButton->setText("Zur Kamerasteuerung");
-      ui->toModeSelectButton->setText("Zurück");
+  ui->recordUntilLabel->setText(TextManager::getText(ID::QUICK_UNTIL));
+  ui->toPTZControlsButton->setText(TextManager::getText(ID::QUICK_TO_PTZ));
+  ui->toModeSelectButton->setText(TextManager::getText(ID::QUICK_BACK));
 
-      // ui->infoLabel->setFont(QFont("DaxOT", 11));
-      ui->infoLabel->setText(
-        QString("<html><head/><body>") + 
-          "<span style=\"font-weight: bold;\">Was kann ich hier machen?</span><br/>" +
-          "Von diesem Bildschirm können Sie direkt weiter zur Videoaufnahme. " +
-          "Dafür müssen Sie lediglich die Zeit bestimmen, zu der die Aufnahme voraussichtlich endet.<br/><br/>" +
-          "<span style=\"font-weight: bold;\">Warum muss ich überhaupt die Stoppzeit angeben?</span><br/>" +
-          "Sie können die Aufnahme jederzeit stoppen, aber " +
-          "<span style=\"font-weight: bold;\">(WICHTIG) </span>" +
-          "10 Minuten nach der angegeben Zeit wird die Aufnahme automatisch gestoppt!<br/><br/>" +
-          "<span style=\"font-weight: bold;\">Was passiert danach?</span><br/>" +
-          "Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
-          "</body></html>"
-        );
-      break;
-
-    case ELanguage::English:
-      ui->recordUntilLabel->setText("Record until...");
-      ui->toPTZControlsButton->setText("Go to Camera Controls");
-      ui->toModeSelectButton->setText("Go back to Mode Selection");
-
-      // ui->infoLabel->setFont(QFont("DaxOT", 12));
-      ui->infoLabel->setText(
-        QString("<html><head/><body>") + 
-          "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
-          "From this screen, you can set a stop time and move on to record a video right away. " +
-          "Just take other booked recordings happening today into account.<br/><br/>" +
-          "<span style=\"font-weight: bold;\">Why do I even have to set a stop time?</span><br/>" +
-          "You can stop the recording whenever you want, but " +
-          "<span style=\"font-weight: bold;\">(IMPORTANT) </span>" +
-          "the recording will stop automatically 10 minutes after the designated time!<br/><br/>" +
-          "<span style=\"font-weight: bold;\">And then what?</span><br/>" +
-          "No matter how the recording was stopped, you will receive a download link via email afterwards." +
-          "</body></html>"
-      );
-
-      break;
-
-    case ELanguage::Default:
-      break;
-  }
+  // ui->infoLabel->setFont(QFont("DaxOT", 11));
+  ui->infoLabel->setText(TextManager::getText(ID::QUICK_INFO));
 }
 
 void QuickRecord::updateExistingBookingsLabel(QDate date)
@@ -161,15 +106,11 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
-        ui->bookingsOnSelectedDateLabel->setText(Backend::language != ELanguage::German ? 
-          "There are no bookings yet today." : 
-          "Es gibt noch keine Buchungen am heutigen Tag.");
+        ui->bookingsOnSelectedDateLabel->setText(TextManager::getText(ID::QUICK_PREV_BOOKINGS_NONE));
         return;
   }
 
-  QString str = Backend::language != ELanguage::German ? 
-    "The following times have been booked later today:\n" :
-    "Heute sind bereits folgende Zeiten gebucht:\n";
+  QString str = TextManager::getText(ID::QUICK_PREV_BOOKINGS);
 
   str += "<html><head/><body>";
 
@@ -190,7 +131,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
       b.event + " (" + b.email + ")";
 
     if (isConflicting)
-      str += " CONFLICTING!</span>";
+      str += TextManager::getText(ID::CONFLICT) + "</span>";
 
     str += "<br/>";
   }
@@ -218,9 +159,8 @@ void QuickRecord::updateDurationLabel()
   QString hours = QString::number(totalMin / 60);
   QString minutes = QString::number(totalMin % 60);
 
-  ui->durationLabel->setText(Backend::language != ELanguage::German ?
-    "( " + hours + "h " + minutes + "min from now )" : 
-    "( " + hours + "h " + minutes + "min ab jetzt )" 
+  ui->durationLabel->setText(
+    "( " + hours + "h " + minutes + TextManager::getText(ID::QUICK_FROM_NOW) + " )"  
   );
 }
 
@@ -228,52 +168,44 @@ void QuickRecord::on_infoButton_pressed()
 {
    infoLabelAnimation->stop();
 
-    if (infoLabelVisible) {
-        infoLabelAnimation->setStartValue(420);
-        infoLabelAnimation->setEndValue(0);
-        infoLabelVisible = false;
+  if (infoLabelVisible) {
+      infoLabelAnimation->setStartValue(420);
+      infoLabelAnimation->setEndValue(0);
+      infoLabelVisible = false;
 
-        ui->infoButton->setStyleSheet(
-          "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-          "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-          "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-        );
-    } 
-    
-    else {
-        // ui->infoLabel->setMaximumWidth(420);
-        infoLabelAnimation->setStartValue(0);
-        infoLabelAnimation->setEndValue(420);
-        infoLabelVisible = true;
+      ui->infoButton->setStyleSheet(
+        "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+        "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+        "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
+      );
+  } 
+  
+  else {
+      // ui->infoLabel->setMaximumWidth(420);
+      infoLabelAnimation->setStartValue(0);
+      infoLabelAnimation->setEndValue(420);
+      infoLabelVisible = true;
 
-        ui->infoButton->setStyleSheet(
-          "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-          "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-          "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-        );
-    }
+      ui->infoButton->setStyleSheet(
+        "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+        "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+        "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
+      );
+  }
 
-    infoLabelAnimation->start();
+  infoLabelAnimation->start();
 }
 
 void QuickRecord::on_decreaseTimeBy20Button_pressed()
 {
   QTime newStopTime = booking.stopTime.addSecs(60 * -20);
 
-  if (newStopTime <= booking.startTime) {
-    // Widgets::okDialog->display("Invalid time");
+  if (newStopTime <= booking.startTime) 
     return;
-  }
 
-  if (newStopTime > QTime(23, 0)) {
-    // Widgets::okDialog->display(
-    //   Backend::language != ELanguage::German ? 
-    //   "Recordings can't extend beyond 23:00" :
-    //   "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
-    // );
-
+  if (newStopTime > QTime(23, 0))  
     return;
-  }
+  
 
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
@@ -285,20 +217,12 @@ void QuickRecord::on_decreaseTimeBy05Button_pressed()
 {
   QTime newStopTime = booking.stopTime.addSecs(60 * -5);
 
-  if (newStopTime <= booking.startTime) {
-    // Widgets::okDialog->display("Invalid time");
+  if (newStopTime <= booking.startTime) 
     return;
-  }
+  
 
-  if (newStopTime > QTime(23, 0)) {
-    // Widgets::okDialog->display(
-    //   Backend::language != ELanguage::German ? 
-    //   "Recordings can't extend beyond 23:00" :
-    //   "Es kann nicht über 23 Uhr hinaus aufgenommen werden"
-    // );
-    
+  if (newStopTime > QTime(23, 0)) 
     return;
-  }
 
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
@@ -310,10 +234,8 @@ void QuickRecord::on_increaseTimeBy05Button_pressed()
 {
   QTime newStopTime = booking.stopTime.addSecs(60 * 5);
 
-  if (newStopTime > QTime(23, 0)) {
-    // Widgets::okDialog->display("Recording can't extend beyond 23:00");
+  if (newStopTime > QTime(23, 0)) 
     return;
-  }
 
   booking.stopTime = newStopTime;
   updateStopTimeLabel();
@@ -325,10 +247,8 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 {
   QTime newStopTime = booking.stopTime.addSecs(60 * 20);
 
-  if (newStopTime > QTime(23, 0)) {
-   //  Widgets::okDialog->display("Recordings can't extend beyond 23:00");
+  if (newStopTime > QTime(23, 0))
     return;
-  }
 
   booking.stopTime = newStopTime;
   updateStopTimeLabel();

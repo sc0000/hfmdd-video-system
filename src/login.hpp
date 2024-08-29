@@ -22,7 +22,7 @@ class Login;
 }
 QT_END_NAMESPACE
 
-class Login : public QDockWidget, public Translatable
+class Login : public QDockWidget
 {
   Q_OBJECT
 private:
@@ -37,7 +37,5 @@ public:
   ~Login();
 
   static inline Login* getInstance() { return instance; }
-  
-  virtual void translate(ELanguage language) override; 
 };
 
