@@ -23,6 +23,8 @@
 #include "touch-control.hpp"
 #include "ui_ptz-controls.h"
 #include "backend.hpp"
+#include "mail-handler.hpp"
+#include "storage-handler.hpp"
 #include "widgets.hpp"
 #include "settings.hpp"
 #include "ptz.h"
@@ -174,9 +176,7 @@ void PTZControls::startRecording()
 {
   if (booking.date != QDate::currentDate()) {
       Widgets::okDialog->display(
-        Backend::language != ELanguage::German ?
-        "The selected booking does not have today's date." :
-        "Die ausgewählte Buchung entspricht nicht dem heutigen Datum."
+        TextManager::getText(ID::CONTROLS_RECORD_WRONG_DATE)
       );
 
       return;
@@ -187,13 +187,7 @@ void PTZControls::startRecording()
     if (currentTime < booking.startTime.addSecs(-15 * 60)  ||
         currentTime > booking.startTime.addSecs(30 * 60)) {
       Widgets::okDialog->display(
-        // TODO: Accommodate flexible earliest start time/auto stop time
-        Backend::language != ELanguage::German ?
-        ("You can start a booked recording 15 minutes\n"
-        "before the specified start time at the earliest,\n"
-        "and 30 minutes after that time at the latest.") :
-        ("Sie können eine gebuchte Aufnahme frühestens 15 Minuten\n"
-        "vor und spätestens 30 Minuten nach der angegebenen Zeit starten.")
+        TextManager::getText(ID::CONTROLS_RECORD_WRONG_TIME)
       );
 
       return;
@@ -201,8 +195,7 @@ void PTZControls::startRecording()
 
     obs_frontend_recording_start();
 
-    // TODO: Set proper threshold, 15 minutes after specified stop time!
-    QDateTime threshold(booking.date, booking.stopTime);
+    QDateTime threshold(booking.date, booking.stopTime.addSecs(10 * 60));
     m_timeObserver->setThreshold(threshold);
     m_timeObserver->start();
 
@@ -226,7 +219,7 @@ void PTZControls::stopRecording(bool manual)
     "Record"
   );
 
-  const QString sendFilesMsg = Backend::sendFiles(booking);
+  const QString sendFilesMsg = MailHandler::sendFiles(booking);
 
   if (manual)
     Widgets::okDialog->display(sendFilesMsg, true);
@@ -240,7 +233,7 @@ void PTZControls::logout()
   if (Backend::mode == EMode::QuickMode && !hasRecorded)
     JsonParser::removeBooking(Backend::currentBooking);
 
-  SettingsManager::deleteTempFiles();
+  StorageHandler::deleteTempFiles();
   
   Widgets::showFullScreenDialogs(true);
   
@@ -869,7 +862,7 @@ void PTZControls::LoadConfig()
 
 void PTZControls::loadUserPresets()
 {
-  if (Backend::currentEmail == Backend::adminEmail) {
+  if (MailHandler::currentEmail == MailHandler::adminEmail) {
     ui->presetListView->setModel(presetModel());
     return;
   }
@@ -1197,9 +1190,9 @@ void PTZControls::on_deletePresetButton_clicked()
   int id = presetIndexToId(model, index);
 
   QVector<int> adminPresets;
-  JsonParser::getPresetsForEmail(Backend::adminEmail, adminPresets);
+  JsonParser::getPresetsForEmail(MailHandler::adminEmail, adminPresets);
 
-  if (Backend::currentEmail != Backend::adminEmail && adminPresets.contains(id)) {
+  if (MailHandler::currentEmail != MailHandler::adminEmail && adminPresets.contains(id)) {
     Widgets::okDialog->display(
       TextManager::getText(ID::CONTROLS_PRESET_DELETE_DENIED)
     );
@@ -1215,13 +1208,13 @@ void PTZControls::on_deletePresetButton_clicked()
     return;
 
   JsonParser::removePreset(
-    Backend::currentEmail,
+    MailHandler::currentEmail,
     id
   );
 
 	model->removePresetWithId(id);
 
-  if (Backend::currentEmail == Backend::adminEmail) return;
+  if (MailHandler::currentEmail == MailHandler::adminEmail) return;
 
   PTZPresetListModel* userModel = userPresetModel();
   userModel->removePresetWithId(id);
@@ -1471,7 +1464,7 @@ void PTZControls::savePreset()
     userPresetModel()->setData(index, newPresetName, Qt::EditRole);
 
     JsonParser::addPreset(
-      Backend::currentEmail, 
+      MailHandler::currentEmail, 
       id
     );
 	}
@@ -1587,7 +1580,7 @@ void PTZControls::on_cameraList_customContextMenuRequested(const QPoint &pos)
 
 void PTZControls::on_actionPTZProperties_triggered()
 {
-  if (Backend::currentEmail != Backend::adminEmail) {
+  if (MailHandler::currentEmail != MailHandler::adminEmail) {
     Widgets::okDialog->display(
       TextManager::getText(ID::CONTROLS_SETTINGS_DENIED)
     );

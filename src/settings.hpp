@@ -35,7 +35,6 @@ private:
 
   bool sourcesDockIsOpen;
 
-  // ! MOVE TO SETTINGSMANAGER
   QVector<QString> qualityPresets = {
     "P1: Fastest (Lowest Quality)",
     "P2: Faster (Lower Quality)",
@@ -65,6 +64,17 @@ public:
 	PTZSettings(QWidget* parent);
 	~PTZSettings();
 	void set_selected(uint32_t device_id);
+
+  static QVector<obs_source_t*> sources;
+
+  static QString filenameFormatting;
+  static QString recFormat;
+  static QString qualityPreset;
+
+  static void updateFilterSettings(const char* path);
+  static void resetFilterSettings();
+  static void saveSettings();
+  static void loadSettings();
 
 /* Joystick Support */
 #if defined(ENABLE_JOYSTICK)

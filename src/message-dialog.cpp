@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include "booking.h"
 #include "backend.hpp"
+#include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "ptz-controls.hpp"
 #include "ui_ok-dialog.h"
@@ -157,7 +158,7 @@ int PasswordDialog::display()
 
 void PasswordDialog::on_okButton_clicked()
 {
-  if (ui->passwordLineEdit->text() == Backend::adminPassword) 
+  if (ui->passwordLineEdit->text() == MailHandler::adminPassword) 
     fade(&passwordDialogAccept);
   
   else 

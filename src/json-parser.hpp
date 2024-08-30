@@ -25,6 +25,8 @@ public:
   inline static void setBookingsPath(const QString& newPath) { bookingsPath = newPath + "bookings.json"; }
   inline static void setPresetsPath(const QString& newPath) { presetsPath = newPath + "bookings.json"; }
 
+  static void updatePaths();
+
   static QString bookingsPath;
   static QString presetsPath;
 };

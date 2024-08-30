@@ -4,6 +4,7 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "login-dialog.hpp"
 #include "ptz.h"
@@ -46,7 +47,7 @@ ModeSelect::~ModeSelect()
 
 void ModeSelect::reload()
 {
-  if (!Backend::mailAddressIsValid) {
+  if (!MailHandler::mailAddressIsValid) {
     Widgets::loginDialog->reload();
     return;
   }

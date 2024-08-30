@@ -9,13 +9,11 @@
 #include "settings-manager.hpp"
 #include "widgets.hpp"
 #include "message-dialog.hpp"
+#include "mail-handler.hpp"
 #include "text-manager.hpp"
 #include "backend.hpp"
 
-QString Backend::currentEmail = "";
-bool Backend::mailAddressIsValid = false;
-QString Backend::adminEmail = "";
-QString Backend::adminPassword = "";
+
 EMode Backend::mode = EMode::Default;
 ELanguage Backend::language = ELanguage::English;
 
@@ -91,11 +89,11 @@ void Backend::updateBookingsOnSelectedDate(const QDate& date)
 
 void Backend::loadBookings()
 {
-  if (currentEmail == adminEmail)
+  if (MailHandler::currentEmail == MailHandler::adminEmail)
     JsonParser::getAllBookings(loadedBookings);
 
   else 
-    JsonParser::getBookingsForEmail(currentEmail, loadedBookings);
+    JsonParser::getBookingsForEmail(MailHandler::currentEmail, loadedBookings);
 
   sortBookings();
 }
@@ -180,140 +178,4 @@ QString Backend::makeEntry(const Booking& booking)
     (booking.isConflicting ? TextManager::getText(ID::CONFLICT) : "");
 
   return entry;
-}
-
-QString Backend::sendFiles(const Booking& booking)
-{
-  const QString dllFilePath = QCoreApplication::applicationFilePath();
-  const QString dllDir = QFileInfo(dllFilePath).absolutePath();
-
-  const QString scriptPath = QDir::toNativeSeparators(dllDir + "/../../node-scripts/file-sender.js");
-
-  const QStringList nodeArgs = QStringList() << scriptPath;
-
-  QProcess* nodeProcess = new QProcess();
-  nodeProcess->setEnvironment(QProcess::systemEnvironment());
-  nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
-
-  nodeProcess->start("node", nodeArgs);
-
-  if (!nodeProcess->waitForStarted()) 
-    return "Process started with error: " + nodeProcess->errorString();
-
-  const QString& baseDir = SettingsManager::baseDirectory;
-
-  const QString apiBasePath = 
-    QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
-
-  QJsonObject jsonObj;
-  jsonObj["basePath"] = apiBasePath;
-  jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
-  jsonObj["receiver"] = booking.email;
-
-  jsonObj["subject"] = TextManager::getText(ID::MAIL_SUBJECT) + 
-    booking.date.toString("ddd MMM dd yyyy");
-
-  jsonObj["nasIP"] = SettingsManager::nasIP;
-  jsonObj["nasPort"] = SettingsManager::nasPort;
-  jsonObj["nasUser"] = SettingsManager::nasUser;
-  jsonObj["nasPassword"] = SettingsManager::nasPassword;
-
-  jsonObj["mailHost"] = SettingsManager::mailHost;
-  jsonObj["mailUser"] = SettingsManager::mailUser;
-  jsonObj["mailPassword"] = SettingsManager::mailPassword;
-  jsonObj["mailSenderAddress"] = SettingsManager::mailSenderAddress;
-  jsonObj["german"] = (language == ELanguage::German);
-  
-  QJsonDocument jsonDoc(jsonObj);
-
-  nodeProcess->write(jsonDoc.toJson());
-  nodeProcess->closeWriteChannel();
-
-  if (!nodeProcess->waitForFinished())
-    return "Process finished with error: " + nodeProcess->errorString();
-
-  const QByteArray output = nodeProcess->readAllStandardOutput();
-  return QString::fromUtf8(output);
-}
-
-QString Backend::sendMail(const Booking& booking, EMailType mailType)
-{
-  const QString dllFilePath = QCoreApplication::applicationFilePath();
-  const QString dllDir = QFileInfo(dllFilePath).absolutePath();
-
-  const QString scriptPath = QDir::toNativeSeparators(dllDir + "/../../node-scripts/mail-sender.js");
-
-  const QStringList nodeArgs = QStringList() << scriptPath;
-
-  QProcess* nodeProcess = new QProcess();
-  nodeProcess->setEnvironment(QProcess::systemEnvironment());
-  nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
-
-  nodeProcess->start("node", nodeArgs);
-
-  if (!nodeProcess->waitForStarted()) 
-    return "Process started with error: " + nodeProcess->errorString();
-
-  const QString& baseDir = SettingsManager::baseDirectory;
-
-  const QString apiBasePath = 
-    QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
-
-  QString type = "";
-
-  switch (mailType) {
-    case EMailType::SendFiles:
-      type = "send-files";
-      break;
-
-    case EMailType::BookingConflictWarning:
-      type = "booking-conflict-warning";
-      break;
-
-    case EMailType::Default:
-      break;
-  }
-
-  if (type.isEmpty())
-    return "Mail type specification invalid. ";
-
-  QJsonObject jsonObj;
-
-  jsonObj["type"] = type;
-
-  jsonObj["basePath"] = apiBasePath;
-  jsonObj["path"] = SettingsManager::outerDirectory + SettingsManager::innerDirectory;
-  jsonObj["receiver"] = booking.email;
-
-  jsonObj["subject"] = (Backend::language != ELanguage::German ? 
-    "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
-    booking.date.toString("ddd MMM dd yyyy");
-
-  jsonObj["dateTime"] = booking.date.toString("ddd MMM dd yyyy\n") + 
-    booking.startTime.toString("HH:mm") + " - " +
-    booking.stopTime.toString("HH:mm");
-
-  jsonObj["event"] = booking.event;
-
-  jsonObj["nasIP"] = SettingsManager::nasIP;
-  jsonObj["nasPort"] = SettingsManager::nasPort;
-  jsonObj["nasUser"] = SettingsManager::nasUser;
-  jsonObj["nasPassword"] = SettingsManager::nasPassword;
-
-  jsonObj["mailHost"] = SettingsManager::mailHost;
-  jsonObj["mailUser"] = SettingsManager::mailUser;
-  jsonObj["mailPassword"] = SettingsManager::mailPassword;
-  jsonObj["mailSenderAddress"] = SettingsManager::mailSenderAddress;
-  jsonObj["german"] = (language == ELanguage::German);
-  
-  QJsonDocument jsonDoc(jsonObj);
-
-  nodeProcess->write(jsonDoc.toJson());
-  nodeProcess->closeWriteChannel();
-
-  if (!nodeProcess->waitForFinished())
-    return "Process finished with error: " + nodeProcess->errorString();
-
-  const QByteArray output = nodeProcess->readAllStandardOutput();
-  return QString::fromUtf8(output);
 }

@@ -1,6 +1,7 @@
 #include <QLabel>
 
 #include "backend.hpp"
+#include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
@@ -55,7 +56,7 @@ void BookingEditor::reload(Booking* bookingToEdit)
     QTime currentTime = QTime::currentTime();
 
     booking.date = QDate::currentDate();
-    booking.email = Backend::currentEmail;
+    booking.email = MailHandler::currentEmail;
     booking.event = "";
     booking.index = JsonParser::availableIndex();
 
@@ -361,7 +362,7 @@ void BookingEditor::on_saveButton_clicked()
     if (result == QDialog::Rejected)
       return;
 
-    const QString sendMail = Backend::sendMail(booking, EMailType::BookingConflictWarning);
+    const QString sendMail = MailHandler::sendMail(booking, EMailType::BookingConflictWarning);
   }
     
   if (isEditing) 

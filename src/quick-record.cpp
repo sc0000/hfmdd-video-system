@@ -2,6 +2,8 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "mail-handler.hpp"
+#include "settings.hpp"
 #include "widgets.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
@@ -60,7 +62,7 @@ QuickRecord::~QuickRecord()
 
 void QuickRecord::reload()
 {
-  if (!Backend::mailAddressIsValid) {
+  if (!MailHandler::mailAddressIsValid) {
     Widgets::loginDialog->reload();
     return;
   }
@@ -74,7 +76,7 @@ void QuickRecord::reload()
   booking.date = QDate::currentDate();
   booking.startTime = QTime::currentTime();
   booking.stopTime = booking.startTime.addSecs(60 * 60);
-  booking.email = Backend::currentEmail;
+  booking.email = MailHandler::currentEmail;
   booking.index = JsonParser::availableIndex();
   booking.event = "Quick Record";
 
@@ -263,7 +265,7 @@ void QuickRecord::on_toPTZControlsButton_clicked()
   JsonParser::addBooking(booking);
 
   // TODO: Check: always reset or update, and setup option to reset manually?
-  SettingsManager::resetFilterSettings();
+  PTZSettings::resetFilterSettings();
 
   Widgets::ptzControls->reload();
   Widgets::showFullScreenDialogs(false);

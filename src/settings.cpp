@@ -25,8 +25,14 @@
 #include <obs-properties.h>
 #include "imported/qjoysticks/QJoysticks.h"
 
+#include "source-record.h"
 #include "backend.hpp"
+#include "mail-handler.hpp"
+#include "storage-handler.hpp"
 #include "settings-manager.hpp"
+#include "json-parser.hpp"
+#include "message-dialog.hpp"
+#include "widgets.hpp"
 #include "ptz.h"
 #include "ptz-device.hpp"
 #include "ptz-controls.hpp"
@@ -37,26 +43,12 @@
 
 static PTZSettings *ptzSettingsWindow = nullptr;
 
-/* ----------------------------------------------------------------- */
+QString PTZSettings::filenameFormatting = "";
+QString PTZSettings::recFormat = "";
+QString PTZSettings::qualityPreset = "";
+QVector<obs_source_t*> PTZSettings::sources;
 
-const char *description_text = "OBS PTZ CONTROLS";
-	// "<html><head/><body>"
-	// "<p>OBS PTZ Controls Plugin<br>" PLUGIN_VERSION "<br>"
-	// "By Grant Likely &lt;grant.likely@secretlab.ca&gt;</p>"
-	// "<p><a href=\"https://obsproject.com/forum/resources/ptz-controls.1284/\">"
-	// "<span style=\" text-decoration: underline; color:#7f7fff;\">"
-	// "https://obsproject.com/forum/resources/ptz-controls.1284/</a></p>"
-	// "<p><a href=\"https://github.com/glikely/obs-ptz\">"
-	// "<span style=\" text-decoration: underline; color:#7f7fff;\">"
-	// "https://github.com/glikely/obs-ptz</span></a></p>"
-	// "<p>Contributors:<br/>"
-	// "Norihiro Kamae<br/>"
-	// "Luuk Verhagen<br/>"
-	// "Jonata Bolzan Loss<br/>"
-	// "Fabio Ferrari<br/>"
-	// "Jim Hauxwell<br/>"
-	// "Eric Schmidt</p>"
-	// "</body></html>";
+/* ----------------------------------------------------------------- */
 
 QString SourceNameDelegate::displayText(const QVariant &value,
 					const QLocale &locale) const
@@ -165,7 +157,7 @@ PTZSettings::PTZSettings(QWidget* parent)
 
 	joystickSetup();
 
-	ui->versionLabel->setText(description_text);
+	// ui->versionLabel->setText(description_text);
 
   //----------------------------------------------------
   for (const QString& preset : qualityPresets) 
@@ -318,6 +310,205 @@ void PTZSettings::on_addPTZ_clicked()
 #endif
 }
 
+static bool scene_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*) 
+{
+    obs_source_t* source = obs_sceneitem_get_source(item);
+
+    if (source) 
+      PTZSettings::sources.append(source);
+
+    return true; // Returning true continues the enumeration
+}
+
+static void filter_enum_callback(obs_source_t* source, obs_source_t* filter, void*)
+{
+  if (!source || !filter) return;
+
+  obs_source_filter_remove(source, filter);
+}
+
+void PTZSettings::updateFilterSettings(const char* path)
+{
+   obs_source_t* currentScene = obs_frontend_get_current_scene();
+
+  if (!currentScene) return;
+
+  obs_scene_t* scene = obs_scene_from_source(currentScene);
+  
+  if (!scene) return;
+
+  config_t* currentProfile = obs_frontend_get_profile_config();
+  QString filenameFormatting = 
+    config_get_string(currentProfile, "Output", "FilenameFormatting");
+
+  sources.clear();
+  obs_scene_enum_items(scene, &scene_enum_callback, NULL);
+   
+  for (obs_source_t* source : sources)
+  {
+    if (!source) continue;
+
+    QString sourceName = obs_source_get_name(source);
+    QString newFormatting = filenameFormatting + "-" + sourceName;
+    obs_source_t* f = obs_source_get_filter_by_name(source, "Source Record");
+    obs_data_t* settings = obs_source_get_settings(f);
+
+    // file_formatting could be set manually...
+    obs_data_set_string(settings, "filename_formatting", newFormatting.toUtf8().constData());
+    obs_data_set_string(settings, "path", path);
+
+    obs_data_release(settings);
+  }
+}
+
+void PTZSettings::resetFilterSettings()
+{ 
+  if (StorageHandler::baseDirectory == "") {
+    Widgets::okDialog->display("ERROR: Unspecified base directory");
+    return;
+  }
+
+  StorageHandler::setOuterDirectory();
+
+
+  if (StorageHandler::outerDirectory == "") {
+    Widgets::okDialog->display("ERROR: Unspecified outer directory");
+    return;
+  }
+
+  StorageHandler::setInnerDirectory();
+
+  if (StorageHandler::innerDirectory == "") {
+    Widgets::okDialog->display("ERROR: Unspecified inner directory");
+    return;
+  }
+
+  StorageHandler::setTempPath();
+
+  config_t* currentProfile = obs_frontend_get_profile_config();
+
+  obs_source_t* currentScene = obs_frontend_get_current_scene();
+
+  if (!currentProfile || !currentScene) return;
+  
+  obs_scene_t* scene = obs_scene_from_source(currentScene);
+
+  if (!scene) return;
+
+  void* unused = nullptr; 
+  
+  obs_source_info* sourceRecordFilterInfo = get_source_record_filter_info();
+  const char* id = sourceRecordFilterInfo->id;
+  QString sourceRecordFilterName = sourceRecordFilterInfo->get_name(unused);
+
+  const QString path = StorageHandler::getPath();
+
+  QByteArray pathByteArray = path.toLocal8Bit();
+  const char* c_path = pathByteArray.data();
+
+  // QString filenameFormatting = 
+  //   config_get_string(currentProfile, "Output", "FilenameFormatting");
+
+  sources.clear();
+  obs_scene_enum_items(scene, &scene_enum_callback, NULL);
+  
+  for (obs_source_t* source : sources)
+  {
+    if (!source) continue;
+
+    obs_source_enum_filters(source, filter_enum_callback, nullptr);
+
+    obs_data_t* settings = obs_data_create();
+    sourceRecordFilterInfo->get_defaults(settings);
+
+    QString sourceName = obs_source_get_name(source);
+    QString newFormatting = filenameFormatting + " " + sourceName;
+
+    QString filterName = sourceRecordFilterName + "-" + sourceName;
+
+    obs_source_t* filter = obs_source_create(id, filterName.toUtf8().constData(), settings, NULL);
+    obs_source_filter_add(source, filter);
+    
+    obs_data_set_int(settings, "record_mode", OUTPUT_MODE_RECORDING);
+    obs_data_set_string(settings, "path", c_path);
+    obs_data_set_string(settings, "filename_formatting", newFormatting.toUtf8().constData());
+    obs_data_set_string(settings, "rec_format", recFormat.toUtf8().constData());
+    obs_data_set_string(settings, "encoder", "nvenc_hevc");
+    obs_data_set_string(settings, "preset2", qualityPreset.toUtf8().constData());
+     
+    // ! For finding the available encoder props !
+    //
+    // const char* encId = get_encoder_id(settings);
+    // obs_properties_t* encProps = obs_get_encoder_properties(encId);
+    // obs_property_t* p = obs_properties_first(encProps);
+    
+    // QString propsInfo = "";
+
+    // while (p)
+    // {
+    //   QString name = obs_property_name(p);
+    //   propsInfo.append(name + "\n");
+    //   obs_property_next(&p);
+    // }
+    
+    // QMessageBox::information(this, "available encoder props", propsInfo);
+  
+    obs_data_release(settings);
+  }
+}
+
+// TODO: Use custom JSON interface
+void PTZSettings::saveSettings()
+{
+  char* file = obs_module_config_path("config2.json");
+
+	if (!file) return;
+
+  OBSData savedata = obs_data_create();
+	obs_data_release(savedata);
+
+  obs_data_set_string(savedata, "base_directory", StorageHandler::baseDirectory.toUtf8().constData());
+  obs_data_set_string(savedata, "filename_formatting", filenameFormatting.toUtf8().constData());
+  obs_data_set_string(savedata, "rec_format", recFormat.toUtf8().constData());
+  obs_data_set_string(savedata, "quality_preset", qualityPreset.toUtf8().constData());
+
+  if (!obs_data_save_json_safe(savedata, file, "tmp", "bak")) {
+		char *path = obs_module_config_path("");
+
+		if (path) {
+			os_mkdirs(path);
+			bfree(path);
+		}
+
+		obs_data_save_json_safe(savedata, file, "tmp", "bak");
+	}
+
+	bfree(file);
+}
+
+void PTZSettings::loadSettings()
+{
+  char *file = obs_module_config_path("config2.json");
+
+	if (!file) return;
+
+	OBSData loaddata = obs_data_create_from_json_file_safe(file, "bak");
+
+  bfree(file);
+
+	if (!loaddata) return;
+  
+	obs_data_release(loaddata);
+
+  StorageHandler::baseDirectory = obs_data_get_string(loaddata, "base_directory");
+  filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
+  recFormat = obs_data_get_string(loaddata, "rec_format");
+  qualityPreset = obs_data_get_string(loaddata, "quality_preset");
+
+  JsonParser::updatePaths();
+  StorageHandler::setTempPath();
+}
+
 void PTZSettings::on_removePTZ_clicked()
 {
 	PTZDevice *ptz =
@@ -437,14 +628,14 @@ void PTZSettings::showDevice(uint32_t device_id)
 
 void PTZSettings::getAdditionalProperties()
 {
-  SettingsManager::loadSettings();
+  loadSettings();
 
-  ui->baseDirectoryLineEdit->setText(SettingsManager::baseDirectory);
-  ui->filenameFormattingLineEdit->setText(SettingsManager::filenameFormatting);
-  ui->recFormatComboBox->setCurrentText(SettingsManager::recFormat);
+  ui->baseDirectoryLineEdit->setText(StorageHandler::baseDirectory);
+  ui->filenameFormattingLineEdit->setText(filenameFormatting);
+  ui->recFormatComboBox->setCurrentText(recFormat);
 
   for (const QString& preset : qualityPresets) {
-    if (preset.contains(SettingsManager::qualityPreset.toUpper())) {
+    if (preset.contains(qualityPreset.toUpper())) {
       ui->qualityComboBox->setCurrentText(preset);
       break;
     }
@@ -453,52 +644,52 @@ void PTZSettings::getAdditionalProperties()
 
 void PTZSettings::getCredentials()
 {
-  SettingsManager::loadCredentials();
+  MailHandler::loadCredentials();
 
-  ui->adminEmailLineEdit->setText(Backend::adminEmail);
-  ui->adminPasswordLineEdit->setText(Backend::adminPassword);
+  ui->adminEmailLineEdit->setText(MailHandler::adminEmail);
+  ui->adminPasswordLineEdit->setText(MailHandler::adminPassword);
 
-  ui->nasIpLineEdit->setText(SettingsManager::nasIP);
-  ui->nasPortLineEdit->setText(SettingsManager::nasPort);
-  ui->nasUserNameLineEdit->setText(SettingsManager::nasUser);
-  ui->nasPasswordLineEdit->setText(SettingsManager::nasPassword);
-  ui->mailHostLineEdit->setText(SettingsManager::mailHost);
-  ui->mailUserNameLineEdit->setText(SettingsManager::mailUser);
-  ui->mailPasswordLineEdit->setText(SettingsManager::mailPassword);
-  ui->mailSenderAddressLineEdit->setText(SettingsManager::mailSenderAddress);
+  ui->nasIpLineEdit->setText(MailHandler::nasIP);
+  ui->nasPortLineEdit->setText(MailHandler::nasPort);
+  ui->nasUserNameLineEdit->setText(MailHandler::nasUser);
+  ui->nasPasswordLineEdit->setText(MailHandler::nasPassword);
+  ui->mailHostLineEdit->setText(MailHandler::mailHost);
+  ui->mailUserNameLineEdit->setText(MailHandler::mailUser);
+  ui->mailPasswordLineEdit->setText(MailHandler::mailPassword);
+  ui->mailSenderAddressLineEdit->setText(MailHandler::mailSenderAddress);
 }
 
 void PTZSettings::updateAdditionalProperties()
 {
-	SettingsManager::baseDirectory = ui->baseDirectoryLineEdit->text();
-  SettingsManager::baseDirectory.replace("\\", "/");
+	StorageHandler::baseDirectory = ui->baseDirectoryLineEdit->text();
+  StorageHandler::baseDirectory.replace("\\", "/");
 
-  if (SettingsManager::baseDirectory.last(1) != "/")
-    SettingsManager::baseDirectory.append("/");
+  if (StorageHandler::baseDirectory.last(1) != "/")
+    StorageHandler::baseDirectory.append("/");
 
-  SettingsManager::filenameFormatting = ui->filenameFormattingLineEdit->text();
-  SettingsManager::qualityPreset = ui->qualityComboBox->currentText().first(2).toLower();
-  SettingsManager::recFormat = ui->recFormatComboBox->currentText();
+  filenameFormatting = ui->filenameFormattingLineEdit->text();
+  qualityPreset = ui->qualityComboBox->currentText().first(2).toLower();
+  recFormat = ui->recFormatComboBox->currentText();
 
-  SettingsManager::resetFilterSettings();
-  SettingsManager::saveSettings();
+  resetFilterSettings();
+  saveSettings();
 }
 
 void PTZSettings::updateCredentials()
 {
-  Backend::adminEmail = ui->adminEmailLineEdit->text();
-  Backend::adminPassword = ui->adminPasswordLineEdit->text();
+  MailHandler::adminEmail = ui->adminEmailLineEdit->text();
+  MailHandler::adminPassword = ui->adminPasswordLineEdit->text();
 
-  SettingsManager::nasIP = ui->nasIpLineEdit->text();
-  SettingsManager::nasPort = ui->nasPortLineEdit->text();
-  SettingsManager::nasUser = ui->nasUserNameLineEdit->text();
-  SettingsManager::nasPassword = ui->nasPasswordLineEdit->text();
-  SettingsManager::mailHost = ui->mailHostLineEdit->text();
-  SettingsManager::mailUser = ui->mailUserNameLineEdit->text();
-  SettingsManager::mailPassword = ui->mailPasswordLineEdit->text();
-  SettingsManager::mailSenderAddress = ui->mailSenderAddressLineEdit->text();
+  MailHandler::nasIP = ui->nasIpLineEdit->text();
+  MailHandler::nasPort = ui->nasPortLineEdit->text();
+  MailHandler::nasUser = ui->nasUserNameLineEdit->text();
+  MailHandler::nasPassword = ui->nasPasswordLineEdit->text();
+  MailHandler::mailHost = ui->mailHostLineEdit->text();
+  MailHandler::mailUser = ui->mailUserNameLineEdit->text();
+  MailHandler::mailPassword = ui->mailPasswordLineEdit->text();
+  MailHandler::mailSenderAddress = ui->mailSenderAddressLineEdit->text();
 
-  SettingsManager::saveCredentials();
+  MailHandler::saveCredentials();
 }
 
 /* ----------------------------------------------------------------- */

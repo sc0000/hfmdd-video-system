@@ -311,6 +311,18 @@ QMap<ETextId, QString> TextManager::english = {
   },
 
   {
+    ID::CONTROLS_RECORD_WRONG_DATE,
+    "The selected booking does not have today's date."
+  },
+
+  {
+    ID::CONTROLS_RECORD_WRONG_TIME,
+    QString("You can start a booked recording 15 minutes\n") +
+    "before the specified start time at the earliest,\n" +
+    "and 30 minutes after that time at the latest."
+  },
+  
+  {
     ID::CONTROLS_BACK_OVERVIEW,
     "To Bookings Overview"
   },
@@ -630,6 +642,17 @@ QMap<ETextId, QString> TextManager::german = {
   {
     ID::CONTROLS_RECORD,
     "Aufnehmen"
+  },
+
+  {
+    ID::CONTROLS_RECORD_WRONG_DATE,
+    "Die ausgewählte Buchung entspricht nicht dem heutigen Datum."
+  },
+
+  {
+    ID::CONTROLS_RECORD_WRONG_TIME,
+    QString("Sie können eine gebuchte Aufnahme frühestens 15 Minuten\n") +
+    "vor und spätestens 30 Minuten nach der angegebenen Zeit starten."
   },
 
   {

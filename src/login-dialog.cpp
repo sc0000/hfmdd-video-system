@@ -7,6 +7,7 @@
 #include <QDir>
 
 #include "backend.hpp"
+#include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "ptz.h"
 #include "ptz-controls.hpp"
@@ -126,7 +127,7 @@ void LoginDialog::updateTexts()
 
 bool LoginDialog::verifyMailAddress()
 {
-  if (!Backend::mailAddressIsValid) {
+  if (!MailHandler::mailAddressIsValid) {
     ui->reminderLabel->setText(reminderLabelText);
     ui->mailAddressLineEdit->setStyleSheet(
       "QLineEdit { border: 2px solid #f21a1a; border-radius: 0px; background-color: rgb(254, 253, 254)}"
@@ -146,14 +147,14 @@ bool LoginDialog::verifyMailAddress()
 
 void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 {
-  Backend::currentEmail = text;
-  Backend::mailAddressIsValid = false;
+  MailHandler::currentEmail = text;
+  MailHandler::mailAddressIsValid = false;
 
-  for (const QString& suffix : SettingsManager::mailSuffices)
+  for (const QString& suffix : MailHandler::mailSuffices)
   {
-    if (Backend::currentEmail.endsWith(suffix))
+    if (MailHandler::currentEmail.endsWith(suffix))
     {
-      Backend::mailAddressIsValid = true;
+      MailHandler::mailAddressIsValid = true;
       break;
     }
   }
@@ -176,7 +177,7 @@ void LoginDialog::on_manageBookingsButton_clicked()
     return;
   }
 
-  if (Backend::currentEmail == Backend::adminEmail) {
+  if (MailHandler::currentEmail == MailHandler::adminEmail) {
     int result = Widgets::passwordDialog->display();
 
     if (result == QDialog::Rejected)    

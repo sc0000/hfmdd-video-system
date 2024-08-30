@@ -2,6 +2,8 @@
 #include <QScreen>
 
 #include "backend.hpp"
+#include "mail-handler.hpp"
+#include "settings.hpp"
 #include "widgets.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
@@ -64,7 +66,7 @@ BookingManager::~BookingManager()
 
 void BookingManager::reload()
 {
-  if (!Backend::mailAddressIsValid) {
+  if (!MailHandler::mailAddressIsValid) {
     Widgets::loginDialog->reload();
     return;
   }
@@ -104,8 +106,21 @@ void BookingManager::loadBookings()
     ui->bookingsList->addItem(item);
   }
 
-  ui->bookingsList->item(currentRow)->setSelected(true);
-  ui->bookingsList->setCurrentRow(currentRow);
+  QListWidgetItem* currentItem = ui->bookingsList->item(currentRow);
+
+  if (currentItem) {
+    currentItem->setSelected(true);
+    ui->bookingsList->setCurrentRow(currentRow);
+  }
+
+  // This sets row 0 as selected. Do we want this?
+  else {
+    currentRow = 0;
+    currentItem = ui->bookingsList->item(currentRow);
+    currentItem->setSelected(true);
+    ui->bookingsList->setCurrentRow(currentRow);
+  }
+
   ui->bookingsList->setFocus();
 }
 
@@ -130,32 +145,32 @@ void BookingManager::on_infoButton_pressed()
 {
   infoLabelAnimation->stop();
 
-    if (infoLabelVisible) {
-        infoLabelAnimation->setStartValue(420);
-        infoLabelAnimation->setEndValue(0);
-        infoLabelVisible = false;
+  if (infoLabelVisible) {
+      infoLabelAnimation->setStartValue(420);
+      infoLabelAnimation->setEndValue(0);
+      infoLabelVisible = false;
 
-        ui->infoButton->setStyleSheet(
-          "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-          "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-          "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-        );
-    } 
-    
-    else {
-        // ui->infoLabel->setMaximumWidth(420);
-        infoLabelAnimation->setStartValue(0);
-        infoLabelAnimation->setEndValue(420);
-        infoLabelVisible = true;
+      ui->infoButton->setStyleSheet(
+        "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+        "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+        "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
+      );
+  } 
+  
+  else {
+      // ui->infoLabel->setMaximumWidth(420);
+      infoLabelAnimation->setStartValue(0);
+      infoLabelAnimation->setEndValue(420);
+      infoLabelVisible = true;
 
-        ui->infoButton->setStyleSheet(
-          "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-          "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-          "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-        );
-    }
+      ui->infoButton->setStyleSheet(
+        "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+        "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+        "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
+      );
+  }
 
-    infoLabelAnimation->start();
+  infoLabelAnimation->start();
 }
 
 void BookingManager::on_newBookingButton_clicked()
@@ -233,7 +248,7 @@ void BookingManager::on_toPTZControlsButton_clicked()
   Backend::currentBooking = bookings[currentRow];
 
   // TODO: Check: always reset or update, and setup option to reset manually?
-  SettingsManager::resetFilterSettings();
+  PTZSettings::resetFilterSettings();
 
   Widgets::ptzControls->reload();
   Widgets::showFullScreenDialogs(false);

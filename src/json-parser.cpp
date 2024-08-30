@@ -6,6 +6,8 @@
 #include <QJsonObject>
 
 #include "backend.hpp"
+#include "mail-handler.hpp"
+#include "storage-handler.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "json-parser.hpp"
@@ -271,8 +273,8 @@ void JsonParser::removePreset(const QString& email, const int preset)
 
     QJsonObject obj = val.toObject();
 
-    if (obj.value("Email").toString() == Backend::adminEmail && 
-        email != Backend::adminEmail)
+    if (obj.value("Email").toString() == MailHandler::adminEmail && 
+        email != MailHandler::adminEmail)
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
@@ -308,7 +310,7 @@ void JsonParser::getPresetsForEmail(const QString& email, QVector<int>& outVecto
 
     if ((!obj.contains("Email")) || 
         (obj.value("Email").toString() != email && 
-          obj.value("Email").toString() != Backend::adminEmail))
+          obj.value("Email").toString() != MailHandler::adminEmail))
       continue;
 
     QJsonArray presetsArray = obj.value("Presets").toArray();
@@ -354,4 +356,10 @@ void JsonParser::writeJsonArrayToFile(const QJsonArray& arr, const QString& path
 
   file.write(doc.toJson());
   file.close();
+}
+
+void JsonParser::updatePaths()
+{
+  bookingsPath = StorageHandler::baseDirectory + "bookings.json";
+  presetsPath = StorageHandler::baseDirectory + "presets.json";
 }

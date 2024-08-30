@@ -10,6 +10,7 @@
 #include "message-dialog.hpp"
 #include "json-parser.hpp"
 #include "backend.hpp"
+#include "mail-handler.hpp"
 #include "booking-manager.hpp"
 #include "ptz-visca-udp.hpp"
 #include "ptz-visca-tcp.hpp"
@@ -461,7 +462,7 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
   if (!bookingManager) return;
 
   JsonParser::getPresetsForEmail(
-    Backend::currentEmail,
+    MailHandler::currentEmail,
     currentUserPresets
   );
 

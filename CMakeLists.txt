@@ -44,6 +44,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/plugin-main.cpp
   src/backend.cpp
   src/text-manager.cpp
+  src/mail-handler.cpp
+  src/storage-handler.cpp
   # src/simple-recording.cpp
   # src/globals.cpp
   src/json-parser.cpp
@@ -92,6 +94,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   # src/ptz.h
   src/backend.hpp
   src/text-manager.hpp
+  src/mail-handler.hpp
+  src/storage-handler.hpp
   # src/globals.hpp
   src/language.hpp
   src/login.hpp

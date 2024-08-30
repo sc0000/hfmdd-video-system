@@ -12,13 +12,6 @@ enum class EMode
   Default
 };
 
-enum class EMailType
-{
-  SendFiles,
-  BookingConflictWarning,
-  Default
-};
-
 enum class ELanguage
 {
   English,
@@ -29,10 +22,6 @@ enum class ELanguage
 class Backend
 {
 public:
-  static QString currentEmail;
-  static bool mailAddressIsValid;
-  static QString adminEmail;
-  static QString adminPassword;
   static EMode mode;
   static ELanguage language;
 
@@ -52,6 +41,5 @@ public:
   static void roundTime(QTime& time);
   static QString makeEntry(const Booking& booking);
 
-  static QString sendFiles(const Booking& booking);
-  static QString sendMail(const Booking& booking, EMailType mailType);
+  
 };
