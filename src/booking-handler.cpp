@@ -12,7 +12,6 @@
 #include "text-handler.hpp"
 #include "booking-handler.hpp"
 
-
 EMode BookingHandler::mode = EMode::Default;
 
 QDate BookingHandler::selectedDate = QDate();

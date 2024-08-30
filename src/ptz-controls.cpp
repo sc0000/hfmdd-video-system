@@ -51,12 +51,8 @@ void ptz_load_controls(void)
 
 void timeOut()
 {
-  if (!Widgets::ptzControls) return;
-
   Widgets::ptzControls->stopRecording(false);
 }
-
-PTZControls *PTZControls::instance = NULL;
 
 /**
  * class buttonResizeFilter - Event filter to adjust button minimum height and resize icon
@@ -154,12 +150,9 @@ static void item_select_cb(void* data, calldata_t* cd) {
   obs_sceneitem_t* item = (obs_sceneitem_t*)calldata_ptr(cd, "item");
   obs_source_t* source = obs_sceneitem_get_source(item);
 
-  PTZControls* ptzControls = PTZControls::getInstance();
-  if (!ptzControls) return;
-
-  // ptzControls->setViewportMode();
-  ptzControls->currCameraName = QString(obs_source_get_name(source));
-  ptzControls->selectCamera();
+  // Widgets::ptzControls->setViewportMode();
+  Widgets::ptzControls->currCameraName = QString(obs_source_get_name(source));
+  Widgets::ptzControls->selectCamera();
 }
 
 void PTZControls::connectSignalItemSelect()
@@ -253,9 +246,9 @@ void PTZControls::updateTexts()
 PTZControls::PTZControls(QWidget *parent)
 	: QDockWidget(parent), 
     ui(new Ui::PTZControls),
-    booking(BookingHandler::currentBooking)
+    booking(BookingHandler::currentBooking),
+    currCameraName(QString("Camera 1"))
 {
-	instance = this;
 	ui->setupUi(this);
 	ui->cameraList->setModel(&ptzDeviceList);
 	copyActionsDynamicProperties();

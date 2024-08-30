@@ -19,7 +19,6 @@ class QuickRecord : public FullScreenDialog, public Translatable
   Q_OBJECT
 
 private:
-  static QuickRecord* instance;
   Ui::QuickRecord* ui;
   QPropertyAnimation* infoLabelAnimation;
   bool infoLabelVisible;
@@ -46,7 +45,6 @@ private slots:
 public:
   QuickRecord(QWidget* parent = nullptr);
   ~QuickRecord();
-  static inline QuickRecord* getInstance() { return instance; }
   
   virtual void reload() override;
   virtual void updateTexts() override; 

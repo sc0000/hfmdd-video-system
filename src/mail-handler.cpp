@@ -95,60 +95,6 @@ void MailHandler::loadCredentials()
   mailSenderAddress = obs_data_get_string(loaddata, "sender_address");
 }
 
-// QString MailHandler::sendFiles(const Booking& booking)
-// {
-//   const QString dllFilePath = QCoreApplication::applicationFilePath();
-//   const QString dllDir = QFileInfo(dllFilePath).absolutePath();
-
-//   const QString scriptPath = QDir::toNativeSeparators(dllDir + "/../../node-scripts/file-sender.js");
-
-//   const QStringList nodeArgs = QStringList() << scriptPath;
-
-//   QProcess* nodeProcess = new QProcess();
-//   nodeProcess->setEnvironment(QProcess::systemEnvironment());
-//   nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
-
-//   nodeProcess->start("node", nodeArgs);
-
-//   if (!nodeProcess->waitForStarted()) 
-//     return "Process started with error: " + nodeProcess->errorString();
-
-//   const QString& baseDir = StorageHandler::baseDirectory;
-
-//   const QString apiBasePath = 
-//     QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
-
-//   QJsonObject jsonObj;
-//   jsonObj["basePath"] = apiBasePath;
-//   jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
-//   jsonObj["receiver"] = booking.email;
-
-//   jsonObj["subject"] = TextHandler::getText(ID::MAIL_SUBJECT) + 
-//     booking.date.toString("ddd MMM dd yyyy");
-
-//   jsonObj["nasIP"] = nasIP;
-//   jsonObj["nasPort"] = nasPort;
-//   jsonObj["nasUser"] = nasUser;
-//   jsonObj["nasPassword"] = nasPassword;
-
-//   jsonObj["mailHost"] = mailHost;
-//   jsonObj["mailUser"] = mailUser;
-//   jsonObj["mailPassword"] = mailPassword;
-//   jsonObj["mailSenderAddress"] = mailSenderAddress;
-//   jsonObj["german"] = false;
-  
-//   QJsonDocument jsonDoc(jsonObj);
-
-//   nodeProcess->write(jsonDoc.toJson());
-//   nodeProcess->closeWriteChannel();
-
-//   if (!nodeProcess->waitForFinished())
-//     return "Process finished with error: " + nodeProcess->errorString();
-
-//   const QByteArray output = nodeProcess->readAllStandardOutput();
-//   return QString::fromUtf8(output);
-// }
-
 QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
 {
   const QString dllFilePath = QCoreApplication::applicationFilePath();

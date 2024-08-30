@@ -17,8 +17,6 @@
 #include "ui_login-dialog.h"
 #include "login-dialog.hpp"
 
-LoginDialog* LoginDialog::instance = NULL;
-
 LoginDialog::LoginDialog(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::LoginDialog),
@@ -29,7 +27,6 @@ LoginDialog::LoginDialog(QWidget *parent)
   setWindowTitle("Login Dialog");
   setFont(QFont("DaxOT-Medium"));
 
-  instance = this;
   ui->setupUi(this);
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
 

@@ -17,7 +17,6 @@ class ModeSelect : public FullScreenDialog, public Translatable
 {
   Q_OBJECT
 private:
-  static ModeSelect* instance;
   Ui::ModeSelect* ui;
 
 private slots:
@@ -28,9 +27,7 @@ public:
   ModeSelect(QWidget *parent = nullptr);
   ~ModeSelect();
 
-  static inline ModeSelect* getInstance() { return instance; }
   virtual void reload() override;
-
   virtual void updateTexts() override; 
 };
 

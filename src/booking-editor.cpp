@@ -104,12 +104,6 @@ void BookingEditor::updateTexts()
   ui->calendarWidget->setLocale(TextHandler::locale);
 }
 
-void BookingEditor::instance(QWidget* parent)
-{
-  std::unique_ptr<BookingEditor> bookingEditor = std::make_unique<BookingEditor>(parent);
-  bookingEditor->exec();
-}
-
 void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 {
   BookingHandler::updateBookingsOnSelectedDate(date);

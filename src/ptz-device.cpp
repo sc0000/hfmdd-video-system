@@ -11,6 +11,7 @@
 #include "json-parser.hpp"
 #include "mail-handler.hpp"
 #include "booking-manager.hpp"
+#include "widgets.hpp"
 #include "ptz-visca-udp.hpp"
 #include "ptz-visca-tcp.hpp"
 #include "ptz-onvif.hpp"
@@ -456,7 +457,7 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
 
   QVector<int> currentUserPresets;
 
-  BookingManager* bookingManager = BookingManager::getInstance();
+  BookingManager* bookingManager = Widgets::bookingManager;
 
   if (!bookingManager) return;
 

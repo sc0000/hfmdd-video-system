@@ -19,7 +19,6 @@ class BookingManager : public FullScreenDialog, public Translatable
   Q_OBJECT
 
 private:
-  static BookingManager* instance;
   Ui::BookingManager* ui;
   QPropertyAnimation* infoLabelAnimation;
   bool infoLabelVisible;
@@ -40,12 +39,11 @@ private slots:
 public:
   BookingManager(QWidget* parent = nullptr);
   ~BookingManager();
-  static inline BookingManager* getInstance() { return instance; }
-  virtual void reload() override;
+
   void toLoginDialog();
 
   void loadBookings();
 
+  virtual void reload() override;
   virtual void updateTexts() override;
-
 };

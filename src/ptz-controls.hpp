@@ -26,7 +26,6 @@ class PTZControls : public QDockWidget, public Translatable {
 private:
 	static void OBSFrontendEventWrapper(enum obs_frontend_event event,
 					    void *ptr);
-	static PTZControls *instance;
 	void OBSFrontendEvent(enum obs_frontend_event event);
 
 	std::unique_ptr<Ui::PTZControls> ui;
@@ -201,7 +200,6 @@ public:
 	~PTZControls();
 	void setDisableLiveMoves(bool enable);
 	bool liveMovesDisabled() { return live_moves_disabled; };
-	static PTZControls* getInstance() { return instance; };
   virtual PTZPresetListModel* presetModel() { return &m_presetsModel; }
   PTZPresetListModel* userPresetModel() { return &m_userPresetsModel; } 
 
@@ -219,7 +217,7 @@ public:
   void logout();
   // void loginTimeOut();
 
-  QString currCameraName = "Birddog1";
+  QString currCameraName;
 
   virtual void updateTexts() override; 
 };

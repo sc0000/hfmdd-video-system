@@ -18,7 +18,6 @@ class LoginDialog : public FullScreenDialog, public Translatable
 {
   Q_OBJECT
 private:
-  static LoginDialog* instance;
   Ui::LoginDialog* ui;
 
 private:
@@ -37,9 +36,7 @@ public:
   LoginDialog(QWidget *parent = nullptr);
   ~LoginDialog();
 
-  static inline LoginDialog* getInstance() { return instance; }
   virtual void reload() override;
-
   virtual void updateTexts() override; 
 };
 

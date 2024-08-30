@@ -17,8 +17,6 @@
 #include "ui_quick-record.h"
 #include "quick-record.hpp"
 
-QuickRecord* QuickRecord::instance = nullptr;
-
 QuickRecord::QuickRecord(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::QuickRecord),
@@ -27,8 +25,7 @@ QuickRecord::QuickRecord(QWidget* parent)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   
-  setWindowTitle("Booking Manager");
-  instance = this;
+  setWindowTitle("Quick Record");
   ui->setupUi(this);
   center(ui->masterWidget);
 
@@ -206,7 +203,6 @@ void QuickRecord::on_decreaseTimeBy20Button_pressed()
 
   if (newStopTime > QTime(23, 0))  
     return;
-  
 
   booking.stopTime = newStopTime;
   updateStopTimeLabel();

@@ -16,8 +16,6 @@
 #include "ui_mode-select.h"
 #include "mode-select.hpp"
 
-ModeSelect* ModeSelect::instance = NULL;
-
 ModeSelect::ModeSelect(QWidget *parent)
   : FullScreenDialog(parent),
     ui(new Ui::ModeSelect)
@@ -25,13 +23,12 @@ ModeSelect::ModeSelect(QWidget *parent)
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setWindowTitle("Mode Select");
 
-  instance = this;
   ui->setupUi(this);
   
   center(ui->masterWidget);
 
   ui->bookingModeButton->setStyleSheet("QPushButton:hover { background-color: rgb(42, 130, 218); }"
-                                    "QPushButton:pressed  { background-color: rgb(31, 30, 31); }");
+                                       "QPushButton:pressed  { background-color: rgb(31, 30, 31); }");
 
   updateTexts();
   setModal(false);

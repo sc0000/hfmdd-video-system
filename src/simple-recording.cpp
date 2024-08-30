@@ -15,11 +15,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-
-
 QVector<obs_source_t*> SimpleRecordingWidget::sources;
-
-
 
 SimpleRecordingWidget::SimpleRecordingWidget(QWidget* parent)
   : QDockWidget("Concert Hall Video Rec Interface", parent), m_parent(parent), m_baseDir("V:/sb-terminal-test/")

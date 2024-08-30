@@ -54,7 +54,6 @@ private slots:
 public:
   BookingEditor(QWidget* parent = nullptr);
   ~BookingEditor();
-  static void instance(QWidget* parent = nullptr);
 
   void reload(Booking* bookingToEdit = nullptr);
   virtual void updateTexts() override;  

@@ -13,7 +13,6 @@
 
 #include "message-dialog.hpp"
 
-
 // TODO: Setup some form of inheritance structure here?
 
 OkDialog::OkDialog(QWidget* parent)
@@ -197,7 +196,7 @@ void PresetDialog::display(Booking* booking)
 
 void PresetDialog::on_okButton_clicked()
 {
-  PTZControls* ptzControls = PTZControls::getInstance();
+  PTZControls* ptzControls = Widgets::ptzControls;
 
   if (!ptzControls) return;
 

@@ -15,9 +15,6 @@
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
 
-
-BookingManager* BookingManager::instance = nullptr;
-
 BookingManager::BookingManager(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::BookingManager),
@@ -31,7 +28,6 @@ BookingManager::BookingManager(QWidget* parent)
   );
   
   setWindowTitle("Booking Manager");
-  instance = this;
   ui->setupUi(this);
   center(ui->masterWidget);
 
@@ -60,23 +56,6 @@ BookingManager::BookingManager(QWidget* parent)
 BookingManager::~BookingManager()
 {
   delete ui;
-}
-
-void BookingManager::reload()
-{
-  if (!MailHandler::mailAddressIsValid) {
-    Widgets::loginDialog->reload();
-    return;
-  }
-  
-  raise();
-  center(ui->masterWidget);
-
-  BookingHandler::reevaluateConflicts();
-  loadBookings();
-
-  ui->infoLabel->setMaximumWidth(0);
-  infoLabelVisible = false;
 }
 
 void BookingManager::toLoginDialog()
@@ -111,15 +90,24 @@ void BookingManager::loadBookings()
     ui->bookingsList->setCurrentRow(currentRow);
   }
 
-  // This sets row 0 as selected. Do we want this?
-  else {
-    currentRow = 0;
-    currentItem = ui->bookingsList->item(currentRow);
-    currentItem->setSelected(true);
-    ui->bookingsList->setCurrentRow(currentRow);
-  }
-
   ui->bookingsList->setFocus();
+}
+
+void BookingManager::reload()
+{
+  if (!MailHandler::mailAddressIsValid) {
+    Widgets::loginDialog->reload();
+    return;
+  }
+  
+  raise();
+  center(ui->masterWidget);
+
+  BookingHandler::reevaluateConflicts();
+  loadBookings();
+
+  ui->infoLabel->setMaximumWidth(0);
+  infoLabelVisible = false;
 }
 
 void BookingManager::updateTexts()

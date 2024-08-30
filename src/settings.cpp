@@ -128,7 +128,7 @@ PTZSettings::PTZSettings(QWidget* parent)
   Handlebar* handlebar = new Handlebar(this);
 
 	ui->livemoveCheckBox->setChecked(
-		PTZControls::getInstance()->liveMovesDisabled());
+		Widgets::ptzControls->liveMovesDisabled());
 	ui->enableDebugLogCheckBox->setChecked(ptz_debug_level <= LOG_INFO);
 
 	auto snd = new SourceNameDelegate(this);
@@ -178,7 +178,7 @@ PTZSettings::~PTZSettings()
 void PTZSettings::joystickSetup()
 {
 	auto joysticks = QJoysticks::getInstance();
-	auto controls = PTZControls::getInstance();
+	auto controls = Widgets::ptzControls;
 	ui->joystickNamesListView->setModel(&m_joystickNamesModel);
 	ui->joystickGroupBox->setChecked(controls->joystickEnabled());
 	ui->joystickSpeedSlider->setDoubleConstraints(
@@ -200,24 +200,24 @@ void PTZSettings::joystickSetup()
 
 void PTZSettings::on_joystickSpeedSlider_doubleValChanged(double val)
 {
-	PTZControls::getInstance()->setJoystickSpeed(val);
+	Widgets::ptzControls->setJoystickSpeed(val);
 }
 
 void PTZSettings::on_joystickDeadzoneSlider_doubleValChanged(double val)
 {
-	PTZControls::getInstance()->setJoystickDeadzone(val);
+	Widgets::ptzControls->setJoystickDeadzone(val);
 }
 
 void PTZSettings::on_joystickGroupBox_toggled(bool checked)
 {
-	PTZControls::getInstance()->setJoystickEnabled(checked);
+	Widgets::ptzControls->setJoystickEnabled(checked);
 	ui->joystickNamesListView->setEnabled(checked);
 }
 
 void PTZSettings::joystickUpdate()
 {
 	auto joysticks = QJoysticks::getInstance();
-	auto controls = PTZControls::getInstance();
+	auto controls = Widgets::ptzControls;
 	m_joystickNamesModel.setStringList(joysticks->deviceNames());
 	auto idx = m_joystickNamesModel.index(controls->joystickId(), 0);
 	if (idx.isValid())
@@ -228,7 +228,7 @@ void PTZSettings::joystickCurrentChanged(QModelIndex current,
 					 QModelIndex previous)
 {
 	Q_UNUSED(previous);
-	PTZControls::getInstance()->setJoystickId(current.row());
+	Widgets::ptzControls->setJoystickId(current.row());
 }
 #else
 void PTZSettings::joystickSetup()
@@ -518,7 +518,7 @@ void PTZSettings::on_removePTZ_clicked()
 
 void PTZSettings::on_livemoveCheckBox_stateChanged(int state)
 {
-	PTZControls::getInstance()->setDisableLiveMoves(state != Qt::Unchecked);
+	Widgets::ptzControls->setDisableLiveMoves(state != Qt::Unchecked);
 }
 
 void PTZSettings::on_enableDebugLogCheckBox_stateChanged(int state)
