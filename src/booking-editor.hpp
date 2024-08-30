@@ -1,8 +1,8 @@
 #include <QMouseEvent>
 
 #include "animated-dialog.hpp"
-#include "language.hpp"
-#include "booking.h"
+#include "booking-handler.hpp"
+#include "text-handler.hpp"
 
 enum class ETimeToSet
 {

@@ -1,7 +1,7 @@
 #include <QVector>
 
-#include "language.hpp"
 #include "fullscreen-dialog.hpp"
+#include "text-handler.hpp"
 
 class Widgets
 {

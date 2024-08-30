@@ -2,8 +2,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include "booking.h"
-#include "backend.hpp"
 #include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "ptz-controls.hpp"

@@ -4,9 +4,9 @@
 #include <QDialog>
 #include <QListWidget>
 
-#include "language.hpp"
+#include "text-handler.hpp"
 #include "fullscreen-dialog.hpp"
-#include "booking.h"
+#include "booking-handler.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

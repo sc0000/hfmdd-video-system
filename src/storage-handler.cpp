@@ -4,7 +4,7 @@
 #include <util/config-file.h>
 #include <obs-frontend-api.h>
 
-#include "backend.hpp"
+#include "booking-handler.hpp"
 #include "mail-handler.hpp"
 #include "storage-handler.hpp"
 
@@ -14,7 +14,7 @@ QString StorageHandler::innerDirectory = "";
 
 void StorageHandler::setOuterDirectory()
 {
-  outerDirectory = Backend::currentBooking.date.toString(Qt::ISODate) + "/";
+  outerDirectory = BookingHandler::currentBooking.date.toString(Qt::ISODate) + "/";
 }
 
 void StorageHandler::setInnerDirectory()

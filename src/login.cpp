@@ -9,7 +9,6 @@
 #include "mode-select.hpp"
 #include "quick-record.hpp"
 #include "booking-manager.hpp"
-#include "settings-manager.hpp"
 #include "widgets.hpp"
 #include "login-dialog.hpp"
 #include "ui_login.h"

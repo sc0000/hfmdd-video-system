@@ -22,7 +22,6 @@
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"
 #include "ui_ptz-controls.h"
-#include "backend.hpp"
 #include "mail-handler.hpp"
 #include "storage-handler.hpp"
 #include "widgets.hpp"
@@ -35,8 +34,6 @@
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
 #include "json-parser.hpp"
-#include "settings-manager.hpp"
-#include "text-manager.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -176,7 +173,7 @@ void PTZControls::startRecording()
 {
   if (booking.date != QDate::currentDate()) {
       Widgets::okDialog->display(
-        TextManager::getText(ID::CONTROLS_RECORD_WRONG_DATE)
+        TextHandler::getText(ID::CONTROLS_RECORD_WRONG_DATE)
       );
 
       return;
@@ -187,7 +184,7 @@ void PTZControls::startRecording()
     if (currentTime < booking.startTime.addSecs(-15 * 60)  ||
         currentTime > booking.startTime.addSecs(30 * 60)) {
       Widgets::okDialog->display(
-        TextManager::getText(ID::CONTROLS_RECORD_WRONG_TIME)
+        TextHandler::getText(ID::CONTROLS_RECORD_WRONG_TIME)
       );
 
       return;
@@ -200,8 +197,6 @@ void PTZControls::startRecording()
     m_timeObserver->start();
 
     ui->recordButton->setText(
-      Backend::language != ELanguage::German ?
-      "Stop" :
       "Stop"
     );
 }
@@ -214,12 +209,10 @@ void PTZControls::stopRecording(bool manual)
   m_timeObserver->stop();
 
   ui->recordButton->setText(
-    Backend::language != ELanguage::German ?
-    "Record" :
-    "Record"
+    TextHandler::getText(ID::CONTROLS_RECORD)
   );
 
-  const QString sendFilesMsg = MailHandler::sendFiles(booking);
+  const QString sendFilesMsg = MailHandler::sendMail(booking, EMailType::SendFiles);
 
   if (manual)
     Widgets::okDialog->display(sendFilesMsg, true);
@@ -230,8 +223,8 @@ void PTZControls::stopRecording(bool manual)
 
 void PTZControls::logout()
 {
-  if (Backend::mode == EMode::QuickMode && !hasRecorded)
-    JsonParser::removeBooking(Backend::currentBooking);
+  if (BookingHandler::mode == EMode::QuickMode && !hasRecorded)
+    JsonParser::removeBooking(BookingHandler::currentBooking);
 
   StorageHandler::deleteTempFiles();
   
@@ -244,23 +237,23 @@ void PTZControls::logout()
 
 void PTZControls::updateTexts()
 {
-  ui->cameraControlsLabel->setText(TextManager::getText(ID::CONTROLS_TITLE));
-  ui->previousCamButton->setText(TextManager::getText(ID::CONTROLS_CAMERA_PREV));
-  ui->nextCamButton->setText(TextManager::getText(ID::CONTROLS_CAMERA_NEXT));
-  ui->overviewButton->setText(TextManager::getText(ID::CONTROLS_CAMERA_OVERVIEW));
-  ui->savePresetButton->setText(TextManager::getText(ID::CONTROLS_PRESET_SAVE));
-  ui->loadPresetButton->setText(TextManager::getText(ID::CONTROLS_PRESET_LOAD));
-  ui->deletePresetButton->setText(TextManager::getText(ID::CONTROLS_PRESET_DELETE));
-  ui->recordButton->setText(TextManager::getText(ID::CONTROLS_RECORD));
-  ui->toBookingManagerButton->setText(TextManager::getText(ID::CONTROLS_BACK_OVERVIEW));
+  ui->cameraControlsLabel->setText(TextHandler::getText(ID::CONTROLS_TITLE));
+  ui->previousCamButton->setText(TextHandler::getText(ID::CONTROLS_CAMERA_PREV));
+  ui->nextCamButton->setText(TextHandler::getText(ID::CONTROLS_CAMERA_NEXT));
+  ui->overviewButton->setText(TextHandler::getText(ID::CONTROLS_CAMERA_MANAGER));
+  ui->savePresetButton->setText(TextHandler::getText(ID::CONTROLS_PRESET_SAVE));
+  ui->loadPresetButton->setText(TextHandler::getText(ID::CONTROLS_PRESET_LOAD));
+  ui->deletePresetButton->setText(TextHandler::getText(ID::CONTROLS_PRESET_DELETE));
+  ui->recordButton->setText(TextHandler::getText(ID::CONTROLS_RECORD));
+  ui->toBookingManagerButton->setText(TextHandler::getText(ID::CONTROLS_BACK_MANAGER));
 
-  infoDialogText = TextManager::getText(ID::CONTROLS_INFO);
+  infoDialogText = TextHandler::getText(ID::CONTROLS_INFO);
 }
 
 PTZControls::PTZControls(QWidget *parent)
 	: QDockWidget(parent), 
     ui(new Ui::PTZControls),
-    booking(Backend::currentBooking)
+    booking(BookingHandler::currentBooking)
 {
 	instance = this;
 	ui->setupUi(this);
@@ -586,23 +579,23 @@ void PTZControls::reload()
   selectCamera();
   setFloating(false);
 
-  ui->currentBookingEmailLabel->setText(Backend::currentBooking.email);
-  ui->currentBookingDateLabel->setText(Backend::currentBooking.date.toString());
+  ui->currentBookingEmailLabel->setText(BookingHandler::currentBooking.email);
+  ui->currentBookingDateLabel->setText(BookingHandler::currentBooking.date.toString());
   ui->currentBookingTimeLabel->setText(
-    Backend::currentBooking.startTime.toString("HH:mm") + " - " +
-    Backend::currentBooking.stopTime.toString("HH:mm")
+    BookingHandler::currentBooking.startTime.toString("HH:mm") + " - " +
+    BookingHandler::currentBooking.stopTime.toString("HH:mm")
   );
 
-  ui->currentBookingEventLabel->setText(Backend::currentBooking.event);
+  ui->currentBookingEventLabel->setText(BookingHandler::currentBooking.event);
   
   // ???
   
-  switch (Backend::mode) {
+  switch (BookingHandler::mode) {
     case EMode::BookMode:
-      ui->toBookingManagerButton->setText(TextManager::getText(ID::CONTROLS_BACK_OVERVIEW));
+      ui->toBookingManagerButton->setText(TextHandler::getText(ID::CONTROLS_BACK_MANAGER));
       break;
     case EMode::QuickMode:
-      ui->toBookingManagerButton->setText(TextManager::getText(ID::CONTROLS_BACK_QUICK));
+      ui->toBookingManagerButton->setText(TextHandler::getText(ID::CONTROLS_BACK_QUICK));
       break;
     case EMode::Default:
       ui->toBookingManagerButton->setText("ERROR");
@@ -628,7 +621,7 @@ void PTZControls::setViewportMode()
 
   if (showOverview) {
     ui->overviewButton->setText(
-      TextManager::getText(ID::CONTROLS_CAMERA_SINGLE)
+      TextHandler::getText(ID::CONTROLS_CAMERA_SINGLE)
     );
 
     // ? Enable camera selection by clicking on preview ?
@@ -704,7 +697,7 @@ void PTZControls::setViewportMode()
 
   else {
     ui->overviewButton->setText(
-      TextManager::getText(ID::CONTROLS_CAMERA_OVERVIEW)
+      TextHandler::getText(ID::CONTROLS_CAMERA_MANAGER)
     );
 
     if (size == 1)
@@ -1151,7 +1144,7 @@ void PTZControls::on_infoButton_pressed()
 
 void PTZControls::on_savePresetButton_clicked()
 {
-  Widgets::presetDialog->display(&Backend::currentBooking);
+  Widgets::presetDialog->display(&BookingHandler::currentBooking);
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -1160,7 +1153,7 @@ void PTZControls::on_loadPresetButton_clicked()
 
   if (!index.isValid()) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::CONTROLS_PRESET_LOAD_NONE_SELECTED)
+      TextHandler::getText(ID::CONTROLS_PRESET_LOAD_NONE_SELECTED)
     );
 
     return;
@@ -1180,7 +1173,7 @@ void PTZControls::on_deletePresetButton_clicked()
 
   if (!index.isValid()) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::CONTROLS_PRESET_DELETE_NONE_SELECTED)
+      TextHandler::getText(ID::CONTROLS_PRESET_DELETE_NONE_SELECTED)
     );
 
     return;
@@ -1194,14 +1187,14 @@ void PTZControls::on_deletePresetButton_clicked()
 
   if (MailHandler::currentEmail != MailHandler::adminEmail && adminPresets.contains(id)) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::CONTROLS_PRESET_DELETE_DENIED)
+      TextHandler::getText(ID::CONTROLS_PRESET_DELETE_DENIED)
     );
 
     return;
   }
 
   int result = Widgets::okCancelDialog->display(
-    TextManager::getText(ID::CONTROLS_PRESET_DELETE_CONFIRM)
+    TextHandler::getText(ID::CONTROLS_PRESET_DELETE_CONFIRM)
   );
   
   if (result == QDialog::Rejected) 
@@ -1243,7 +1236,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
 {
   Widgets::showFullScreenDialogs(true);
 
-  switch (Backend::mode) {
+  switch (BookingHandler::mode) {
     case EMode::BookMode: {
       Widgets::bookingManager->reload();
     }
@@ -1252,7 +1245,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
     
     case EMode::QuickMode: {
       if (!hasRecorded)
-        JsonParser::removeBooking(Backend::currentBooking);
+        JsonParser::removeBooking(BookingHandler::currentBooking);
 
       Widgets::quickRecord->reload();
     }
@@ -1582,7 +1575,7 @@ void PTZControls::on_actionPTZProperties_triggered()
 {
   if (MailHandler::currentEmail != MailHandler::adminEmail) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::CONTROLS_SETTINGS_DENIED)
+      TextHandler::getText(ID::CONTROLS_SETTINGS_DENIED)
     );
 
     return;

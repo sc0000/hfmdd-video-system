@@ -1,9 +1,8 @@
 #pragma once
 
 #include <QVector>
-
-#include "language.hpp"
-#include "booking.h"
+#include <QString>
+#include <QDateTime>
 
 enum class EMode
 {
@@ -12,18 +11,21 @@ enum class EMode
   Default
 };
 
-enum class ELanguage
+struct Booking
 {
-  English,
-  German,
-  Default
+  QString email;
+  QDate date;
+  QTime startTime;
+  QTime stopTime;
+  QString event;
+  bool isConflicting;
+  int index;
 };
 
-class Backend
+class BookingHandler
 {
 public:
   static EMode mode;
-  static ELanguage language;
 
   static QDate selectedDate;
 
@@ -40,6 +42,4 @@ public:
   static void reevaluateConflicts();
   static void roundTime(QTime& time);
   static QString makeEntry(const Booking& booking);
-
-  
 };

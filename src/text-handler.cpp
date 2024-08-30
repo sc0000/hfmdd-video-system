@@ -2,34 +2,34 @@
 
 #include "message-dialog.hpp"
 #include "widgets.hpp"
-#include "text-manager.hpp"
+#include "text-handler.hpp"
 
-QMap<ETextId, QString>* TextManager::currentTexts = &TextManager::english;
-QLocale TextManager::locale = QLocale::English;
+QMap<ETextId, QString>* TextHandler::currentTexts = &TextHandler::english;
+QLocale TextHandler::locale = QLocale::English;
 
-void TextManager::translate(const QString language) 
+void TextHandler::translate(const QString language) 
 {
     if (language == "English") {
-      TextManager::currentTexts = &TextManager::english;
+      TextHandler::currentTexts = &TextHandler::english;
       locale = QLocale::English;
     }
       
     else if (language == "Deutsch") {
-      TextManager::currentTexts = &TextManager::german;
+      TextHandler::currentTexts = &TextHandler::german;
       locale = QLocale::German;
     }
 }
 
-const QString TextManager::getText(ETextId id)
+const QString TextHandler::getText(ETextId id)
 {
-  return TextManager::currentTexts->value(id, "Text/Label not found");
+  return TextHandler::currentTexts->value(id, "Text/Label not found");
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---TEXTS--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-QMap<ETextId, QString> TextManager::english = {
+QMap<ETextId, QString> TextHandler::english = {
   {
     ID::LOGIN_INFO, 
     QString("<html><head/><body>") + 
@@ -106,67 +106,67 @@ QMap<ETextId, QString> TextManager::english = {
   },
 
   {
-    ID::OVERVIEW_NEW,
+    ID::MANAGER_NEW,
     "New Booking"
   },
 
   {
-    ID::OVERVIEW_EDIT,
+    ID::MANAGER_EDIT,
     "Edit Booking"
   },
 
   {
-    ID::OVERVIEW_EDIT_NONE_SELECTED,
+    ID::MANAGER_EDIT_NONE_SELECTED,
     "Please select a booking you want to edit."
   },
 
   {
-    ID::OVERVIEW_EDIT_TOO_MANY_SELECTED,
+    ID::MANAGER_EDIT_TOO_MANY_SELECTED,
     "Please select only one booking to edit."
   },
 
   {
-    ID::OVERVIEW_DELETE,
+    ID::MANAGER_DELETE,
     "Delete Booking"
   },
 
   {
-    ID::OVERVIEW_DELETE_NONE_SELECTED,
+    ID::MANAGER_DELETE_NONE_SELECTED,
     "Please select a booking you want to edit."
   },
 
   {
-    ID::OVERVIEW_DELETE_TOO_MANY_SELECTED,
+    ID::MANAGER_DELETE_TOO_MANY_SELECTED,
     "Please select only one booking to edit."
   },
 
   {
-    ID::OVERVIEW_DELETE_CONFIRM,
+    ID::MANAGER_DELETE_CONFIRM,
     "Do you really want to delete the selected booking? This cannot be undone."
   },
 
   {
-    ID::OVERVIEW_TO_PTZ,
+    ID::MANAGER_TO_PTZ,
     "Go to Camera Controls"
   },
 
   {
-    ID::OVERVIEW_TO_PTZ_NONE_SELECTED,
+    ID::MANAGER_TO_PTZ_NONE_SELECTED,
     "Please select a booking to continue."
   },
 
   {
-    ID::OVERVIEW_TO_PTZ_TOO_MANY_SELECTED,
+    ID::MANAGER_TO_PTZ_TOO_MANY_SELECTED,
     "Please select only one booking to continue."
   },
 
   {
-    ID::OVERVIEW_BACK,
+    ID::MANAGER_BACK,
     "Go back to Mode Selection"
   }, 
 
   {
-    ID::OVERVIEW_INFO,
+    ID::MANAGER_INFO,
     QString("<html><head/><body>") +
       "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" + 
       "From this screen, you can book video recording sessions, or edit existing ones. " + 
@@ -261,7 +261,7 @@ QMap<ETextId, QString> TextManager::english = {
   },
 
   {
-    ID::CONTROLS_CAMERA_OVERVIEW,
+    ID::CONTROLS_CAMERA_MANAGER,
     "Camera Overview"
   },
 
@@ -323,7 +323,7 @@ QMap<ETextId, QString> TextManager::english = {
   },
   
   {
-    ID::CONTROLS_BACK_OVERVIEW,
+    ID::CONTROLS_BACK_MANAGER,
     "To Bookings Overview"
   },
 
@@ -360,9 +360,16 @@ QMap<ETextId, QString> TextManager::english = {
     ID::MAIL_SUBJECT,
     "HfMDD Concert Hall Recordings "
   },
+
+  {
+    ID::MAIL_BODY,
+    QString("You can download your concert hall recording following the link below.\n") +
+      "Please be advised that it might take a moment for the download to start.\n" +
+      "For any questions or feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de).\n\n"
+  }
 };
 
-QMap<ETextId, QString> TextManager::german = {
+QMap<ETextId, QString> TextHandler::german = {
   {ID::LOGIN_INFO,
   
       QString("<html><head/><body>") + 
@@ -440,67 +447,67 @@ QMap<ETextId, QString> TextManager::german = {
   },
 
   {
-    ID::OVERVIEW_NEW,
+    ID::MANAGER_NEW,
     "Neue Buchung"
   },
 
   {
-    ID::OVERVIEW_EDIT,
+    ID::MANAGER_EDIT,
     "Buchung bearbeiten"
   },
 
   {
-    ID::OVERVIEW_EDIT_NONE_SELECTED,
+    ID::MANAGER_EDIT_NONE_SELECTED,
     "Bitte wählen Sie eine Buchung aus, die Sie bearbeiten wollen."
   },
 
   {
-    ID::OVERVIEW_EDIT_TOO_MANY_SELECTED,
+    ID::MANAGER_EDIT_TOO_MANY_SELECTED,
     "Bitte wählen Sie nur eine Buchung zur Bearbeitung aus."
   },
 
   {
-    ID::OVERVIEW_DELETE,
+    ID::MANAGER_DELETE,
     "Buchung löschen"
   },
 
   {
-    ID::OVERVIEW_DELETE_NONE_SELECTED,
+    ID::MANAGER_DELETE_NONE_SELECTED,
     "Bitte wählen Sie eine Buchung aus, die Sie löschen möchten."
   },
 
   {
-    ID::OVERVIEW_DELETE_TOO_MANY_SELECTED,
+    ID::MANAGER_DELETE_TOO_MANY_SELECTED,
     "Bitte wählen Sie nur eine Buchung zur Bearbeitung aus."
   },
 
   {
-    ID::OVERVIEW_DELETE_CONFIRM,
+    ID::MANAGER_DELETE_CONFIRM,
     "Wollen Sie diese Buchung wirklich unwiderruflich löschen?"
   },
 
   {
-    ID::OVERVIEW_TO_PTZ,
+    ID::MANAGER_TO_PTZ,
     "Zur Kamerasteuerung"
   },
 
   {
-    ID::OVERVIEW_TO_PTZ_NONE_SELECTED,
+    ID::MANAGER_TO_PTZ_NONE_SELECTED,
     "Bitte wählen Sie eine Buchung aus, um fortzufahren."
   },
 
   {
-    ID::OVERVIEW_TO_PTZ_TOO_MANY_SELECTED,
+    ID::MANAGER_TO_PTZ_TOO_MANY_SELECTED,
     "Bitte wählen Sie nur eine Buchung aus, um fortzufahren."
   },
 
   {
-    ID::OVERVIEW_BACK,
+    ID::MANAGER_BACK,
     "Zurück"
   }, 
 
   {
-    ID::OVERVIEW_INFO,
+    ID::MANAGER_INFO,
     QString("<html><head/><body>") +
       "<span style=\"font-weight: bold;\">Was kann ich hier machen?</span><br/>" + 
       "Hier können Sie Videosessions buchen oder vorhandene Buchungen bearbeiten.<br/><br/>" +
@@ -595,7 +602,7 @@ QMap<ETextId, QString> TextManager::german = {
   },
 
   {
-    ID::CONTROLS_CAMERA_OVERVIEW,
+    ID::CONTROLS_CAMERA_MANAGER,
     "Gesamtansicht"
   },
 
@@ -656,7 +663,7 @@ QMap<ETextId, QString> TextManager::german = {
   },
 
   {
-    ID::CONTROLS_BACK_OVERVIEW,
+    ID::CONTROLS_BACK_MANAGER,
     "Zurück"
   },
 
@@ -694,4 +701,11 @@ QMap<ETextId, QString> TextManager::german = {
     ID::MAIL_SUBJECT,
     "HfMDD Konzertsaal -- Aufnahme "
   },
+
+  {
+    ID::MAIL_BODY,
+    QString("Sie können ihre Aufnahme aus dem Konzertsaal über den Link unten herunterladen.\n") +
+      "Bitte beachten Sie, dass es einen Moment dauern kann, ehe der Download beginnt.\n" +
+      "Für Fragen oder Feedback wenden Sie sich bitte an Oliver Fenk (oliver.fenk@hfmdd.de).\n\n"
+  }
 };

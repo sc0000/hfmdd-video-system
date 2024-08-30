@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QLineEdit>
 
-#include "language.hpp"
+#include "text-handler.hpp"
 #include "fullscreen-dialog.hpp"
 
 QT_BEGIN_NAMESPACE

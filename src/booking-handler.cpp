@@ -6,24 +6,22 @@
 #include <QJsonDocument>
 
 #include "json-parser.hpp"
-#include "settings-manager.hpp"
 #include "widgets.hpp"
 #include "message-dialog.hpp"
 #include "mail-handler.hpp"
-#include "text-manager.hpp"
-#include "backend.hpp"
+#include "text-handler.hpp"
+#include "booking-handler.hpp"
 
 
-EMode Backend::mode = EMode::Default;
-ELanguage Backend::language = ELanguage::English;
+EMode BookingHandler::mode = EMode::Default;
 
-QDate Backend::selectedDate = QDate();
+QDate BookingHandler::selectedDate = QDate();
 
-Booking Backend::currentBooking = {0};
-QVector<Booking> Backend::loadedBookings = {};
-QVector<Booking> Backend::bookingsOnSelectedDate = {};
+Booking BookingHandler::currentBooking = {0};
+QVector<Booking> BookingHandler::loadedBookings = {};
+QVector<Booking> BookingHandler::bookingsOnSelectedDate = {};
 
-void Backend::updateConflictingBookings(const QDate& date, const bool setConflicting)
+void BookingHandler::updateConflictingBookings(const QDate& date, const bool setConflicting)
 {
   updateBookingsOnSelectedDate(date);
 
@@ -47,7 +45,7 @@ void Backend::updateConflictingBookings(const QDate& date, const bool setConflic
   JsonParser::updateBooking(currentBooking);
 }
 
-void Backend::updateConflictingBookings(Booking& booking, const bool setConflicting)
+void BookingHandler::updateConflictingBookings(Booking& booking, const bool setConflicting)
 {
   updateBookingsOnSelectedDate(booking.date);
 
@@ -71,7 +69,7 @@ void Backend::updateConflictingBookings(Booking& booking, const bool setConflict
   JsonParser::updateBooking(booking);
 }
 
-bool Backend::bookingsAreConflicting(const Booking& b0, const Booking& b1)
+bool BookingHandler::bookingsAreConflicting(const Booking& b0, const Booking& b1)
 {
   if (b0.index == b1.index) return false;
 
@@ -82,12 +80,12 @@ bool Backend::bookingsAreConflicting(const Booking& b0, const Booking& b1)
   return false; 
 }
 
-void Backend::updateBookingsOnSelectedDate(const QDate& date)
+void BookingHandler::updateBookingsOnSelectedDate(const QDate& date)
 {
   JsonParser::getBookingsOnDate(date, bookingsOnSelectedDate);
 }
 
-void Backend::loadBookings()
+void BookingHandler::loadBookings()
 {
   if (MailHandler::currentEmail == MailHandler::adminEmail)
     JsonParser::getAllBookings(loadedBookings);
@@ -98,7 +96,7 @@ void Backend::loadBookings()
   sortBookings();
 }
 
-void Backend::sortBookings()
+void BookingHandler::sortBookings()
 {
   qsizetype size = loadedBookings.size();
 
@@ -125,7 +123,7 @@ void Backend::sortBookings()
   }
 }
 
-void Backend::reevaluateConflicts()
+void BookingHandler::reevaluateConflicts()
 {
   // load all bookings (locally)
   QVector<Booking> allBookings;
@@ -143,7 +141,7 @@ void Backend::reevaluateConflicts()
   }
 }
 
-void Backend::roundTime(QTime& time)
+void BookingHandler::roundTime(QTime& time)
 {
   int minutes = time.minute();
   int remainder = minutes % 10;
@@ -167,7 +165,7 @@ void Backend::roundTime(QTime& time)
     time = QTime(time.hour(), roundedMinutes);
 }
 
-QString Backend::makeEntry(const Booking& booking)
+QString BookingHandler::makeEntry(const Booking& booking)
 {
   QString entry = 
     booking.date.toString("ddd MMM dd yyyy") + "\t" +
@@ -175,7 +173,7 @@ QString Backend::makeEntry(const Booking& booking)
     booking.stopTime.toString("HH:mm") + "\t" +
     booking.event.leftJustified(20, ' ') + "\t" +
     booking.email.leftJustified(20, ' ') +
-    (booking.isConflicting ? TextManager::getText(ID::CONFLICT) : "");
+    (booking.isConflicting ? TextHandler::getText(ID::CONFLICT) : "");
 
   return entry;
 }

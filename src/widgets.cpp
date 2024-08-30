@@ -1,4 +1,3 @@
-#include "language.hpp"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "mode-select.hpp"

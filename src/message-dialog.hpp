@@ -5,8 +5,7 @@
 #include <QPropertyAnimation>
 
 #include "animated-dialog.hpp"
-#include "language.hpp"
-#include "booking.h"
+#include "booking-handler.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

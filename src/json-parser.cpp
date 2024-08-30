@@ -5,7 +5,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include "backend.hpp"
 #include "mail-handler.hpp"
 #include "storage-handler.hpp"
 #include "message-dialog.hpp"

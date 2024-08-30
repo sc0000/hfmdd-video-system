@@ -17,7 +17,7 @@
 
 #include <obs-frontend-api.h>
 
-#include "booking.h"
+#include "booking-handler.hpp"
 
 class SimpleRecordingWidget : public QDockWidget
 {
@@ -73,8 +73,6 @@ private:
   QString m_currentPresetName;
 
 private:
-
-  // ? Should link/mail logic be in its own class ?
   QString sendDownloadLink(const Booking& booking, const QString& path);
 
 private slots:

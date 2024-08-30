@@ -1,7 +1,7 @@
 #include <QLabel>
 #include <QScreen>
 
-#include "backend.hpp"
+#include "booking-handler.hpp"
 #include "mail-handler.hpp"
 #include "settings.hpp"
 #include "widgets.hpp"
@@ -11,9 +11,8 @@
 #include "booking-editor.hpp"
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
-#include "settings-manager.hpp"
 #include "booking-manager.hpp"
-#include "text-manager.hpp"
+#include "text-handler.hpp"
 #include "mode-select.hpp"
 #include "ui_quick-record.h"
 #include "quick-record.hpp"
@@ -23,7 +22,7 @@ QuickRecord* QuickRecord::instance = nullptr;
 QuickRecord::QuickRecord(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::QuickRecord),
-    booking(Backend::currentBooking),
+    booking(BookingHandler::currentBooking),
     infoLabelVisible(false)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
@@ -52,7 +51,7 @@ QuickRecord::QuickRecord(QWidget* parent)
   setModal(false);
   hide();
   
-  Backend::loadBookings();
+  BookingHandler::loadBookings();
 }
 
 QuickRecord::~QuickRecord()
@@ -70,9 +69,9 @@ void QuickRecord::reload()
   raise();
   center(ui->masterWidget);
 
-  Backend::reevaluateConflicts();
+  BookingHandler::reevaluateConflicts();
 
-  Backend::loadBookings();
+  BookingHandler::loadBookings();
   booking.date = QDate::currentDate();
   booking.startTime = QTime::currentTime();
   booking.stopTime = booking.startTime.addSecs(60 * 60);
@@ -80,8 +79,8 @@ void QuickRecord::reload()
   booking.index = JsonParser::availableIndex();
   booking.event = "Quick Record";
 
-  Backend::roundTime(booking.stopTime);
-  Backend::updateBookingsOnSelectedDate(booking.date);
+  BookingHandler::roundTime(booking.stopTime);
+  BookingHandler::updateBookingsOnSelectedDate(booking.date);
   updateStopTimeLabel();
   updateExistingBookingsLabel(booking.date);
   updateDurationLabel();
@@ -92,27 +91,27 @@ void QuickRecord::reload()
 
 void QuickRecord::updateTexts()
 {
-  ui->recordUntilLabel->setText(TextManager::getText(ID::QUICK_UNTIL));
-  ui->toPTZControlsButton->setText(TextManager::getText(ID::QUICK_TO_PTZ));
-  ui->toModeSelectButton->setText(TextManager::getText(ID::QUICK_BACK));
+  ui->recordUntilLabel->setText(TextHandler::getText(ID::QUICK_UNTIL));
+  ui->toPTZControlsButton->setText(TextHandler::getText(ID::QUICK_TO_PTZ));
+  ui->toModeSelectButton->setText(TextHandler::getText(ID::QUICK_BACK));
 
   // ui->infoLabel->setFont(QFont("DaxOT", 11));
-  ui->infoLabel->setText(TextManager::getText(ID::QUICK_INFO));
+  ui->infoLabel->setText(TextHandler::getText(ID::QUICK_INFO));
 }
 
 void QuickRecord::updateExistingBookingsLabel(QDate date)
 {
-  Backend::updateBookingsOnSelectedDate(date);
+  BookingHandler::updateBookingsOnSelectedDate(date);
 
-  const QVector<Booking>& bosd = Backend::bookingsOnSelectedDate;
+  const QVector<Booking>& bosd = BookingHandler::bookingsOnSelectedDate;
 
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
-        ui->bookingsOnSelectedDateLabel->setText(TextManager::getText(ID::QUICK_PREV_BOOKINGS_NONE));
+        ui->bookingsOnSelectedDateLabel->setText(TextHandler::getText(ID::QUICK_PREV_BOOKINGS_NONE));
         return;
   }
 
-  QString str = TextManager::getText(ID::QUICK_PREV_BOOKINGS);
+  QString str = TextHandler::getText(ID::QUICK_PREV_BOOKINGS);
 
   str += "<html><head/><body>";
 
@@ -122,7 +121,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
     bool isConflicting = false;
     
-    if (Backend::bookingsAreConflicting(booking, b)) 
+    if (BookingHandler::bookingsAreConflicting(booking, b)) 
       isConflicting = true; 
           
     if (isConflicting)
@@ -133,7 +132,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
       b.event + " (" + b.email + ")";
 
     if (isConflicting)
-      str += TextManager::getText(ID::CONFLICT) + "</span>";
+      str += TextHandler::getText(ID::CONFLICT) + "</span>";
 
     str += "<br/>";
   }
@@ -162,7 +161,7 @@ void QuickRecord::updateDurationLabel()
   QString minutes = QString::number(totalMin % 60);
 
   ui->durationLabel->setText(
-    "( " + hours + "h " + minutes + TextManager::getText(ID::QUICK_FROM_NOW) + " )"  
+    "( " + hours + "h " + minutes + TextHandler::getText(ID::QUICK_FROM_NOW) + " )"  
   );
 }
 
@@ -261,7 +260,7 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 
 void QuickRecord::on_toPTZControlsButton_clicked()
 { 
-  Backend::updateConflictingBookings(booking.date);
+  BookingHandler::updateConflictingBookings(booking.date);
   JsonParser::addBooking(booking);
 
   // TODO: Check: always reset or update, and setup option to reset manually?

@@ -6,6 +6,7 @@
 #include <QPaintEvent>
 
 #include "fullscreen-dialog.hpp"
+#include "text-handler.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

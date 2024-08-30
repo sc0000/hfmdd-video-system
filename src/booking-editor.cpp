@@ -1,12 +1,11 @@
 #include <QLabel>
 
-#include "backend.hpp"
+#include "booking-handler.hpp"
 #include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
-#include "settings-manager.hpp"
-#include "text-manager.hpp"
+#include "text-handler.hpp"
 #include "booking-manager.hpp"
 #include "ui_booking-editor.h"
 #include "booking-editor.hpp"
@@ -14,7 +13,7 @@
 BookingEditor::BookingEditor(QWidget* parent)
   : AnimatedDialog(parent),
     ui(new Ui::BookingEditor),
-    booking(Backend::currentBooking),
+    booking(BookingHandler::currentBooking),
     timeToSet(ETimeToSet::StartTime)
 {
   ui->setupUi(this);
@@ -64,7 +63,7 @@ void BookingEditor::reload(Booking* bookingToEdit)
       currentTime :
       QTime(8, 0);
 
-    Backend::roundTime(booking.startTime);
+    BookingHandler::roundTime(booking.startTime);
     
     booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) && booking.startTime.addSecs(60 * 60) > QTime(7, 0) ? 
       booking.startTime.addSecs(60 * 60) : 
@@ -95,14 +94,14 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
 void BookingEditor::updateTexts()
 {
-  ui->bookingsOnSelectedDateLabel->setText(TextManager::getText(ID::EDITOR_DATE_NONE_SELECTED));
-  ui->setStartTimeButton->setText(TextManager::getText(ID::EDITOR_TIME_START));
-  ui->setStopTimeButton->setText(TextManager::getText(ID::EDITOR_TIME_STOP));
-  ui->eventTypeLabel->setText(TextManager::getText(ID::EDITOR_EVENT));
-  ui->eventTypeLineEdit->setPlaceholderText(TextManager::getText(ID::EDITOR_EVENT_PLACEHOLDER));
-  ui->saveButton->setText(TextManager::getText(ID::EDITOR_SAVE));
-  ui->cancelButton->setText(TextManager::getText(ID::EDITOR_CANCEL));
-  ui->calendarWidget->setLocale(TextManager::locale);
+  ui->bookingsOnSelectedDateLabel->setText(TextHandler::getText(ID::EDITOR_DATE_NONE_SELECTED));
+  ui->setStartTimeButton->setText(TextHandler::getText(ID::EDITOR_TIME_START));
+  ui->setStopTimeButton->setText(TextHandler::getText(ID::EDITOR_TIME_STOP));
+  ui->eventTypeLabel->setText(TextHandler::getText(ID::EDITOR_EVENT));
+  ui->eventTypeLineEdit->setPlaceholderText(TextHandler::getText(ID::EDITOR_EVENT_PLACEHOLDER));
+  ui->saveButton->setText(TextHandler::getText(ID::EDITOR_SAVE));
+  ui->cancelButton->setText(TextHandler::getText(ID::EDITOR_CANCEL));
+  ui->calendarWidget->setLocale(TextHandler::locale);
 }
 
 void BookingEditor::instance(QWidget* parent)
@@ -113,27 +112,22 @@ void BookingEditor::instance(QWidget* parent)
 
 void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 {
-  Backend::updateBookingsOnSelectedDate(date);
+  BookingHandler::updateBookingsOnSelectedDate(date);
 
-  const QVector<Booking>& bosd = Backend::bookingsOnSelectedDate;
+  const QVector<Booking>& bosd = BookingHandler::bookingsOnSelectedDate;
 
-  QLocale germanLocale(QLocale::German);
-
-  // !!!!
-  QString dateStr = Backend::language != ELanguage::German ?
-    date.toString() :
-    germanLocale.toString(date); 
+  QString dateStr = TextHandler::locale.toString(date);
 
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0].index == booking.index)) {
         ui->bookingsOnSelectedDateLabel->setText(
-          TextManager::getText(ID::EDITOR_PREV_BOOKINGS_NONE) + dateStr + "."
+          TextHandler::getText(ID::EDITOR_PREV_BOOKINGS_NONE) + dateStr + "."
         );
 
         return;
   }
 
-  QString str = TextManager::getText(ID::EDITOR_PREV_BOOKINGS) + dateStr + ":\n";
+  QString str = TextHandler::getText(ID::EDITOR_PREV_BOOKINGS) + dateStr + ":\n";
 
   str += "<html><head/><body>";
 
@@ -142,7 +136,7 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
     bool isConflicting = false;
     
-    if (Backend::bookingsAreConflicting(booking, b)) 
+    if (BookingHandler::bookingsAreConflicting(booking, b)) 
       isConflicting = true; 
           
     if (isConflicting)
@@ -151,7 +145,7 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
     str += b.startTime.toString("HH:mm") + "-" + b.stopTime.toString("HH:mm") + ": " + b.event + " (" + b.email + ")";
 
     if (isConflicting) 
-      str += TextManager::getText(ID::CONFLICT) + "</span>";
+      str += TextHandler::getText(ID::CONFLICT) + "</span>";
 
     str += "<br/>";
   }
@@ -338,7 +332,7 @@ void BookingEditor::on_saveButton_clicked()
 {
   if (booking.event == "") {
     Widgets::okDialog->display(
-      TextManager::getText(ID::EDITOR_EVENT_MISSING)
+      TextHandler::getText(ID::EDITOR_EVENT_MISSING)
     );
 
     return;
@@ -346,17 +340,17 @@ void BookingEditor::on_saveButton_clicked()
 
   if (booking.startTime.toString("HH:mm") == booking.stopTime.toString("HH:mm")) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::EDITOR_IDENTICAL_TIMES)
+      TextHandler::getText(ID::EDITOR_IDENTICAL_TIMES)
     );
 
     return;
   }
   
-  Backend::updateConflictingBookings(booking);
+  BookingHandler::updateConflictingBookings(booking);
 
   if (booking.isConflicting) {
     int result = Widgets::okCancelDialog->display(
-      TextManager::getText(ID::EDITOR_CONFLICTING_BOOKINGS), true
+      TextHandler::getText(ID::EDITOR_CONFLICTING_BOOKINGS), true
     );
     
     if (result == QDialog::Rejected)

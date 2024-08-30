@@ -1,6 +1,6 @@
 #pragma once
 
-#include "booking.h"
+#include "booking-handler.hpp"
 
 enum class EMailType
 {
@@ -30,7 +30,7 @@ public:
 
   static QVector<QString> mailSuffices;
 
-  static QString sendFiles(const Booking& booking);
+  // static QString sendFiles(const Booking& booking);
   static QString sendMail(const Booking& booking, EMailType mailType);
 
   static void saveCredentials();

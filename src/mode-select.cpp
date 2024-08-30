@@ -3,7 +3,7 @@
 
 #include <QScreen>
 
-#include "backend.hpp"
+#include "booking-handler.hpp"
 #include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "login-dialog.hpp"
@@ -12,9 +12,7 @@
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
-#include "settings-manager.hpp"
 #include "json-parser.hpp"
-#include "text-manager.hpp"
 #include "ui_mode-select.h"
 #include "mode-select.hpp"
 
@@ -58,18 +56,18 @@ void ModeSelect::reload()
 
 void ModeSelect::updateTexts()
 {
-  ui->quickModeButton->setText(TextManager::getText(ID::MODE_QUICK));
-  ui->bookingModeButton->setText(TextManager::getText(ID::MODE_BOOKING));
+  ui->quickModeButton->setText(TextHandler::getText(ID::MODE_QUICK));
+  ui->bookingModeButton->setText(TextHandler::getText(ID::MODE_BOOKING));
 }
 
 void ModeSelect::on_quickModeButton_clicked()
 {
-  Backend::mode = EMode::QuickMode;
+  BookingHandler::mode = EMode::QuickMode;
   fade(Widgets::quickRecord);
 }
 
 void ModeSelect::on_bookingModeButton_clicked()
 {
-  Backend::mode = EMode::BookMode;
+  BookingHandler::mode = EMode::BookMode;
   fade(Widgets::bookingManager);
 }  

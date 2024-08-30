@@ -4,7 +4,7 @@
 #include <QDockWidget>
 #include <QLineEdit>
 
-#include "language.hpp"
+#include "text-handler.hpp"
 
 #ifdef __cplusplus
 extern "C" {

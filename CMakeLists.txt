@@ -42,8 +42,8 @@ endif()
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE 
   src/plugin-main.cpp
-  src/backend.cpp
-  src/text-manager.cpp
+  src/booking-handler.cpp
+  src/text-handler.cpp
   src/mail-handler.cpp
   src/storage-handler.cpp
   # src/simple-recording.cpp
@@ -68,7 +68,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/quick-record.ui
   src/ptz-controls.ui
   src/settings.ui
-  src/settings-manager.cpp
   src/login-dialog.qrc
   src/ptz-controls.qrc
   # src/ptz.c
@@ -92,12 +91,11 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/imported/slider-ignorewheel.cpp
   src/imported/spinbox-ignorewheel.cpp
   # src/ptz.h
-  src/backend.hpp
-  src/text-manager.hpp
+  src/booking-handler.hpp
+  src/text-handler.hpp
   src/mail-handler.hpp
   src/storage-handler.hpp
   # src/globals.hpp
-  src/language.hpp
   src/login.hpp
   src/login-dialog.hpp
   src/mode-select.hpp
@@ -108,7 +106,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/booking-editor.hpp
   src/booking-manager.hpp
   src/quick-record.hpp
-  src/settings-manager.hpp
   src/json-parser.hpp
   src/ptz-controls.hpp
   src/ptz-device.hpp

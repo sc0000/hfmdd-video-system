@@ -9,7 +9,6 @@
 #include "protocol-helpers.hpp"
 #include "message-dialog.hpp"
 #include "json-parser.hpp"
-#include "backend.hpp"
 #include "mail-handler.hpp"
 #include "booking-manager.hpp"
 #include "ptz-visca-udp.hpp"

@@ -11,9 +11,8 @@
 #include <obs-module.h>
 
 #include "source-record.h"
-#include "backend.hpp"
 #include "storage-handler.hpp"
-#include "text-manager.hpp"
+#include "text-handler.hpp"
 #include "mail-handler.hpp"
 
 QString MailHandler::nasIP = "";
@@ -96,59 +95,59 @@ void MailHandler::loadCredentials()
   mailSenderAddress = obs_data_get_string(loaddata, "sender_address");
 }
 
-QString MailHandler::sendFiles(const Booking& booking)
-{
-  const QString dllFilePath = QCoreApplication::applicationFilePath();
-  const QString dllDir = QFileInfo(dllFilePath).absolutePath();
+// QString MailHandler::sendFiles(const Booking& booking)
+// {
+//   const QString dllFilePath = QCoreApplication::applicationFilePath();
+//   const QString dllDir = QFileInfo(dllFilePath).absolutePath();
 
-  const QString scriptPath = QDir::toNativeSeparators(dllDir + "/../../node-scripts/file-sender.js");
+//   const QString scriptPath = QDir::toNativeSeparators(dllDir + "/../../node-scripts/file-sender.js");
 
-  const QStringList nodeArgs = QStringList() << scriptPath;
+//   const QStringList nodeArgs = QStringList() << scriptPath;
 
-  QProcess* nodeProcess = new QProcess();
-  nodeProcess->setEnvironment(QProcess::systemEnvironment());
-  nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
+//   QProcess* nodeProcess = new QProcess();
+//   nodeProcess->setEnvironment(QProcess::systemEnvironment());
+//   nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
 
-  nodeProcess->start("node", nodeArgs);
+//   nodeProcess->start("node", nodeArgs);
 
-  if (!nodeProcess->waitForStarted()) 
-    return "Process started with error: " + nodeProcess->errorString();
+//   if (!nodeProcess->waitForStarted()) 
+//     return "Process started with error: " + nodeProcess->errorString();
 
-  const QString& baseDir = StorageHandler::baseDirectory;
+//   const QString& baseDir = StorageHandler::baseDirectory;
 
-  const QString apiBasePath = 
-    QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
+//   const QString apiBasePath = 
+//     QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
 
-  QJsonObject jsonObj;
-  jsonObj["basePath"] = apiBasePath;
-  jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
-  jsonObj["receiver"] = booking.email;
+//   QJsonObject jsonObj;
+//   jsonObj["basePath"] = apiBasePath;
+//   jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
+//   jsonObj["receiver"] = booking.email;
 
-  jsonObj["subject"] = TextManager::getText(ID::MAIL_SUBJECT) + 
-    booking.date.toString("ddd MMM dd yyyy");
+//   jsonObj["subject"] = TextHandler::getText(ID::MAIL_SUBJECT) + 
+//     booking.date.toString("ddd MMM dd yyyy");
 
-  jsonObj["nasIP"] = nasIP;
-  jsonObj["nasPort"] = nasPort;
-  jsonObj["nasUser"] = nasUser;
-  jsonObj["nasPassword"] = nasPassword;
+//   jsonObj["nasIP"] = nasIP;
+//   jsonObj["nasPort"] = nasPort;
+//   jsonObj["nasUser"] = nasUser;
+//   jsonObj["nasPassword"] = nasPassword;
 
-  jsonObj["mailHost"] = mailHost;
-  jsonObj["mailUser"] = mailUser;
-  jsonObj["mailPassword"] = mailPassword;
-  jsonObj["mailSenderAddress"] = mailSenderAddress;
-  jsonObj["german"] = (Backend::language == ELanguage::German);
+//   jsonObj["mailHost"] = mailHost;
+//   jsonObj["mailUser"] = mailUser;
+//   jsonObj["mailPassword"] = mailPassword;
+//   jsonObj["mailSenderAddress"] = mailSenderAddress;
+//   jsonObj["german"] = false;
   
-  QJsonDocument jsonDoc(jsonObj);
+//   QJsonDocument jsonDoc(jsonObj);
 
-  nodeProcess->write(jsonDoc.toJson());
-  nodeProcess->closeWriteChannel();
+//   nodeProcess->write(jsonDoc.toJson());
+//   nodeProcess->closeWriteChannel();
 
-  if (!nodeProcess->waitForFinished())
-    return "Process finished with error: " + nodeProcess->errorString();
+//   if (!nodeProcess->waitForFinished())
+//     return "Process finished with error: " + nodeProcess->errorString();
 
-  const QByteArray output = nodeProcess->readAllStandardOutput();
-  return QString::fromUtf8(output);
-}
+//   const QByteArray output = nodeProcess->readAllStandardOutput();
+//   return QString::fromUtf8(output);
+// }
 
 QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
 {
@@ -199,8 +198,7 @@ QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
   jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
   jsonObj["receiver"] = booking.email;
 
-  jsonObj["subject"] = (Backend::language != ELanguage::German ? 
-    "HfMDD Concert Hall Recordings " : "HfMDD Konzertsaal -- Aufnahme ") + 
+  jsonObj["subject"] = TextHandler::getText(ID::MAIL_SUBJECT) + 
     booking.date.toString("ddd MMM dd yyyy");
 
   jsonObj["dateTime"] = booking.date.toString("ddd MMM dd yyyy\n") + 
@@ -218,7 +216,7 @@ QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
   jsonObj["mailUser"] = mailUser;
   jsonObj["mailPassword"] = mailPassword;
   jsonObj["mailSenderAddress"] = mailSenderAddress;
-  jsonObj["german"] = (Backend::language == ELanguage::German);
+  jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_BODY);
   
   QJsonDocument jsonDoc(jsonObj);
 

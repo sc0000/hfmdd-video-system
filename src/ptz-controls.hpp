@@ -11,9 +11,9 @@
 #include <obs.hpp>
 #include <QDockWidget>
 
-#include "language.hpp"
+#include "text-handler.hpp"
 #include "time-observer.hpp"
-#include "booking.h"
+#include "booking-handler.hpp"
 #include "ptz.h"
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"

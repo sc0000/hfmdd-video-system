@@ -26,10 +26,8 @@
 #include "imported/qjoysticks/QJoysticks.h"
 
 #include "source-record.h"
-#include "backend.hpp"
 #include "mail-handler.hpp"
 #include "storage-handler.hpp"
-#include "settings-manager.hpp"
 #include "json-parser.hpp"
 #include "message-dialog.hpp"
 #include "widgets.hpp"

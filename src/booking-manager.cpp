@@ -1,7 +1,6 @@
 #include <QLabel>
 #include <QScreen>
 
-#include "backend.hpp"
 #include "mail-handler.hpp"
 #include "settings.hpp"
 #include "widgets.hpp"
@@ -11,8 +10,7 @@
 #include "booking-editor.hpp"
 #include "json-parser.hpp"
 #include "ptz-controls.hpp"
-#include "settings-manager.hpp"
-#include "text-manager.hpp"
+#include "text-handler.hpp"
 #include "mode-select.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
@@ -23,7 +21,7 @@ BookingManager* BookingManager::instance = nullptr;
 BookingManager::BookingManager(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::BookingManager),
-    bookings(Backend::loadedBookings),
+    bookings(BookingHandler::loadedBookings),
     currentRow(0)
 {
   setWindowFlags(
@@ -74,7 +72,7 @@ void BookingManager::reload()
   raise();
   center(ui->masterWidget);
 
-  Backend::reevaluateConflicts();
+  BookingHandler::reevaluateConflicts();
   loadBookings();
 
   ui->infoLabel->setMaximumWidth(0);
@@ -88,14 +86,14 @@ void BookingManager::toLoginDialog()
 
 void BookingManager::loadBookings()
 {   
-  Backend::loadBookings();
+  BookingHandler::loadBookings();
 
   if (!ui->bookingsList) return;
 
   ui->bookingsList->clear();
 
   for (qsizetype i = 0; i < bookings.size(); ++i) {
-    QString entryText = Backend::makeEntry(bookings[i]);
+    QString entryText = BookingHandler::makeEntry(bookings[i]);
     QListWidgetItem* item = new QListWidgetItem(entryText);
     
     if (bookings[i].isConflicting) {
@@ -126,14 +124,14 @@ void BookingManager::loadBookings()
 
 void BookingManager::updateTexts()
 {
-  ui->newBookingButton->setText(TextManager::getText(ID::OVERVIEW_NEW));
-  ui->editBookingButton->setText(TextManager::getText(ID::OVERVIEW_EDIT));
-  ui->deleteBookingButton->setText(TextManager::getText(ID::OVERVIEW_DELETE));
-  ui->toPTZControlsButton->setText(TextManager::getText(ID::OVERVIEW_TO_PTZ));
-  ui->toModeSelectButton->setText(TextManager::getText(ID::OVERVIEW_BACK));
+  ui->newBookingButton->setText(TextHandler::getText(ID::MANAGER_NEW));
+  ui->editBookingButton->setText(TextHandler::getText(ID::MANAGER_EDIT));
+  ui->deleteBookingButton->setText(TextHandler::getText(ID::MANAGER_DELETE));
+  ui->toPTZControlsButton->setText(TextHandler::getText(ID::MANAGER_TO_PTZ));
+  ui->toModeSelectButton->setText(TextHandler::getText(ID::MANAGER_BACK));
 
   // ui->infoLabel->setFont(QFont("DaxOT", 11));
-  ui->infoLabel->setText(TextManager::getText(ID::OVERVIEW_INFO));
+  ui->infoLabel->setText(TextHandler::getText(ID::MANAGER_INFO));
 }
 
 void BookingManager::on_bookingsList_currentRowChanged()
@@ -182,7 +180,7 @@ void BookingManager::on_editBookingButton_clicked()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::OVERVIEW_EDIT_NONE_SELECTED)
+      TextHandler::getText(ID::MANAGER_EDIT_NONE_SELECTED)
     );
 
     return;
@@ -190,7 +188,7 @@ void BookingManager::on_editBookingButton_clicked()
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::OVERVIEW_EDIT_TOO_MANY_SELECTED)
+      TextHandler::getText(ID::MANAGER_EDIT_TOO_MANY_SELECTED)
     );
 
     return;
@@ -204,7 +202,7 @@ void BookingManager::on_deleteBookingButton_clicked()
 {
   if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::OVERVIEW_DELETE_NONE_SELECTED)
+      TextHandler::getText(ID::MANAGER_DELETE_NONE_SELECTED)
     );
 
     return;
@@ -213,7 +211,7 @@ void BookingManager::on_deleteBookingButton_clicked()
   // TODO: Select more than one booking for deletion?
 
   int result = Widgets::okCancelDialog->display(
-    TextManager::getText(ID::OVERVIEW_DELETE_CONFIRM)
+    TextHandler::getText(ID::MANAGER_DELETE_CONFIRM)
   );
 
   if (result == QDialog::Rejected) 
@@ -221,7 +219,7 @@ void BookingManager::on_deleteBookingButton_clicked()
   
   int rowIndex = ui->bookingsList->currentRow();
   Booking& selectedBooking = bookings[rowIndex];
-  Backend::updateConflictingBookings(selectedBooking, false);
+  BookingHandler::updateConflictingBookings(selectedBooking, false);
   JsonParser::removeBooking(selectedBooking);
 
   loadBookings();
@@ -231,7 +229,7 @@ void BookingManager::on_toPTZControlsButton_clicked()
 {
    if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::OVERVIEW_TO_PTZ_NONE_SELECTED)
+      TextHandler::getText(ID::MANAGER_TO_PTZ_NONE_SELECTED)
     );
 
     return;
@@ -239,13 +237,13 @@ void BookingManager::on_toPTZControlsButton_clicked()
 
   else if (ui->bookingsList->selectedItems().size() > 1) {
     Widgets::okDialog->display(
-      TextManager::getText(ID::OVERVIEW_TO_PTZ_TOO_MANY_SELECTED)
+      TextHandler::getText(ID::MANAGER_TO_PTZ_TOO_MANY_SELECTED)
     );
 
     return;
   }
 
-  Backend::currentBooking = bookings[currentRow];
+  BookingHandler::currentBooking = bookings[currentRow];
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   PTZSettings::resetFilterSettings();

@@ -6,16 +6,14 @@
 #include <QPixmap>
 #include <QDir>
 
-#include "backend.hpp"
+#include "booking-handler.hpp"
 #include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
-#include "settings-manager.hpp"
 #include "mode-select.hpp"
-#include "text-manager.hpp"
 #include "ui_login-dialog.h"
 #include "login-dialog.hpp"
 
@@ -121,8 +119,8 @@ void LoginDialog::reload()
 
 void LoginDialog::updateTexts()
 {
-  ui->reminderLabel->setText(TextManager::getText(ID::LOGIN_REMINDER));
-  infoDialogText = TextManager::getText(ID::LOGIN_INFO);
+  ui->reminderLabel->setText(TextHandler::getText(ID::LOGIN_REMINDER));
+  infoDialogText = TextHandler::getText(ID::LOGIN_INFO);
 }
 
 bool LoginDialog::verifyMailAddress()
@@ -173,7 +171,7 @@ void LoginDialog::on_mailAddressLineEdit_textChanged(const QString& text)
 void LoginDialog::on_manageBookingsButton_clicked()
 {
   if (!verifyMailAddress()) {
-    Widgets::okDialog->display(TextManager::getText(ID::LOGIN_REMINDER));
+    Widgets::okDialog->display(TextHandler::getText(ID::LOGIN_REMINDER));
     return;
   }
 
@@ -189,7 +187,7 @@ void LoginDialog::on_manageBookingsButton_clicked()
 
 void LoginDialog::on_languageComboBox_currentTextChanged(const QString& text)
 {
-  TextManager::translate(text);
+  TextHandler::translate(text);
 
   for (Translatable* t : Widgets::translatables)
     t->updateTexts();
@@ -203,7 +201,7 @@ void LoginDialog::on_infoButton_pressed()
       "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
     );
 
-    Widgets::infoDialog->display(TextManager::getText(ID::LOGIN_INFO), ui->infoButton);
+    Widgets::infoDialog->display(TextHandler::getText(ID::LOGIN_INFO), ui->infoButton);
   }
     
 
