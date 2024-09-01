@@ -49,7 +49,7 @@ QMap<ETextId, QString> TextHandler::english = {
 
   {
     ID::LOGIN_REMINDER,
-    "Please log in with your HfMDD email address!"
+    "Please log in with your HfMDD email address,\nwith either a @hfmdd.de or @mailbox.hfmdd.de suffix!"
   },
 
   {
@@ -389,7 +389,7 @@ QMap<ETextId, QString> TextHandler::german = {
   
   {
     ID::LOGIN_REMINDER,
-    "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein!"
+    "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein\n(@mailbox.hfmdd.de oder @hfmdd.de)!"
   },
 
   {
