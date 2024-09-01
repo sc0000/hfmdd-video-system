@@ -1574,7 +1574,7 @@ void PTZControls::on_actionPTZProperties_triggered()
     return;
   }
 
-	ptz_settings_show(
+	Widgets::ptzSettings->display(
 		ptzDeviceList.getDeviceId(ui->cameraList->currentIndex()));
 }
 

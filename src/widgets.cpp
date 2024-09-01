@@ -6,6 +6,7 @@
 #include "quick-record.hpp"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
+#include "settings.hpp"
 #include "widgets.hpp"
 
 Login* Widgets::login; // TODO: Rename!
@@ -25,6 +26,8 @@ PasswordDialog* Widgets::passwordDialog;
 PresetDialog* Widgets::presetDialog;
 InfoDialog* Widgets::infoDialog;
 
+PTZSettings* Widgets::ptzSettings;
+
 void Widgets::load()
 {
   QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
@@ -43,6 +46,8 @@ void Widgets::load()
   presetDialog = new PresetDialog(mainWindow);
   infoDialog = new InfoDialog(mainWindow);
 
+  ptzSettings = new PTZSettings(mainWindow);
+
   assert(
     login &&
     loginDialog &&
@@ -54,7 +59,9 @@ void Widgets::load()
     okDialog &&
     okCancelDialog &&
     passwordDialog &&
-    presetDialog
+    presetDialog &&
+    infoDialog &&
+    ptzSettings
   );
 
   fullScreenDialogs = {

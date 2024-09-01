@@ -167,6 +167,9 @@ PTZSettings::PTZSettings(QWidget* parent)
   getAdditionalProperties();
   getCredentials();
   //----------------------------------------------------
+
+  setModal(true);
+  hide();
 }
 
 PTZSettings::~PTZSettings()
@@ -607,21 +610,16 @@ void PTZSettings::settingsChanged(OBSData changed)
 	propertiesView->RefreshProperties();
 }
 
-// TODO: Rename: reload()
-void PTZSettings::showDevice(uint32_t device_id)
+void PTZSettings::showDevice(uint32_t deviceId)
 {
-	if (device_id) {
-		set_selected(device_id);
+	if (deviceId) {
+		set_selected(deviceId);
 		ui->tabWidget->setCurrentWidget(ui->camerasTab);
 	} 
   
   else {
 		ui->tabWidget->setCurrentWidget(ui->generalTab);
 	}
-
-	// show();
-	// raise();
-  fade();
 }
 
 void PTZSettings::getAdditionalProperties()
@@ -688,6 +686,12 @@ void PTZSettings::updateCredentials()
   MailHandler::mailSenderAddress = ui->mailSenderAddressLineEdit->text();
 
   MailHandler::saveCredentials();
+}
+
+void PTZSettings::display(uint32_t deviceId)
+{
+  showDevice(deviceId);
+  fade();
 }
 
 /* ----------------------------------------------------------------- */

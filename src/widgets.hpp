@@ -22,6 +22,8 @@ public:
   static class PresetDialog* presetDialog;
   static class InfoDialog* infoDialog;
 
+  static class PTZSettings* ptzSettings;
+
   static QVector<FullScreenDialog*> fullScreenDialogs;
   static QVector<Translatable*> translatables;
 
