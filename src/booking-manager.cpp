@@ -44,7 +44,7 @@ BookingManager::BookingManager(QWidget* parent)
   infoLabelAnimation = new QPropertyAnimation(ui->infoLabel, "maximumWidth");
   infoLabelAnimation->setDuration(100);
 
-  ui->infoLabel->setFont(QFont("DaxOT", 11));
+  ui->infoLabel->setFont(QFont("DaxOT", 12));
 
   ui->bookingsList->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
 
@@ -117,14 +117,13 @@ void BookingManager::updateTexts()
   ui->deleteBookingButton->setText(TextHandler::getText(ID::MANAGER_DELETE));
   ui->toPTZControlsButton->setText(TextHandler::getText(ID::MANAGER_TO_PTZ));
   ui->toModeSelectButton->setText(TextHandler::getText(ID::MANAGER_BACK));
-
-  // ui->infoLabel->setFont(QFont("DaxOT", 11));
   ui->infoLabel->setText(TextHandler::getText(ID::MANAGER_INFO));
-}
 
-void BookingManager::on_bookingsList_currentRowChanged()
-{
-  
+  if (TextHandler::locale == QLocale::German)
+    ui->infoLabel->setFont(QFont("DaxOT", 11));
+
+  else
+    ui->infoLabel->setFont(QFont("DaxOT", 12));
 }
 
 void BookingManager::on_infoButton_pressed()

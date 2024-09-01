@@ -36,12 +36,12 @@ QMap<ETextId, QString> TextHandler::english = {
       "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>" +
       "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>" +
       "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdde.de or @mailbox.hfmdd.de). " +
-      "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos.<br/>" +
-      "Then, you have two options: You could make a recording right away, only setting the stop time.<br/>"
+      "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos. " +
+      "Then, you have two options: You could make a recording right away, only setting the stop time. "
       "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>" +
       "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>" +
-      "No matter which route you'll take, the system will let you know of any other planned recordings that might be in conflict with what you're planning.<br/>" +
-      "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot.<br/>" +
+      "No matter which route you'll take, the system will let you know of any other planned recordings that might be in conflict with what you're planning. " +
+      "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot." +
       "Therefore, it is all the more important to communicate with whomever you're colliding with. Conflicting bookings might also be reviewed by the admin, and, if needed, adjusted.<br/><br/>" +
       "<span style=\"font-weight: bold;\">Who can I talk to about this?</span><br/>For questions and feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de)." +
       "</body></html>"
@@ -49,7 +49,7 @@ QMap<ETextId, QString> TextHandler::english = {
 
   {
     ID::LOGIN_REMINDER,
-    "Please log in with your HfMDD email address,\nwith either a @hfmdd.de or @mailbox.hfmdd.de suffix!"
+    "Please log in with your HfMDD email address, with either a @hfmdd.de or @mailbox.hfmdd.de suffix!"
   },
 
   {
@@ -342,7 +342,7 @@ QMap<ETextId, QString> TextHandler::english = {
     QString("<html><head/><body>") + 
       "<span style=\"font-weight: bold;\">What can I do here?</span><br/>" +
       "With the arrow keys and the surrounding ones, you can configure each camera. Cycle through them with the topmost buttons, " +
-      "or by clicking on the preview in overview mode.<br/>" +
+      "or by clicking on the preview in overview mode. " +
       "Save your current configuration as a preset, or load previously saved presets. Finally, you can start and stop the recording.<br/><br/>" +
       "<span style=\"font-weight: bold;\">What's with the presets already in the list?</span><br/>" +
       "Additional to your own presets, you have access to a couple of standard presets provided by the admin.<br/><br/>" +
@@ -376,11 +376,11 @@ QMap<ETextId, QString> TextHandler::german = {
         "<span style=\"font-weight: bold;\">Was ist das hier?</span><br/>" +
         "Das hier ist ein System, mit dem jedes Mitglied der HfMDD seine Konzertsaalauftritte selbstständig auf Video aufzeichnen kann.<br/><br/>" +
         "<span style=\"font-weight: bold;\">Wie funktioniert das?</span><br/>Melden Sie sich zunächst mit Ihrer Hochschul-Mailadresse an (@hfmdd.de oder @mailbox.hfmdd.de). " +
-        "Bitte achten Sie auf die richtige Schreibweise, andernfalls kann der Downloadlink für Ihre Videos nicht zugestellt werden." +
-        "Dann haben Sie zwei Möglichkeiten:<br/>Sie können direkt mit der Aufnahme beginnen und nur die Stoppzeit angeben, "
+        "Bitte achten Sie auf die richtige Schreibweise, andernfalls kann der Downloadlink für Ihre Videos nicht zugestellt werden. " +
+        "Dann haben Sie zwei Möglichkeiten: Sie können direkt mit der Aufnahme beginnen und nur die Stoppzeit angeben, "
         "oder das Buchungssystem nutzen und ein Zeitfenster für eine Aufnahme reservieren.<br/><br/>" +
         "<span style=\"font-weight: bold;\">Gibt es etwas, worauf ich achten muss?</span><br/>" +
-        "Das System weist Sie auf bereits existierende Buchungen hin, die möglicherweise mit Ihren Plänen kollidieren.<br/>" +
+        "Das System weist Sie auf bereits existierende Buchungen hin, die möglicherweise mit Ihren Plänen kollidieren. " +
         "Aktuell ist es durchaus möglich, kollierende Zeitfenster zu buchen, wie auch in reservierte Zeitfenster hinein aufzunehmen. " +
         "In solchen Fällen ist es ratsam, ggf. den Kontakt zur betreffenden Person zu suchen. Kollidierende Buchungen werden außerdem vom Administrator überprüft und Umständen entsprechend angepasst.<br/><br/>" +
         "<span style=\"font-weight: bold;\">An wen kann ich mich bei Fragen und Problemen wenden?</span><br/>Oliver Fenk (oliver.fenk@hfmdd.de)." +
@@ -389,7 +389,7 @@ QMap<ETextId, QString> TextHandler::german = {
   
   {
     ID::LOGIN_REMINDER,
-    "Bitte loggen Sie sich mit Ihrer HfMDD-E-Mail-Adresse ein\n(@mailbox.hfmdd.de oder @hfmdd.de)!"
+    "Bitte loggen Sie sich mit Ihrer von der HfM bereit gestellten E-Mail-Adresse ein (@mailbox.hfmdd.de oder @hfmdd.de)!"
   },
 
   {

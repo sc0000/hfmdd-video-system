@@ -27,7 +27,6 @@ private:
   QVector<Booking>& bookings;
   
 private slots:
-  void on_bookingsList_currentRowChanged();
   void on_infoButton_pressed();
   void on_newBookingButton_clicked();
   void on_editBookingButton_clicked();

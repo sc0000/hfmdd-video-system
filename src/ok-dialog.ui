@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
-    <height>140</height>
+    <width>432</width>
+    <height>162</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -27,11 +27,14 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>341</width>
-     <height>121</height>
+     <width>411</width>
+     <height>141</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>8</number>
+    </property>
     <property name="sizeConstraint">
      <enum>QLayout::SetNoConstraint</enum>
     </property>
@@ -53,10 +56,13 @@
        <string>TextLabel</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignJustify|Qt::AlignVCenter</set>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
+      </property>
+      <property name="margin">
+       <number>8</number>
       </property>
      </widget>
     </item>
@@ -66,13 +72,32 @@
        <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>8</number>
+       <number>0</number>
       </property>
       <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QPushButton" name="okButton">
-        <property name="maximumSize">
+        <property name="minimumSize">
          <size>
           <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>52</width>
           <height>16777215</height>
          </size>
         </property>

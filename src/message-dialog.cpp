@@ -30,6 +30,8 @@ OkDialog::OkDialog(QWidget* parent)
     "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
   );
 
+  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+
   setModal(true);
   hide();
 }
@@ -58,13 +60,15 @@ OkCancelDialog::OkCancelDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
 
   ui->okButton->setStyleSheet(
     "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
     "QPushButton:hover { background-color: rgb(31, 30, 31); }"
     "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
   );
+
+  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
 
   ui->cancelButton->setStyleSheet(
     "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
@@ -124,13 +128,16 @@ PasswordDialog::PasswordDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
 
   ui->okButton->setStyleSheet(
     "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
     "QPushButton:hover { background-color: rgb(31, 30, 31); }"
     "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
   );
+
+  ui->passwordWidget->setStyleSheet("QWidget { border: 1px solid rgb( 254, 253, 254); }");
+  ui->passwordLabel->setStyleSheet("QLabel { border: none; }");
 
   ui->cancelButton->setStyleSheet(
     "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
@@ -139,7 +146,7 @@ PasswordDialog::PasswordDialog(QWidget* parent)
   );
 
   ui->passwordLineEdit->setStyleSheet(
-    "QLineEdit { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
+    "QLineEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
   );
 
   setModal(true);
@@ -173,6 +180,28 @@ PresetDialog::PresetDialog(QWidget* parent)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
+
+  ui->okButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  ui->presetNameWidget->setStyleSheet("QWidget { border: 1px solid rgb( 254, 253, 254); }");
+  ui->presetNameLabel->setStyleSheet("QLabel { border: none; }");
+
+  ui->cancelButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  ui->presetNameLineEdit->setStyleSheet(
+    "QLineEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+  );
+
   setModal(true);
   hide();
 }
