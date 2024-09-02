@@ -23,7 +23,7 @@ private:
   QPropertyAnimation* infoLabelAnimation;
   bool infoLabelVisible;
 
-  Booking& booking;
+  Booking* booking;
 
 private:
   void updateExistingBookingsLabel(QDate date);

@@ -14,7 +14,7 @@ QString StorageHandler::innerDirectory = "";
 
 void StorageHandler::setOuterDirectory()
 {
-  outerDirectory = BookingHandler::currentBooking.date.toString(Qt::ISODate) + "/";
+  outerDirectory = BookingHandler::currentBooking->date.toString(Qt::ISODate) + "/";
 }
 
 void StorageHandler::setInnerDirectory()

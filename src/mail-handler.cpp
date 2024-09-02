@@ -21,6 +21,7 @@ QString MailHandler::nasUser = "";
 QString MailHandler::nasPassword = "";
 
 QString MailHandler::mailHost = "";
+QString MailHandler::mailPort = "";
 QString MailHandler::mailUser = "";
 QString MailHandler::mailPassword = "";
 QString MailHandler::mailSenderAddress = "";
@@ -30,8 +31,11 @@ QString MailHandler::adminPassword = "";
 
 QString MailHandler::currentEmail = "";
 bool MailHandler::mailAddressIsValid = false;
+bool MailHandler::isAdmin = false;
 
 QVector<QString> MailHandler::mailSuffices = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net", "@gmail.com", "@gmail.de" };
+
+bool MailHandler::sendConflictWarnings = true;
 
 void MailHandler::saveCredentials()
 {
@@ -50,6 +54,7 @@ void MailHandler::saveCredentials()
   obs_data_set_string(savedata, "nas_user", nasUser.toUtf8().constData());
   obs_data_set_string(savedata, "nas_password", nasPassword.toUtf8().constData());
   obs_data_set_string(savedata, "mail_host", mailHost.toUtf8().constData());
+  obs_data_set_string(savedata, "mail_port", mailPort.toUtf8().constData());
   obs_data_set_string(savedata, "mail_user", mailUser.toUtf8().constData());
   obs_data_set_string(savedata, "mail_password", mailPassword.toUtf8().constData());
   obs_data_set_string(savedata, "sender_address", mailSenderAddress.toUtf8().constData());
@@ -90,6 +95,7 @@ void MailHandler::loadCredentials()
   nasUser = obs_data_get_string(loaddata, "nas_user");
   nasPassword = obs_data_get_string(loaddata, "nas_password");
   mailHost = obs_data_get_string(loaddata, "mail_host");
+  mailPort = obs_data_get_string(loaddata, "mail_port");
   mailUser = obs_data_get_string(loaddata, "mail_user");
   mailPassword = obs_data_get_string(loaddata, "mail_password");
   mailSenderAddress = obs_data_get_string(loaddata, "sender_address");
@@ -97,6 +103,9 @@ void MailHandler::loadCredentials()
 
 QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
 {
+  if (mailType == EMailType::BookingConflictWarning && !sendConflictWarnings)
+    return QString();
+
   const QString dllFilePath = QCoreApplication::applicationFilePath();
   const QString dllDir = QFileInfo(dllFilePath).absolutePath();
 
@@ -159,10 +168,13 @@ QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
   jsonObj["nasPassword"] = nasPassword;
 
   jsonObj["mailHost"] = mailHost;
+  jsonObj["mailPort"] = mailPort;
   jsonObj["mailUser"] = mailUser;
   jsonObj["mailPassword"] = mailPassword;
   jsonObj["mailSenderAddress"] = mailSenderAddress;
   jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_BODY);
+
+  jsonObj["adminAddress"] = adminEmail;
   
   QJsonDocument jsonDoc(jsonObj);
 

@@ -16,103 +16,129 @@ EMode BookingHandler::mode = EMode::Default;
 
 QDate BookingHandler::selectedDate = QDate();
 
-Booking BookingHandler::currentBooking = {0};
-QVector<Booking> BookingHandler::loadedBookings = {};
-QVector<Booking> BookingHandler::bookingsOnSelectedDate = {};
+Booking* BookingHandler::currentBooking = nullptr;
+QVector<Booking> BookingHandler::allBookings = {};
+QVector<Booking*> BookingHandler::loadedBookings = {};
+QVector<Booking*> BookingHandler::bookingsOnSelectedDate = {};
+
+void BookingHandler::initCurrentBooking()
+{
+  currentBooking = new Booking;
+}
 
 void BookingHandler::updateConflictingBookings(const QDate& date, const bool setConflicting)
 {
-  updateBookingsOnSelectedDate(date);
+  // getBookingsOnSelectedDate(date);
 
-  currentBooking.isConflicting = false;
+  // currentBooking.isConflicting = false;
 
-  for (Booking& b : bookingsOnSelectedDate) {
-    if (bookingsAreConflicting(currentBooking, b)) {
-      currentBooking.isConflicting = true;
-      b.isConflicting = setConflicting;
-    }
+  // for (Booking* b : bookingsOnSelectedDate) {
+  //   if (bookingsAreConflicting(currentBooking, *b)) {
+  //     currentBooking.isConflicting = true;
+  //     b->isConflicting = setConflicting;
+  //   }
 
-    else {
-      b.isConflicting = false;
-    }
+  //   else {
+  //     b->isConflicting = false;
+  //   }
 
-    b.date = date;
+  //   b->date = date;
 
-    JsonParser::updateBooking(b);
-  }
+  //   JsonParser::updateBooking(*b);
+  // }
 
-  JsonParser::updateBooking(currentBooking);
+  // JsonParser::updateBooking(currentBooking);
 }
 
 void BookingHandler::updateConflictingBookings(Booking& booking, const bool setConflicting)
 {
-  updateBookingsOnSelectedDate(booking.date);
+  // getBookingsOnSelectedDate(booking.date);
 
-  booking.isConflicting = false;
+  // booking.isConflicting = false;
 
-  for (Booking& other : bookingsOnSelectedDate) {
-    if (bookingsAreConflicting(booking, other)) {
-      booking.isConflicting = true;
-      other.isConflicting = setConflicting;
-    }
+  // for (Booking* other : bookingsOnSelectedDate) {
+  //   if (bookingsAreConflicting(booking, other)) {
+  //     booking.isConflicting = true;
+  //     other->isConflicting = setConflicting;
+  //   }
 
-    else {
-      other.isConflicting = false;
-    }
+  //   else {
+  //     other->isConflicting = false;
+  //   }
 
-    other.date = booking.date;
+  //   other->date = booking.date;
 
-    JsonParser::updateBooking(other);
-  }
+  //   JsonParser::updateBooking(*other);
+  // }
 
-  JsonParser::updateBooking(booking);
+  // JsonParser::updateBooking(booking);
 }
 
-bool BookingHandler::bookingsAreConflicting(const Booking& b0, const Booking& b1)
+bool BookingHandler::bookingsAreConflicting(const Booking* b0, const Booking* b1)
 {
-  if (b0.index == b1.index) return false;
+  if (b0->index == b1->index ||
+      b0->date != b1->date) return false;
 
-  if ((b0.startTime >= b1.startTime && b0.startTime < b1.stopTime) ||
-      (b0.stopTime > b1.startTime && b0.stopTime <= b1.stopTime))
+  if ((b0->startTime >= b1->startTime && b0->startTime < b1->stopTime) ||
+      (b0->stopTime > b1->startTime && b0->stopTime <= b1->stopTime) ||
+      (b0->startTime <= b1->startTime && b0->stopTime >= b1->stopTime))
     return true;
 
   return false; 
 }
 
-void BookingHandler::updateBookingsOnSelectedDate(const QDate& date)
+void BookingHandler::getBookingsOnSelectedDate(const QDate& date)
 {
-  JsonParser::getBookingsOnDate(date, bookingsOnSelectedDate);
+  bookingsOnSelectedDate.clear();
+
+  for (Booking& booking : allBookings) {
+    if (booking.date == date)
+      bookingsOnSelectedDate.append(&booking);
+  }
+
+  sortBookings(bookingsOnSelectedDate);
+}
+
+void BookingHandler::getUserBookings()
+{ 
+  loadedBookings.clear();
+
+  for (Booking& booking : allBookings) {
+    if (MailHandler::isAdmin)
+      loadedBookings.append(&booking);
+
+    else if (booking.email == MailHandler::currentEmail)
+      loadedBookings.append(&booking);
+  }
+
+  sortBookings(loadedBookings); 
 }
 
 void BookingHandler::loadBookings()
 {
-  if (MailHandler::currentEmail == MailHandler::adminEmail)
-    JsonParser::getAllBookings(loadedBookings);
-
-  else 
-    JsonParser::getBookingsForEmail(MailHandler::currentEmail, loadedBookings);
-
-  sortBookings();
+  JsonParser::getAllBookings(allBookings);
+  sortAllBookings();
+  getUserBookings();
 }
 
-void BookingHandler::sortBookings()
+void BookingHandler::sortAllBookings()
 {
-  qsizetype size = loadedBookings.size();
+  qsizetype size = allBookings.size();
 
   for (qsizetype i = 0; i < size; ++i) {
     bool flag = false;
 
     for (qsizetype j = 0; j < size - 1 - i; ++j) {
-      QString dateTime0 = loadedBookings[j].date.toString(Qt::ISODate) + "_" +
-        loadedBookings[j].startTime.toString("HH:mm");
+      QString dateTime0 = allBookings[j].date.toString(Qt::ISODate) + "_" +
+        allBookings[j].startTime.toString("HH:mm");
 
-      QString dateTime1 = loadedBookings[j + 1].date.toString(Qt::ISODate) + "_" +
-        loadedBookings[j + 1].startTime.toString("HH:mm");
+      QString dateTime1 = allBookings[j + 1].date.toString(Qt::ISODate) + "_" +
+        allBookings[j + 1].startTime.toString("HH:mm");
 
       if (dateTime0 < dateTime1) {
-        Booking tmp = loadedBookings[j];
-        loadedBookings[j] = loadedBookings[j + 1];
-        loadedBookings[j + 1] = tmp;
+        Booking tmp = allBookings[j];
+        allBookings[j] = allBookings[j + 1];
+        allBookings[j + 1] = tmp;
 
         flag = true;
       }
@@ -122,22 +148,46 @@ void BookingHandler::sortBookings()
   }
 }
 
+void BookingHandler::sortBookings(QVector<Booking*>& bookings)
+{
+  qsizetype size = bookings.size();
+
+  for (qsizetype i = 0; i < size; ++i) {
+    bool flag = false;
+
+    for (qsizetype j = 0; j < size - 1 - i; ++j) {
+      QString dateTime0 = bookings[j]->date.toString(Qt::ISODate) + "_" +
+                          bookings[j]->startTime.toString("HH:mm");
+
+      QString dateTime1 = bookings[j + 1]->date.toString(Qt::ISODate) + "_" +
+                          bookings[j + 1]->startTime.toString("HH:mm");
+
+      if (dateTime0 < dateTime1) {
+        qSwap(bookings[j], bookings[j + 1]);
+        flag = true;
+      }
+    }
+
+    if (!flag) break;
+  }
+}
+
 void BookingHandler::reevaluateConflicts()
 {
-  // load all bookings (locally)
-  QVector<Booking> allBookings;
-  JsonParser::getAllBookings(allBookings);
+  qsizetype size = allBookings.size();
 
-  for (qsizetype i = 0; i < allBookings.size(); ++i) {
+  for (qsizetype i = 0; i < size; ++i) {
     bool isConflicting = false;
 
-    for (qsizetype j = 0; j < allBookings.size(); ++j) {
-      if (bookingsAreConflicting(allBookings[i], allBookings[j])) 
+    for (qsizetype j = 0; j < size; ++j) {
+      if (bookingsAreConflicting(&allBookings[i], &allBookings[j])) 
         isConflicting = true; 
     }
 
     allBookings[i].isConflicting = isConflicting;
   }
+
+  JsonParser::updateAllBookings(allBookings);
 }
 
 void BookingHandler::roundTime(QTime& time)
@@ -162,17 +212,4 @@ void BookingHandler::roundTime(QTime& time)
 
   else
     time = QTime(time.hour(), roundedMinutes);
-}
-
-QString BookingHandler::makeEntry(const Booking& booking)
-{
-  QString entry = 
-    booking.date.toString("ddd MMM dd yyyy") + "\t" +
-    booking.startTime.toString("HH:mm") + " - " +
-    booking.stopTime.toString("HH:mm") + "\t" +
-    booking.event.leftJustified(20, ' ') + "\t" +
-    booking.email.leftJustified(20, ' ') +
-    (booking.isConflicting ? TextHandler::getText(ID::CONFLICT) : "");
-
-  return entry;
 }

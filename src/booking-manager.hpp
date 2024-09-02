@@ -24,7 +24,7 @@ private:
   bool infoLabelVisible;
   int currentRow;
 
-  QVector<Booking>& bookings;
+  static QString makeEntry(const Booking& booking);
   
 private slots:
   void on_infoButton_pressed();
@@ -41,7 +41,7 @@ public:
 
   void toLoginDialog();
 
-  void loadBookings();
+  void constructList();
 
   virtual void reload() override;
   virtual void updateTexts() override;

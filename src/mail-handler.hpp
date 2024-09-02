@@ -18,6 +18,7 @@ public:
   static QString nasPassword;
   
   static QString mailHost;
+  static QString mailPort;
   static QString mailUser;
   static QString mailPassword;
   static QString mailSenderAddress;
@@ -27,12 +28,14 @@ public:
 
   static QString currentEmail;
   static bool mailAddressIsValid;
+  static bool isAdmin;
 
   static QVector<QString> mailSuffices;
+
+  static bool sendConflictWarnings;
 
   static QString sendMail(const Booking& booking, EMailType mailType);
 
   static void saveCredentials();
-  static void loadCredentials();
-  
+  static void loadCredentials(); 
 };

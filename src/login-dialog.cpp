@@ -177,6 +177,8 @@ void LoginDialog::on_manageBookingsButton_clicked()
 
     if (result == QDialog::Rejected)    
       return;
+
+    MailHandler::isAdmin = true; 
   } 
 
   fade(Widgets::modeSelect);

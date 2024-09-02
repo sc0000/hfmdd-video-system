@@ -24,7 +24,7 @@ class BookingEditor : public AnimatedDialog, public Translatable
 private:
   Ui::BookingEditor* ui;
 
-  Booking& booking;
+  Booking* booking;
   bool isEditing;
 
   ETimeToSet timeToSet;

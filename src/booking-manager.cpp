@@ -18,7 +18,6 @@
 BookingManager::BookingManager(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::BookingManager),
-    bookings(BookingHandler::loadedBookings),
     currentRow(0)
 {
   setWindowFlags(
@@ -63,19 +62,22 @@ void BookingManager::toLoginDialog()
   fade(Widgets::loginDialog);
 }
 
-void BookingManager::loadBookings()
+void BookingManager::constructList()
 {   
   BookingHandler::loadBookings();
+  BookingHandler::reevaluateConflicts();
 
   if (!ui->bookingsList) return;
 
   ui->bookingsList->clear();
 
-  for (qsizetype i = 0; i < bookings.size(); ++i) {
-    QString entryText = BookingHandler::makeEntry(bookings[i]);
+  qsizetype size = BookingHandler::loadedBookings.size();
+
+  for (const Booking* booking : BookingHandler::loadedBookings) {
+    QString entryText = makeEntry(*booking);
     QListWidgetItem* item = new QListWidgetItem(entryText);
-    
-    if (bookings[i].isConflicting) {
+
+    if (booking->isConflicting) {
       item->setBackground(QBrush(QColor(31, 30, 31)));
       item->setForeground(QBrush(QColor(254, 253, 254)));
     }
@@ -103,11 +105,25 @@ void BookingManager::reload()
   raise();
   center(ui->masterWidget);
 
+  BookingHandler::loadBookings();
   BookingHandler::reevaluateConflicts();
-  loadBookings();
+  constructList();
 
   ui->infoLabel->setMaximumWidth(0);
   infoLabelVisible = false;
+}
+
+QString BookingManager::makeEntry(const Booking& booking)
+{
+  QString entry = 
+    booking.date.toString("ddd MMM dd yyyy") + "\t" +
+    booking.startTime.toString("HH:mm") + " - " +
+    booking.stopTime.toString("HH:mm") + "\t" +
+    booking.event.leftJustified(20, ' ') + "\t" +
+    booking.email.leftJustified(20, ' ') +
+    (booking.isConflicting ? TextHandler::getText(ID::CONFLICT) : "");
+
+  return entry;
 }
 
 void BookingManager::updateTexts()
@@ -182,7 +198,7 @@ void BookingManager::on_editBookingButton_clicked()
   }
 
   currentRow = ui->bookingsList->currentRow();
-  Widgets::bookingEditor->reload(&bookings[currentRow]);
+  Widgets::bookingEditor->reload(BookingHandler::loadedBookings[currentRow]);
 }
 
 void BookingManager::on_deleteBookingButton_clicked()
@@ -205,11 +221,10 @@ void BookingManager::on_deleteBookingButton_clicked()
     return;
   
   int rowIndex = ui->bookingsList->currentRow();
-  Booking& selectedBooking = bookings[rowIndex];
-  BookingHandler::updateConflictingBookings(selectedBooking, false);
+  Booking selectedBooking = *BookingHandler::loadedBookings[rowIndex];
+  // BookingHandler::updateConflictingBookings(selectedBooking, false);
   JsonParser::removeBooking(selectedBooking);
-
-  loadBookings();
+  constructList();
 }
 
 void BookingManager::on_toPTZControlsButton_clicked()
@@ -230,7 +245,17 @@ void BookingManager::on_toPTZControlsButton_clicked()
     return;
   }
 
-  BookingHandler::currentBooking = bookings[currentRow];
+  currentRow = ui->bookingsList->currentRow();
+  Booking* selectedBooking = BookingHandler::loadedBookings[currentRow];
+
+  BookingHandler::currentBooking->date = selectedBooking->date;
+  BookingHandler::currentBooking->email = selectedBooking->email;
+  BookingHandler::currentBooking->index = selectedBooking->index;
+  BookingHandler::currentBooking->startTime = selectedBooking->startTime;
+  BookingHandler::currentBooking->stopTime = selectedBooking->stopTime;
+  BookingHandler::currentBooking->event = selectedBooking->event;
+  BookingHandler::currentBooking->isConflicting = selectedBooking->isConflicting;
+  BookingHandler::currentBooking->index = selectedBooking->index;
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   PTZSettings::resetFilterSettings();

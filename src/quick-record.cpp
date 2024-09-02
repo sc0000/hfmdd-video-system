@@ -69,17 +69,17 @@ void QuickRecord::reload()
   BookingHandler::reevaluateConflicts();
 
   BookingHandler::loadBookings();
-  booking.date = QDate::currentDate();
-  booking.startTime = QTime::currentTime();
-  booking.stopTime = booking.startTime.addSecs(60 * 60);
-  booking.email = MailHandler::currentEmail;
-  booking.index = JsonParser::availableIndex();
-  booking.event = "Quick Record";
+  booking->date = QDate::currentDate();
+  booking->startTime = QTime::currentTime();
+  booking->stopTime = booking->startTime.addSecs(60 * 60);
+  booking->email = MailHandler::currentEmail;
+  booking->index = JsonParser::availableIndex();
+  booking->event = "Quick Record";
 
-  BookingHandler::roundTime(booking.stopTime);
-  BookingHandler::updateBookingsOnSelectedDate(booking.date);
+  BookingHandler::roundTime(booking->stopTime);
+  BookingHandler::getBookingsOnSelectedDate(booking->date);
   updateStopTimeLabel();
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   updateDurationLabel();
 
   ui->infoLabel->setMaximumWidth(0);
@@ -98,12 +98,12 @@ void QuickRecord::updateTexts()
 
 void QuickRecord::updateExistingBookingsLabel(QDate date)
 {
-  BookingHandler::updateBookingsOnSelectedDate(date);
+  BookingHandler::getBookingsOnSelectedDate(date);
 
-  const QVector<Booking>& bosd = BookingHandler::bookingsOnSelectedDate;
+  const QVector<Booking*>& bosd = BookingHandler::bookingsOnSelectedDate;
 
   if (bosd.isEmpty() ||
-     (bosd.size() == 1 && bosd[0].index == booking.index)) {
+     (bosd.size() == 1 && bosd[0]->index == booking->index)) {
         ui->bookingsOnSelectedDateLabel->setText(TextHandler::getText(ID::QUICK_PREV_BOOKINGS_NONE));
         return;
   }
@@ -112,9 +112,9 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   str += "<html><head/><body>";
 
-  for (const Booking& b : bosd) {
-    if (b.index == booking.index ||
-        b.stopTime < booking.startTime) continue;
+  for (const Booking* b : bosd) {
+    if (b->index == booking->index ||
+        b->stopTime < booking->startTime) continue;
 
     bool isConflicting = false;
     
@@ -124,9 +124,9 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
     if (isConflicting)
       str += "<span style=\"background-color: rgb(31, 30, 31); color: rgb(254, 253, 254);\">";
 
-    str += b.startTime.toString("HH:mm") + "-" + 
-      b.stopTime.toString("HH:mm") + ": " + 
-      b.event + " (" + b.email + ")";
+    str += b->startTime.toString("HH:mm") + "-" + 
+      b->stopTime.toString("HH:mm") + ": " + 
+      b->event + " (" + b->email + ")";
 
     if (isConflicting)
       str += TextHandler::getText(ID::CONFLICT) + "</span>";
@@ -147,12 +147,12 @@ void QuickRecord::updateConflictingBookings(const QDate& date)
 
 void QuickRecord::updateStopTimeLabel()
 { 
-  ui->stopTimeLabel->setText(booking.stopTime.toString("HH:mm"));
+  ui->stopTimeLabel->setText(booking->stopTime.toString("HH:mm"));
 }
 
 void QuickRecord::updateDurationLabel()
 {
-  int secs = QTime::currentTime().secsTo(booking.stopTime);
+  int secs = QTime::currentTime().secsTo(booking->stopTime);
   int totalMin = secs / 60;
   QString hours = QString::number(totalMin / 60);
   QString minutes = QString::number(totalMin % 60);
@@ -196,68 +196,68 @@ void QuickRecord::on_infoButton_pressed()
 
 void QuickRecord::on_decreaseTimeBy20Button_pressed()
 {
-  QTime newStopTime = booking.stopTime.addSecs(60 * -20);
+  QTime newStopTime = booking->stopTime.addSecs(60 * -20);
 
-  if (newStopTime <= booking.startTime) 
+  if (newStopTime <= booking->startTime) 
     return;
 
   if (newStopTime > QTime(23, 0))  
     return;
 
-  booking.stopTime = newStopTime;
+  booking->stopTime = newStopTime;
   updateStopTimeLabel();
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   updateDurationLabel();
 }
 
 void QuickRecord::on_decreaseTimeBy05Button_pressed()
 {
-  QTime newStopTime = booking.stopTime.addSecs(60 * -5);
+  QTime newStopTime = booking->stopTime.addSecs(60 * -5);
 
-  if (newStopTime <= booking.startTime) 
+  if (newStopTime <= booking->startTime) 
     return;
   
 
   if (newStopTime > QTime(23, 0)) 
     return;
 
-  booking.stopTime = newStopTime;
+  booking->stopTime = newStopTime;
   updateStopTimeLabel();
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   updateDurationLabel();
 }
 
 void QuickRecord::on_increaseTimeBy05Button_pressed()
 {
-  QTime newStopTime = booking.stopTime.addSecs(60 * 5);
+  QTime newStopTime = booking->stopTime.addSecs(60 * 5);
 
   if (newStopTime > QTime(23, 0)) 
     return;
 
-  booking.stopTime = newStopTime;
+  booking->stopTime = newStopTime;
   updateStopTimeLabel();
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   updateDurationLabel();
 }
 
 void QuickRecord::on_increaseTimeBy20Button_pressed()
 {
-  QTime newStopTime = booking.stopTime.addSecs(60 * 20);
+  QTime newStopTime = booking->stopTime.addSecs(60 * 20);
 
   if (newStopTime > QTime(23, 0))
     return;
 
-  booking.stopTime = newStopTime;
+  booking->stopTime = newStopTime;
   updateStopTimeLabel();
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   updateDurationLabel();
 }
 
 
 void QuickRecord::on_toPTZControlsButton_clicked()
 { 
-  BookingHandler::updateConflictingBookings(booking.date);
-  JsonParser::addBooking(booking);
+  BookingHandler::updateConflictingBookings(booking->date);
+  JsonParser::addBooking(*booking);
 
   // TODO: Check: always reset or update, and setup option to reset manually?
   PTZSettings::resetFilterSettings();

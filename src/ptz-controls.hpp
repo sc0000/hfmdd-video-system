@@ -71,7 +71,7 @@ private:
 	void setCurrent(unsigned int index);
 	int presetIndexToId(PTZPresetListModel* model, QModelIndex index);
 
-  Booking& booking;
+  Booking* booking;
 
 // TODO: Tidy up!
 public:

@@ -472,6 +472,7 @@ void PTZSettings::saveSettings()
   obs_data_set_string(savedata, "filename_formatting", filenameFormatting.toUtf8().constData());
   obs_data_set_string(savedata, "rec_format", recFormat.toUtf8().constData());
   obs_data_set_string(savedata, "quality_preset", qualityPreset.toUtf8().constData());
+  obs_data_set_bool(savedata, "send_conflict_warnings", MailHandler::sendConflictWarnings);
 
   if (!obs_data_save_json_safe(savedata, file, "tmp", "bak")) {
 		char *path = obs_module_config_path("");
@@ -501,6 +502,7 @@ void PTZSettings::loadSettings()
   
 	obs_data_release(loaddata);
 
+  MailHandler::sendConflictWarnings = obs_data_get_bool(loaddata, "send_conflict_warnings");
   StorageHandler::baseDirectory = obs_data_get_string(loaddata, "base_directory");
   filenameFormatting = obs_data_get_string(loaddata, "filename_formatting");
   recFormat = obs_data_get_string(loaddata, "rec_format");
@@ -626,6 +628,7 @@ void PTZSettings::getAdditionalProperties()
 {
   loadSettings();
 
+  ui->sendConflictWarningsCheckBox->setChecked(MailHandler::sendConflictWarnings);
   ui->baseDirectoryLineEdit->setText(StorageHandler::baseDirectory);
   ui->filenameFormattingLineEdit->setText(filenameFormatting);
   ui->recFormatComboBox->setCurrentText(recFormat);
@@ -650,6 +653,7 @@ void PTZSettings::getCredentials()
   ui->nasUserNameLineEdit->setText(MailHandler::nasUser);
   ui->nasPasswordLineEdit->setText(MailHandler::nasPassword);
   ui->mailHostLineEdit->setText(MailHandler::mailHost);
+  ui->mailPortLineEdit->setText(MailHandler::mailPort);
   ui->mailUserNameLineEdit->setText(MailHandler::mailUser);
   ui->mailPasswordLineEdit->setText(MailHandler::mailPassword);
   ui->mailSenderAddressLineEdit->setText(MailHandler::mailSenderAddress);
@@ -657,6 +661,8 @@ void PTZSettings::getCredentials()
 
 void PTZSettings::updateAdditionalProperties()
 {
+  MailHandler::sendConflictWarnings = ui->sendConflictWarningsCheckBox->isChecked();
+
 	StorageHandler::baseDirectory = ui->baseDirectoryLineEdit->text();
   StorageHandler::baseDirectory.replace("\\", "/");
 
@@ -681,6 +687,7 @@ void PTZSettings::updateCredentials()
   MailHandler::nasUser = ui->nasUserNameLineEdit->text();
   MailHandler::nasPassword = ui->nasPasswordLineEdit->text();
   MailHandler::mailHost = ui->mailHostLineEdit->text();
+  MailHandler::mailPort = ui->mailPortLineEdit->text();
   MailHandler::mailUser = ui->mailUserNameLineEdit->text();
   MailHandler::mailPassword = ui->mailPasswordLineEdit->text();
   MailHandler::mailSenderAddress = ui->mailSenderAddressLineEdit->text();

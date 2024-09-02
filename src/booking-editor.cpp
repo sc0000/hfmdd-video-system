@@ -41,32 +41,36 @@ void BookingEditor::reload(Booking* bookingToEdit)
   if (bookingToEdit) {
     isEditing = true;
 
-    ui->eventTypeLineEdit->setText(bookingToEdit->event);
+    booking->date = bookingToEdit->date;
+    booking->email = bookingToEdit->email;
+    booking->index = bookingToEdit->index;
+    booking->startTime = bookingToEdit->startTime;
+    booking->stopTime = bookingToEdit->stopTime;
+    booking->event = bookingToEdit->event;
+    booking->isConflicting = bookingToEdit->isConflicting;
+    booking->index = bookingToEdit->index;
 
-    booking.date = bookingToEdit->date;
-    booking.email = bookingToEdit->email;
-    booking.index = bookingToEdit->index;
-    booking.startTime = bookingToEdit->startTime;
-    booking.stopTime = bookingToEdit->stopTime;
+    ui->eventTypeLineEdit->setText(booking->event);
   }
 
   else {
     isEditing = false;
     QTime currentTime = QTime::currentTime();
 
-    booking.date = QDate::currentDate();
-    booking.email = MailHandler::currentEmail;
-    booking.event = "";
-    booking.index = JsonParser::availableIndex();
+    booking->date = QDate::currentDate();
+    booking->email = MailHandler::currentEmail;
+    booking->event = "";
+    booking->isConflicting = false;
+    booking->index = JsonParser::availableIndex();
 
-    booking.startTime = currentTime < QTime(23, 0) && currentTime > QTime(7, 0) ?
+    booking->startTime = currentTime < QTime(23, 0) && currentTime > QTime(7, 0) ?
       currentTime :
       QTime(8, 0);
 
-    BookingHandler::roundTime(booking.startTime);
+    BookingHandler::roundTime(booking->startTime);
     
-    booking.stopTime = booking.startTime.addSecs(60 * 60) < QTime(23, 0) && booking.startTime.addSecs(60 * 60) > QTime(7, 0) ? 
-      booking.startTime.addSecs(60 * 60) : 
+    booking->stopTime = booking->startTime.addSecs(60 * 60) < QTime(23, 0) && booking->startTime.addSecs(60 * 60) > QTime(7, 0) ? 
+      booking->startTime.addSecs(60 * 60) : 
       QTime(23, 0);
 
     ui->eventTypeLineEdit->setText("");
@@ -81,8 +85,8 @@ void BookingEditor::reload(Booking* bookingToEdit)
     "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
-  ui->calendarWidget->setSelectedDate(booking.date);
-  updateExistingBookingsLabel(booking.date);
+  ui->calendarWidget->setSelectedDate(booking->date);
+  updateExistingBookingsLabel(booking->date);
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
 
@@ -105,15 +109,15 @@ void BookingEditor::updateTexts()
 }
 
 void BookingEditor::updateExistingBookingsLabel(const QDate& date)
-{
-  BookingHandler::updateBookingsOnSelectedDate(date);
+{ 
+  BookingHandler::getBookingsOnSelectedDate(date);
 
-  const QVector<Booking>& bosd = BookingHandler::bookingsOnSelectedDate;
+  const QVector<Booking*>& bosd = BookingHandler::bookingsOnSelectedDate;
 
   QString dateStr = TextHandler::locale.toString(date);
 
   if (bosd.isEmpty() ||
-     (bosd.size() == 1 && bosd[0].index == booking.index)) {
+     (bosd.size() == 1 && bosd[0]->index == booking->index)) {
         ui->bookingsOnSelectedDateLabel->setText(
           TextHandler::getText(ID::EDITOR_PREV_BOOKINGS_NONE) + dateStr + "."
         );
@@ -125,18 +129,21 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
   str += "<html><head/><body>";
 
-  for (const Booking& b : bosd) {
-    if (b.index == booking.index) continue;
+  booking->isConflicting = false;
+
+  for (const Booking* b : bosd) {
+    if (b->index == booking->index) continue;
 
     bool isConflicting = false;
     
-    if (BookingHandler::bookingsAreConflicting(booking, b)) 
-      isConflicting = true; 
-          
-    if (isConflicting)
+    if (BookingHandler::bookingsAreConflicting(booking, b)) {
+      isConflicting = true;
+      booking->isConflicting = true;
       str += "<span style=\"background-color: rgb(31, 30, 31); color: rgb(254, 253, 254);\">";
-
-    str += b.startTime.toString("HH:mm") + "-" + b.stopTime.toString("HH:mm") + ": " + b.event + " (" + b.email + ")";
+    }
+      
+    str += b->startTime.toString("HH:mm") + "-" + b->stopTime.toString("HH:mm") + ": " + 
+      b->event + " (" + b->email + ")";
 
     if (isConflicting) 
       str += TextHandler::getText(ID::CONFLICT) + "</span>";
@@ -152,12 +159,12 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
 void BookingEditor::drawTimespan()
 {
-  ui->timeLabel->setText(booking.startTime.toString("HH:mm") + " – " + booking.stopTime.toString("HH:mm"));
+  ui->timeLabel->setText(booking->startTime.toString("HH:mm") + " – " + booking->stopTime.toString("HH:mm"));
 }
 
 void BookingEditor::on_calendarWidget_clicked(QDate date)
 {
-  booking.date = date;
+  booking->date = date;
   updateExistingBookingsLabel(date);
 }
 
@@ -186,122 +193,122 @@ void BookingEditor::on_setStopTimeButton_pressed()
 void BookingEditor::on_decreaseTimeBy60Button_pressed()
 {
   if (timeToSet == ETimeToSet::StartTime) {
-    QTime newStartTime = booking.startTime.addSecs(60 * -60);
+    QTime newStartTime = booking->startTime.addSecs(60 * -60);
 
     if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
       return;
 
-    booking.startTime = newStartTime;
+    booking->startTime = newStartTime;
   }
 
   if (timeToSet == ETimeToSet::StopTime) {
-    QTime newStopTime = booking.stopTime.addSecs(60 * -60);
+    QTime newStopTime = booking->stopTime.addSecs(60 * -60);
 
     if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
       return;
 
-    if (newStopTime <= booking.startTime) {
+    if (newStopTime <= booking->startTime) {
       QTime newStartTime = newStopTime.addSecs(60 * -60);
-      booking.startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
+      booking->startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
     }
 
-    booking.stopTime = newStopTime;
+    booking->stopTime = newStopTime;
   }
 
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   drawTimespan();
 }
 
 void BookingEditor::on_decreaseTimeBy05Button_pressed()
 {
   if (timeToSet == ETimeToSet::StartTime) {
-    QTime newStartTime = booking.startTime.addSecs(60 * -5);
+    QTime newStartTime = booking->startTime.addSecs(60 * -5);
 
    if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
       return;
 
-    booking.startTime = newStartTime;
+    booking->startTime = newStartTime;
   }
 
   if (timeToSet == ETimeToSet::StopTime) {
-    QTime newStopTime = booking.stopTime.addSecs(60 * -5);
+    QTime newStopTime = booking->stopTime.addSecs(60 * -5);
 
     if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
       return;
 
-    if (newStopTime <= booking.startTime) {
+    if (newStopTime <= booking->startTime) {
       QTime newStartTime = newStopTime.addSecs(60 * -5);
-      booking.startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
+      booking->startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
     }
 
-    booking.stopTime = newStopTime;
+    booking->stopTime = newStopTime;
   }
 
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   drawTimespan();
 }
 
 void BookingEditor::on_increaseTimeBy05Button_pressed()
 {
   if (timeToSet == ETimeToSet::StartTime) {
-    QTime newStartTime = booking.startTime.addSecs(60 * 5);
+    QTime newStartTime = booking->startTime.addSecs(60 * 5);
 
     if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
       return;
 
-    if (newStartTime >= booking.stopTime) {
+    if (newStartTime >= booking->stopTime) {
       QTime newStopTime = newStartTime.addSecs(60 * 5);
-      booking.stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
+      booking->stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
     }
 
-    booking.startTime = newStartTime;
+    booking->startTime = newStartTime;
   }
 
   if (timeToSet == ETimeToSet::StopTime) {
-    QTime newStopTime = booking.stopTime.addSecs(60 * 5);
+    QTime newStopTime = booking->stopTime.addSecs(60 * 5);
 
     if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
       return;
 
-    booking.stopTime = newStopTime;
+    booking->stopTime = newStopTime;
   }
 
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   drawTimespan();
 }
 
 void BookingEditor::on_increaseTimeBy60Button_pressed()
 {
   if (timeToSet == ETimeToSet::StartTime) {
-    QTime newStartTime = booking.startTime.addSecs(60 * 60);
+    QTime newStartTime = booking->startTime.addSecs(60 * 60);
 
     if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
       return;
 
-    if (newStartTime >= booking.stopTime) {
+    if (newStartTime >= booking->stopTime) {
       QTime newStopTime = newStartTime.addSecs(60 * 60);
-      booking.stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
+      booking->stopTime = newStopTime < QTime(23, 0) ? newStopTime : QTime(23, 0);
     }
 
-    booking.startTime = newStartTime;
+    booking->startTime = newStartTime;
   }
 
   if (timeToSet == ETimeToSet::StopTime) {
-    QTime newStopTime = booking.stopTime.addSecs(60 * 60);
+    QTime newStopTime = booking->stopTime.addSecs(60 * 60);
 
     if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
       return;
 
-    booking.stopTime = newStopTime;
+    booking->stopTime = newStopTime;
   }
 
-  updateExistingBookingsLabel(booking.date);
+  updateExistingBookingsLabel(booking->date);
   drawTimespan();
 }
 
 void BookingEditor::on_eventTypeLineEdit_textChanged(const QString& text)
 {
-  booking.event = text;
+  booking->event = text;
 
   if (text == "")
     ui->eventTypeLineEdit->setStyleSheet("QLineEdit { font-style: italic; }");
@@ -324,7 +331,7 @@ void bookingEditorReject()
 
 void BookingEditor::on_saveButton_clicked()
 {
-  if (booking.event == "") {
+  if (booking->event == "") {
     Widgets::okDialog->display(
       TextHandler::getText(ID::EDITOR_EVENT_MISSING)
     );
@@ -332,17 +339,15 @@ void BookingEditor::on_saveButton_clicked()
     return;
   }
 
-  if (booking.startTime.toString("HH:mm") == booking.stopTime.toString("HH:mm")) {
+  if (booking->startTime.toString("HH:mm") == booking->stopTime.toString("HH:mm")) {
     Widgets::okDialog->display(
       TextHandler::getText(ID::EDITOR_IDENTICAL_TIMES)
     );
 
     return;
   }
-  
-  BookingHandler::updateConflictingBookings(booking);
 
-  if (booking.isConflicting) {
+  if (booking->isConflicting) {
     int result = Widgets::okCancelDialog->display(
       TextHandler::getText(ID::EDITOR_CONFLICTING_BOOKINGS), true
     );
@@ -350,16 +355,16 @@ void BookingEditor::on_saveButton_clicked()
     if (result == QDialog::Rejected)
       return;
 
-    const QString sendMail = MailHandler::sendMail(booking, EMailType::BookingConflictWarning);
+    const QString sendMail = MailHandler::sendMail(*booking, EMailType::BookingConflictWarning);
   }
     
   if (isEditing) 
-    JsonParser::updateBooking(booking);
+    JsonParser::updateBooking(*booking);
   
   else 
-    JsonParser::addBooking(booking);
+    JsonParser::addBooking(*booking);
   
-  Widgets::bookingManager->loadBookings();
+  Widgets::bookingManager->constructList();
 
   isEditing = false;
   ui->saveButton->setAttribute(Qt::WA_UnderMouse, false);

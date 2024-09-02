@@ -164,7 +164,7 @@ void PTZControls::connectSignalItemSelect()
 
 void PTZControls::startRecording()
 {
-  if (booking.date != QDate::currentDate()) {
+  if (booking->date != QDate::currentDate()) {
       Widgets::okDialog->display(
         TextHandler::getText(ID::CONTROLS_RECORD_WRONG_DATE)
       );
@@ -174,8 +174,8 @@ void PTZControls::startRecording()
 
     QTime currentTime = QTime::currentTime();
 
-    if (currentTime < booking.startTime.addSecs(-15 * 60)  ||
-        currentTime > booking.startTime.addSecs(30 * 60)) {
+    if (currentTime < booking->startTime.addSecs(-15 * 60)  ||
+        currentTime > booking->startTime.addSecs(30 * 60)) {
       Widgets::okDialog->display(
         TextHandler::getText(ID::CONTROLS_RECORD_WRONG_TIME)
       );
@@ -185,7 +185,7 @@ void PTZControls::startRecording()
 
     obs_frontend_recording_start();
 
-    QDateTime threshold(booking.date, booking.stopTime.addSecs(10 * 60));
+    QDateTime threshold(booking->date, booking->stopTime.addSecs(10 * 60));
     m_timeObserver->setThreshold(threshold);
     m_timeObserver->start();
 
@@ -205,7 +205,7 @@ void PTZControls::stopRecording(bool manual)
     TextHandler::getText(ID::CONTROLS_RECORD)
   );
 
-  const QString sendFilesMsg = MailHandler::sendMail(booking, EMailType::SendFiles);
+  const QString sendFilesMsg = MailHandler::sendMail(*booking, EMailType::SendFiles);
 
   if (manual)
     Widgets::okDialog->display(sendFilesMsg, true);
@@ -217,7 +217,7 @@ void PTZControls::stopRecording(bool manual)
 void PTZControls::logout()
 {
   if (BookingHandler::mode == EMode::QuickMode && !hasRecorded)
-    JsonParser::removeBooking(BookingHandler::currentBooking);
+    JsonParser::removeBooking(*booking);
 
   StorageHandler::deleteTempFiles();
   
@@ -446,7 +446,7 @@ PTZControls::PTZControls(QWidget *parent)
   ui->presetListView->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
   //----------------------------------------------------
 
-  m_timeObserver = new TimeObserver(QDateTime(booking.date, booking.stopTime), &timeOut, this);
+  m_timeObserver = new TimeObserver(QDateTime(booking->date, booking->stopTime), &timeOut, this);
 
   updateTexts();
   setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
@@ -572,14 +572,14 @@ void PTZControls::reload()
   selectCamera();
   setFloating(false);
 
-  ui->currentBookingEmailLabel->setText(BookingHandler::currentBooking.email);
-  ui->currentBookingDateLabel->setText(BookingHandler::currentBooking.date.toString());
+  ui->currentBookingEmailLabel->setText(booking->email);
+  ui->currentBookingDateLabel->setText(booking->date.toString());
   ui->currentBookingTimeLabel->setText(
-    BookingHandler::currentBooking.startTime.toString("HH:mm") + " - " +
-    BookingHandler::currentBooking.stopTime.toString("HH:mm")
+    booking->startTime.toString("HH:mm") + " - " +
+    booking->stopTime.toString("HH:mm")
   );
 
-  ui->currentBookingEventLabel->setText(BookingHandler::currentBooking.event);
+  ui->currentBookingEventLabel->setText(booking->event);
   
   // ???
   
@@ -1137,7 +1137,7 @@ void PTZControls::on_infoButton_pressed()
 
 void PTZControls::on_savePresetButton_clicked()
 {
-  Widgets::presetDialog->display(&BookingHandler::currentBooking);
+  Widgets::presetDialog->display(booking);
 }
 
 void PTZControls::on_loadPresetButton_clicked()
@@ -1238,7 +1238,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
     
     case EMode::QuickMode: {
       if (!hasRecorded)
-        JsonParser::removeBooking(BookingHandler::currentBooking);
+        JsonParser::removeBooking(*booking);
 
       Widgets::quickRecord->reload();
     }

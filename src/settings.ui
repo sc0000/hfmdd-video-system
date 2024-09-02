@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>738</width>
-    <height>605</height>
+    <height>576</height>
    </rect>
   </property>
   <property name="font">
@@ -56,7 +56,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="generalTab">
        <attribute name="title">
@@ -151,85 +151,12 @@
           <x>10</x>
           <y>230</y>
           <width>721</width>
-          <height>262</height>
+          <height>264</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="recOptionsLayout">
-         <item row="4" column="0">
-          <widget class="QLabel" name="filenameFormattingLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>140</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>124</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Filename Formatting</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QComboBox" name="recFormatComboBox"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QCheckBox" name="enableDebugLogCheckBox">
-           <property name="text">
-            <string>Enable debug logging</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="recFormatLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>140</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>124</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Recording Format</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="filenameFormattingLineEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>400</width>
-             <height>0</height>
-            </size>
-           </property>
-          </widget>
+         <item row="6" column="1">
+          <widget class="QComboBox" name="qualityComboBox"/>
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="baseDirectoryLabel">
@@ -258,9 +185,6 @@
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
            </property>
           </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QComboBox" name="qualityComboBox"/>
          </item>
          <item row="3" column="1">
           <widget class="QLineEdit" name="baseDirectoryLineEdit">
@@ -291,6 +215,95 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="sendConflictWarningsCheckBox">
+           <property name="text">
+            <string>Send Booking Conflict Warnings</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="livemoveCheckBox">
+           <property name="toolTip">
+            <string>Disable movement controls for cameras in the currently active program scene. This protects against accidental camera moves on the live stream.</string>
+           </property>
+           <property name="text">
+            <string>Lockout live PTZ moves in studio mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="recFormatLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>124</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Recording Format</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="filenameFormattingLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>140</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>124</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Filename Formatting</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QComboBox" name="recFormatComboBox"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="filenameFormattingLineEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label">
            <property name="sizePolicy">
@@ -316,32 +329,36 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="0">
-          <widget class="QPushButton" name="saveButton0">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="enableDebugLogCheckBox">
            <property name="text">
-            <string>Save</string>
+            <string>Enable debug logging</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QCheckBox" name="livemoveCheckBox">
-           <property name="toolTip">
-            <string>Disable movement controls for cameras in the currently active program scene. This protects against accidental camera moves on the live stream.</string>
-           </property>
-           <property name="text">
-            <string>Lockout live PTZ moves in studio mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QCheckBox" name="sendConflictWarningsCheckBox">
-           <property name="text">
-            <string>Send Booking Conflict Warnings</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
+         <item row="7" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="saveButton0">
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -521,68 +538,41 @@
           <x>10</x>
           <y>10</y>
           <width>721</width>
-          <height>510</height>
+          <height>406</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
-         <property name="horizontalSpacing">
-          <number>14</number>
+         <property name="spacing">
+          <number>7</number>
          </property>
-         <property name="verticalSpacing">
-          <number>21</number>
-         </property>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="nasPasswordLineEdit">
-           <property name="echoMode">
-            <enum>QLineEdit::Password</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="mailHostLabel">
+         <item row="0" column="0">
+          <widget class="QLabel" name="adminEmailLabel">
            <property name="text">
-            <string>Mail Host</string>
+            <string>Admin Email</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="nasUserNameLineEdit"/>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="mailSenderAddressLabel">
+         <item row="7" column="0">
+          <widget class="QLabel" name="mailPortLabel">
            <property name="text">
-            <string>Sender Address</string>
+            <string>Mail Port</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="adminPasswordLineEdit">
-           <property name="echoMode">
-            <enum>QLineEdit::Password</enum>
+         <item row="8" column="0">
+          <widget class="QLabel" name="mailUserNameLabel">
+           <property name="text">
+            <string>Mail User Name</string>
            </property>
           </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLineEdit" name="mailSenderAddressLineEdit"/>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="nasUserNameLabel">
            <property name="text">
             <string>NAS User Name</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="mailPasswordLabel">
-           <property name="text">
-            <string>Mail Password</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="mailHostLineEdit"/>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="mailUserNameLabel">
-           <property name="text">
-            <string>Mail User Name</string>
            </property>
           </widget>
          </item>
@@ -593,23 +583,66 @@
            </property>
           </widget>
          </item>
-         <item row="8" column="1">
+         <item row="2" column="0">
+          <widget class="QLabel" name="nasIpLabel">
+           <property name="text">
+            <string>NAS IP</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
           <widget class="QLineEdit" name="mailPasswordLineEdit">
            <property name="echoMode">
             <enum>QLineEdit::Password</enum>
            </property>
           </widget>
          </item>
-         <item row="9" column="1">
-          <widget class="QLineEdit" name="mailSenderAddressLineEdit"/>
-         </item>
          <item row="3" column="1">
           <widget class="QLineEdit" name="nasPortLineEdit"/>
          </item>
-         <item row="10" column="0">
-          <widget class="QPushButton" name="saveButton1">
+         <item row="6" column="0">
+          <widget class="QLabel" name="mailHostLabel">
            <property name="text">
-            <string>Save</string>
+            <string>Mail Host</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="mailHostLineEdit"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="nasUserNameLineEdit"/>
+         </item>
+         <item row="10" column="0">
+          <widget class="QLabel" name="mailSenderAddressLabel">
+           <property name="text">
+            <string>Sender Address</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLineEdit" name="mailUserNameLineEdit"/>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="mailPortLineEdit"/>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="nasIpLineEdit"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="nasPasswordLineEdit">
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="adminEmailLineEdit"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="adminPasswordLabel">
+           <property name="text">
+            <string>Admin Password</string>
            </property>
           </widget>
          </item>
@@ -620,35 +653,46 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="nasIpLineEdit"/>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLineEdit" name="mailUserNameLineEdit"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="nasIpLabel">
+         <item row="9" column="0">
+          <widget class="QLabel" name="mailPasswordLabel">
            <property name="text">
-            <string>NAS IP</string>
+            <string>Mail Password</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="adminPasswordLabel">
-           <property name="text">
-            <string>Admin Password</string>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="adminPasswordLineEdit">
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="adminEmailLineEdit"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="adminEmailLabel">
-           <property name="text">
-            <string>Admin Email</string>
+         <item row="11" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="spacing">
+            <number>0</number>
            </property>
-          </widget>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="saveButton1">
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>

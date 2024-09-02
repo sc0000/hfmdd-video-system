@@ -43,6 +43,8 @@ bool obs_module_load(void)
   // obs_frontend_add_dock(simpleRecordingWidget);
 
   if (!mainWindow) return false;
+
+  BookingHandler::initCurrentBooking();
   
   ptz_load_devices();
 	ptz_load_action_source();
