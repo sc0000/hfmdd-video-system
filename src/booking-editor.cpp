@@ -85,6 +85,9 @@ void BookingEditor::reload(Booking* bookingToEdit)
     "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
+  ui->saveButton->setAttribute(Qt::WA_UnderMouse, false);
+  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
+
   ui->calendarWidget->setSelectedDate(booking->date);
   updateExistingBookingsLabel(booking->date);
 
@@ -367,12 +370,11 @@ void BookingEditor::on_saveButton_clicked()
   Widgets::bookingManager->constructList();
 
   isEditing = false;
-  ui->saveButton->setAttribute(Qt::WA_UnderMouse, false);
+ 
   fade(&bookingEditorAccept);
 }
 
 void BookingEditor::on_cancelButton_clicked()
 {
-  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
   fade(&bookingEditorReject);
 }

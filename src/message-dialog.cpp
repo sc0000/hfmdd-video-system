@@ -40,6 +40,9 @@ void OkDialog::display(const QString& message, bool triggerLogout)
 {
   m_triggerLogout = triggerLogout;
   ui->messageLabel->setText(message);
+
+  ui->okButton->setAttribute(Qt::WA_UnderMouse, false);
+
   fade();
 }
 
@@ -83,6 +86,10 @@ OkCancelDialog::OkCancelDialog(QWidget* parent)
 int OkCancelDialog::display(const QString& message, const bool colorBlack)
 {
   ui->messageLabel->setText(message);
+
+  ui->okButton->setAttribute(Qt::WA_UnderMouse, false);
+  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
+
   fade();
   return exec();
 }
@@ -156,6 +163,10 @@ PasswordDialog::PasswordDialog(QWidget* parent)
 int PasswordDialog::display()
 {
   ui->passwordLineEdit->clear();
+
+  ui->okButton->setAttribute(Qt::WA_UnderMouse, false);
+  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
+
   fade();
   return exec();
 }
@@ -242,7 +253,8 @@ void PresetDialog::on_cancelButton_clicked()
 InfoDialog::InfoDialog(QWidget* parent)
  :  AnimatedDialog(parent),
     ui(new Ui::InfoDialog),
-    button(nullptr)
+    button(nullptr),
+    handlebar(nullptr)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
@@ -255,7 +267,7 @@ InfoDialog::InfoDialog(QWidget* parent)
 
   ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
 
-  Handlebar* handlebar = new Handlebar(this, EHandlebarStyle::Blue);
+  handlebar = new Handlebar(this, EHandlebarStyle::Blue);
 
   setModal(true);
   hide();
@@ -267,7 +279,14 @@ void InfoDialog::display(const QString& message, QPushButton* activatingButton, 
     button = activatingButton;
 
   ui->messageLabel->setText(message);
-  AnimatedDialog::fade();
+
+  QPushButton* closeButton = handlebar->getCloseButton();
+
+  if (!closeButton) return;
+  
+  closeButton->setAttribute(Qt::WA_UnderMouse, false);
+
+  fade();
 }
 
 void InfoDialog::fade(void (*result)(void))

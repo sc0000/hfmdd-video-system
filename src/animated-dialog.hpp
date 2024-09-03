@@ -19,6 +19,7 @@ class Handlebar : public QFrame
 
 public:
   explicit Handlebar(QWidget* parent = nullptr, EHandlebarStyle HandlebarStyle = EHandlebarStyle::Black);
+  inline QPushButton* getCloseButton() { return closeButton; }
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;

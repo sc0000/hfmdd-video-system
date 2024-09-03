@@ -110,6 +110,7 @@ class InfoDialog : public AnimatedDialog
 private:
   Ui::InfoDialog* ui;
   QPushButton* button;
+  Handlebar* handlebar;
 
 public:
   explicit InfoDialog(QWidget* parent = nullptr);
