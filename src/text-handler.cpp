@@ -357,15 +357,35 @@ QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
-    ID::MAIL_SUBJECT,
+    ID::MAIL_FILES_SUBJECT,
     "HfMDD Concert Hall Recordings "
   },
 
   {
-    ID::MAIL_BODY,
+    ID::MAIL_FILES_BODY,
     QString("You can download your concert hall recording following the link below.\n") +
       "Please be advised that it might take a moment for the download to start.\n" +
       "For any questions or feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de).\n\n"
+  },
+
+  {
+    ID::MAIL_ADMIN_SUBJECT_EDITED,
+    "Your booking has been edited"
+  },
+
+  {
+    ID::MAIL_ADMIN_BODY_EDITED,
+    QString("MAIL_ADMIN_BODY_EDITED")
+  },
+
+  {
+    ID::MAIL_ADMIN_SUBJECT_DELETED,
+    "Your booking has been deleted"
+  },
+
+  {
+    ID::MAIL_ADMIN_BODY_DELETED,
+    "The following booking of yours had to have been deleted:\n\nDate: %1\nStart Time: %2\nStopTime: %3\nEvent: %4"
   }
 };
 
@@ -698,14 +718,34 @@ QMap<ETextId, QString> TextHandler::german = {
   },
 
   {
-    ID::MAIL_SUBJECT,
+    ID::MAIL_FILES_SUBJECT,
     "HfMDD Konzertsaal -- Aufnahme "
   },
 
   {
-    ID::MAIL_BODY,
+    ID::MAIL_FILES_BODY,
     QString("Sie können ihre Aufnahme aus dem Konzertsaal über den Link unten herunterladen.\n") +
       "Bitte beachten Sie, dass es einen Moment dauern kann, ehe der Download beginnt.\n" +
       "Für Fragen oder Feedback wenden Sie sich bitte an Oliver Fenk (oliver.fenk@hfmdd.de).\n\n"
+  },
+
+  {
+    ID::MAIL_ADMIN_SUBJECT_EDITED,
+    "Your booking has been edited"
+  },
+
+  {
+    ID::MAIL_ADMIN_BODY_EDITED,
+    QString("MAIL_ADMIN_BODY_EDITED")
+  },
+
+  {
+    ID::MAIL_ADMIN_SUBJECT_DELETED,
+    "Your booking has been deleted"
+  },
+
+  {
+    ID::MAIL_ADMIN_BODY_DELETED,
+    "The following booking of yours had to have been deleted:\n\nDate: %1\nStart Time: %2\nStop Time: %3\nEvent: %4"
   }
 };

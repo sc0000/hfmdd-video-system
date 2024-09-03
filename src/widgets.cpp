@@ -25,6 +25,7 @@ OkCancelDialog* Widgets::okCancelDialog;
 PasswordDialog* Widgets::passwordDialog;
 PresetDialog* Widgets::presetDialog;
 InfoDialog* Widgets::infoDialog;
+AdminMailDialog* Widgets::adminMailDialog;
 
 PTZSettings* Widgets::ptzSettings;
 
@@ -45,6 +46,7 @@ void Widgets::load()
   passwordDialog = new PasswordDialog(mainWindow);
   presetDialog = new PresetDialog(mainWindow);
   infoDialog = new InfoDialog(mainWindow);
+  adminMailDialog = new AdminMailDialog(mainWindow);
 
   ptzSettings = new PTZSettings(mainWindow);
 

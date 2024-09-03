@@ -118,3 +118,28 @@ public:
 
   virtual void fade(void (*result)(void) = nullptr) override;
 };
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class AdminMailDialog;
+}
+QT_END_NAMESPACE
+
+class AdminMailDialog : public AnimatedDialog
+{
+  Q_OBJECT
+
+private:
+  Ui::AdminMailDialog* ui;
+  Handlebar* handlebar;
+  const Booking* m_booking;
+
+public:
+  explicit AdminMailDialog(QWidget* parent = nullptr);
+  void display(const Booking* m_booking); 
+
+private slots:
+  void on_okButton_clicked();
+  void on_cancelButton_clicked();
+  void on_languageButton_clicked();  
+};

@@ -222,6 +222,12 @@ void BookingManager::on_deleteBookingButton_clicked()
   
   int rowIndex = ui->bookingsList->currentRow();
   Booking* selectedBooking = BookingHandler::loadedBookings[rowIndex];
+  const QString& selectedBookingMail = selectedBooking->email;
+
+  if (MailHandler::isAdmin && selectedBookingMail != MailHandler::adminEmail) {
+    Widgets::adminMailDialog->display(selectedBooking);
+  }
+
   JsonParser::removeBooking(selectedBooking);
   constructList();
 }

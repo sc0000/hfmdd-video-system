@@ -21,6 +21,7 @@ public:
   static class PasswordDialog* passwordDialog;
   static class PresetDialog* presetDialog;
   static class InfoDialog* infoDialog;
+  static class AdminMailDialog* adminMailDialog;
 
   static class PTZSettings* ptzSettings;
 

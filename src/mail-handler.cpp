@@ -153,7 +153,7 @@ QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
   jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
   jsonObj["receiver"] = booking.email;
 
-  jsonObj["subject"] = TextHandler::getText(ID::MAIL_SUBJECT) + 
+  jsonObj["subject"] = TextHandler::getText(ID::MAIL_FILES_SUBJECT) + 
     booking.date.toString("ddd MMM dd yyyy");
 
   jsonObj["dateTime"] = booking.date.toString("ddd MMM dd yyyy\n") + 
@@ -172,7 +172,7 @@ QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
   jsonObj["mailUser"] = mailUser;
   jsonObj["mailPassword"] = mailPassword;
   jsonObj["mailSenderAddress"] = mailSenderAddress;
-  jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_BODY);
+  jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_FILES_BODY);
 
   jsonObj["adminAddress"] = adminEmail;
   

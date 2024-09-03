@@ -10,6 +10,7 @@
 #include "ui_password-dialog.h"
 #include "ui_preset-dialog.h"
 #include "ui_info-dialog.h"
+#include "ui_admin-mail-dialog.h"
 
 #include "message-dialog.hpp"
 
@@ -301,4 +302,85 @@ void InfoDialog::fade(void (*result)(void))
   }
 
   AnimatedDialog::fade(result);
+}
+
+AdminMailDialog::AdminMailDialog(QWidget* parent)
+ :  AnimatedDialog(parent),
+    ui(new Ui::AdminMailDialog),
+    handlebar(nullptr),
+    m_booking(nullptr)
+{
+  ui->setupUi(this);
+  setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
+
+  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+  
+  ui->masterWidget->setFixedWidth(width() - 4);
+  ui->masterWidget->setFixedHeight(height() - 32);
+  ui->masterWidget->move(QPoint(4, 32));
+
+  // ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+
+  handlebar = new Handlebar(this, EHandlebarStyle::Blue);
+
+  ui->mailBodyTextEdit->setStyleSheet(
+    "QTextEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+  );
+
+  ui->okButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  ui->cancelButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  ui->languageButton->setStyleSheet(
+    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
+    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+  );
+
+  setModal(true);
+  hide();
+}
+
+void AdminMailDialog::display(const Booking* booking)
+{
+  ui->okButton->setAttribute(Qt::WA_UnderMouse, false);
+  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
+  ui->languageButton->setAttribute(Qt::WA_UnderMouse, false);
+  QPushButton* closeButton = handlebar->getCloseButton();
+  if (!closeButton) return;
+  closeButton->setAttribute(Qt::WA_UnderMouse, false);
+
+  m_booking = booking;
+
+  ui->mailBodyTextEdit->setText(
+    TextHandler::getText(ID::MAIL_ADMIN_BODY_DELETED)
+    .arg(m_booking->date.toString())
+    .arg(m_booking->startTime.toString("HH:mm"))
+    .arg(m_booking->stopTime.toString("HH:mm"))
+    .arg(m_booking->event));
+
+  fade();
+}
+
+void AdminMailDialog::on_okButton_clicked()
+{
+
+}
+  
+void AdminMailDialog::on_cancelButton_clicked()
+{
+
+}
+
+void AdminMailDialog::on_languageButton_clicked()
+{
+
 }
