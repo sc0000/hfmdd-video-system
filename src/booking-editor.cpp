@@ -26,6 +26,15 @@ BookingEditor::BookingEditor(QWidget* parent)
 
   ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
 
+  ui->scrollArea->takeWidget();
+
+  ui->bookingsOnSelectedDateLabel->setLayout(ui->scrollAreaLayout);
+  ui->bookingsOnSelectedDateLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  ui->bookingsOnSelectedDateLabel->setMinimumSize(595, 64);
+
+  ui->scrollArea->setWidgetResizable(false);
+  ui->scrollArea->setWidget(ui->bookingsOnSelectedDateLabel);
+
   updateTexts();
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   setModal(true);
@@ -125,6 +134,7 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
           TextHandler::getText(ID::EDITOR_PREV_BOOKINGS_NONE) + dateStr + "."
         );
 
+        resizeBookingsOnExistingDateLabel();
         return;
   }
 
@@ -158,11 +168,23 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
   ui->bookingsOnSelectedDateLabel->setText(str);
+  
+  resizeBookingsOnExistingDateLabel();
 }
 
 void BookingEditor::drawTimespan()
 {
   ui->timeLabel->setText(booking->startTime.toString("HH:mm") + " – " + booking->stopTime.toString("HH:mm"));
+}
+
+void BookingEditor::resizeBookingsOnExistingDateLabel()
+{
+  QFontMetrics fontMetrics(ui->bookingsOnSelectedDateLabel->font());
+  int lineHeight = fontMetrics.lineSpacing();
+  int numLines = 2 + BookingHandler::bookingsOnSelectedDate.size();
+  int labelHeight = lineHeight * numLines;
+
+  ui->bookingsOnSelectedDateLabel->setFixedHeight(labelHeight);
 }
 
 void BookingEditor::on_calendarWidget_clicked(QDate date)

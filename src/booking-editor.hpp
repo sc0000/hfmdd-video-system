@@ -35,6 +35,7 @@ private:
 private:
   void updateExistingBookingsLabel(const QDate& date);
   void drawTimespan();
+  void resizeBookingsOnExistingDateLabel();
  
 private slots:
   void on_calendarWidget_clicked(QDate date);
