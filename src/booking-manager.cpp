@@ -221,8 +221,7 @@ void BookingManager::on_deleteBookingButton_clicked()
     return;
   
   int rowIndex = ui->bookingsList->currentRow();
-  Booking selectedBooking = *BookingHandler::loadedBookings[rowIndex];
-  // BookingHandler::updateConflictingBookings(selectedBooking, false);
+  Booking* selectedBooking = BookingHandler::loadedBookings[rowIndex];
   JsonParser::removeBooking(selectedBooking);
   constructList();
 }

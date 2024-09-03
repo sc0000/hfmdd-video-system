@@ -26,52 +26,14 @@ void BookingHandler::initCurrentBooking()
   currentBooking = new Booking;
 }
 
-void BookingHandler::updateConflictingBookings(const QDate& date, const bool setConflicting)
+void BookingHandler::addCurrentBooking()
 {
-  // getBookingsOnSelectedDate(date);
+  for (const Booking& booking : allBookings) {
+    if (currentBooking->index == booking.index)
+      return;
+  }
 
-  // currentBooking.isConflicting = false;
-
-  // for (Booking* b : bookingsOnSelectedDate) {
-  //   if (bookingsAreConflicting(currentBooking, *b)) {
-  //     currentBooking.isConflicting = true;
-  //     b->isConflicting = setConflicting;
-  //   }
-
-  //   else {
-  //     b->isConflicting = false;
-  //   }
-
-  //   b->date = date;
-
-  //   JsonParser::updateBooking(*b);
-  // }
-
-  // JsonParser::updateBooking(currentBooking);
-}
-
-void BookingHandler::updateConflictingBookings(Booking& booking, const bool setConflicting)
-{
-  // getBookingsOnSelectedDate(booking.date);
-
-  // booking.isConflicting = false;
-
-  // for (Booking* other : bookingsOnSelectedDate) {
-  //   if (bookingsAreConflicting(booking, other)) {
-  //     booking.isConflicting = true;
-  //     other->isConflicting = setConflicting;
-  //   }
-
-  //   else {
-  //     other->isConflicting = false;
-  //   }
-
-  //   other->date = booking.date;
-
-  //   JsonParser::updateBooking(*other);
-  // }
-
-  // JsonParser::updateBooking(booking);
+  allBookings.append(*currentBooking);
 }
 
 bool BookingHandler::bookingsAreConflicting(const Booking* b0, const Booking* b1)
@@ -112,6 +74,11 @@ void BookingHandler::getUserBookings()
   }
 
   sortBookings(loadedBookings); 
+}
+
+void BookingHandler::saveBookings()
+{
+  JsonParser::updateAllBookings(allBookings);
 }
 
 void BookingHandler::loadBookings()

@@ -27,7 +27,6 @@ private:
 
 private:
   void updateExistingBookingsLabel(QDate date);
-  void updateConflictingBookings(const QDate& date);
   void updateStopTimeLabel();
   void updateDurationLabel();
   

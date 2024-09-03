@@ -35,11 +35,11 @@ public:
   static QVector<Booking*> bookingsOnSelectedDate;
 
   static void initCurrentBooking();
-  static void updateConflictingBookings(const QDate& date, const bool setConflicting = true);
-  static void updateConflictingBookings(Booking& booking, const bool setConflicting = true);
+  static void addCurrentBooking();
   static bool bookingsAreConflicting(const Booking* booking0, const Booking* booking1);
   static void getBookingsOnSelectedDate(const QDate& date);
   static void getUserBookings();
+  static void saveBookings();
   static void loadBookings();
   static void sortAllBookings();
   static void sortBookings(QVector<Booking*>& bookings);

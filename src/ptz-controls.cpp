@@ -217,7 +217,7 @@ void PTZControls::stopRecording(bool manual)
 void PTZControls::logout()
 {
   if (BookingHandler::mode == EMode::QuickMode && !hasRecorded)
-    JsonParser::removeBooking(*booking);
+    JsonParser::removeBooking(booking);
 
   StorageHandler::deleteTempFiles();
   
@@ -1238,7 +1238,7 @@ void PTZControls::on_toBookingManagerButton_clicked()
     
     case EMode::QuickMode: {
       if (!hasRecorded)
-        JsonParser::removeBooking(*booking);
+        JsonParser::removeBooking(booking);
 
       Widgets::quickRecord->reload();
     }

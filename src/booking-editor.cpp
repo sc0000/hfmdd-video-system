@@ -359,10 +359,10 @@ void BookingEditor::on_saveButton_clicked()
   }
     
   if (isEditing) 
-    JsonParser::updateBooking(*booking);
+    JsonParser::updateBooking(booking);
   
   else 
-    JsonParser::addBooking(*booking);
+    JsonParser::addBooking(booking);
   
   Widgets::bookingManager->constructList();
 

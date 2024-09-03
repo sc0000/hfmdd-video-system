@@ -108,6 +108,8 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
         return;
   }
 
+  booking->isConflicting = false;
+
   QString str = TextHandler::getText(ID::QUICK_PREV_BOOKINGS);
 
   str += "<html><head/><body>";
@@ -118,11 +120,11 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
     bool isConflicting = false;
     
-    if (BookingHandler::bookingsAreConflicting(booking, b)) 
-      isConflicting = true; 
-          
-    if (isConflicting)
+    if (BookingHandler::bookingsAreConflicting(booking, b)) {
+      isConflicting = true;
+      booking->isConflicting = true;
       str += "<span style=\"background-color: rgb(31, 30, 31); color: rgb(254, 253, 254);\">";
+    }
 
     str += b->startTime.toString("HH:mm") + "-" + 
       b->stopTime.toString("HH:mm") + ": " + 
@@ -138,11 +140,6 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
   ui->bookingsOnSelectedDateLabel->setText(str);
-}
-
-void QuickRecord::updateConflictingBookings(const QDate& date)
-{
-
 }
 
 void QuickRecord::updateStopTimeLabel()
@@ -256,9 +253,19 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
 
 void QuickRecord::on_toPTZControlsButton_clicked()
 { 
-  BookingHandler::updateConflictingBookings(booking->date);
-  JsonParser::addBooking(*booking);
+  if (booking->isConflicting) {
+    int result = Widgets::okCancelDialog->display(
+      TextHandler::getText(ID::EDITOR_CONFLICTING_BOOKINGS), true
+    );
+    
+    if (result == QDialog::Rejected)
+      return;
 
+    const QString sendMail = MailHandler::sendMail(*booking, EMailType::BookingConflictWarning);
+  }
+
+  JsonParser::addBooking(booking);
+  
   // TODO: Check: always reset or update, and setup option to reset manually?
   PTZSettings::resetFilterSettings();
 
