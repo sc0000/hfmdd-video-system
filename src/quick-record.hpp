@@ -27,6 +27,7 @@ private:
 
 private:
   void updateExistingBookingsLabel(QDate date);
+  void resizeBookingsOnExistingDateLabel();
   void updateStopTimeLabel();
   void updateDurationLabel();
   

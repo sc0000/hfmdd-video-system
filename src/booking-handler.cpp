@@ -143,6 +143,8 @@ void BookingHandler::reevaluateConflicts()
 {
   qsizetype size = allBookings.size();
 
+  if (size == 0) return;
+
   for (qsizetype i = 0; i < size; ++i) {
     bool isConflicting = false;
 

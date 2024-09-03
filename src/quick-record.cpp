@@ -42,7 +42,16 @@ QuickRecord::QuickRecord(QWidget* parent)
   infoLabelAnimation = new QPropertyAnimation(ui->infoLabel, "maximumWidth");
   infoLabelAnimation->setDuration(100);
 
-  // ui->infoLabel->setFont(QFont("DaxOT", 11));
+  ui->scrollArea->takeWidget();
+
+  ui->bookingsOnSelectedDateLabel->setLayout(ui->scrollAreaLayout);
+  ui->bookingsOnSelectedDateLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  ui->bookingsOnSelectedDateLabel->setMinimumSize(527, 64);
+
+  ui->scrollArea->setWidgetResizable(false);
+  ui->scrollArea->setWidget(ui->bookingsOnSelectedDateLabel);
+
+
   updateTexts();
 
   setModal(false);
@@ -66,9 +75,9 @@ void QuickRecord::reload()
   raise();
   center(ui->masterWidget);
 
+  BookingHandler::loadBookings();
   BookingHandler::reevaluateConflicts();
 
-  BookingHandler::loadBookings();
   booking->date = QDate::currentDate();
   booking->startTime = QTime::currentTime();
   booking->stopTime = booking->startTime.addSecs(60 * 60);
@@ -105,6 +114,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
   if (bosd.isEmpty() ||
      (bosd.size() == 1 && bosd[0]->index == booking->index)) {
         ui->bookingsOnSelectedDateLabel->setText(TextHandler::getText(ID::QUICK_PREV_BOOKINGS_NONE));
+        resizeBookingsOnExistingDateLabel();
         return;
   }
 
@@ -140,6 +150,18 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
   ui->bookingsOnSelectedDateLabel->setText(str);
+
+  resizeBookingsOnExistingDateLabel();
+}
+
+void QuickRecord::resizeBookingsOnExistingDateLabel()
+{
+  QFontMetrics fontMetrics(ui->bookingsOnSelectedDateLabel->font());
+  int lineHeight = fontMetrics.lineSpacing();
+  int numLines = 2 + BookingHandler::bookingsOnSelectedDate.size();
+  int labelHeight = lineHeight * numLines;
+
+  ui->bookingsOnSelectedDateLabel->setFixedHeight(labelHeight);
 }
 
 void QuickRecord::updateStopTimeLabel()

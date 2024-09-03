@@ -98,13 +98,13 @@
       <property name="minimumSize">
        <size>
         <width>595</width>
-        <height>83</height>
+        <height>64</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>595</width>
-        <height>83</height>
+        <height>64</height>
        </size>
       </property>
       <property name="frameShadow">
@@ -188,9 +188,9 @@
        <widget class="QWidget" name="verticalLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>10</x>
+          <x>0</x>
           <y>10</y>
-          <width>160</width>
+          <width>581</width>
           <height>80</height>
          </rect>
         </property>
