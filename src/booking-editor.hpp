@@ -23,14 +23,13 @@ class BookingEditor : public AnimatedDialog, public Translatable
 
 private:
   Ui::BookingEditor* ui;
-
+  Handlebar* handlebar;
   Booking* booking;
   bool isEditing;
 
   ETimeToSet timeToSet;
 
-  bool mousePressed = false;
-  QPoint dragPosition;
+  Booking originalBooking;
 
 private:
   void updateExistingBookingsLabel(const QDate& date);

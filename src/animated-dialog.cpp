@@ -1,6 +1,8 @@
+#include <QLabel>
+
 #include "animated-dialog.hpp"
 
-Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle) 
+Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle, const QString& title) 
   : QFrame(parent),
     animatedDialogParent(static_cast<AnimatedDialog*>(parent)) 
 {
@@ -13,18 +15,32 @@ Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle)
   
   move(QPoint(0, 0));
 
+  if (title != "") {
+    QLabel* titleLabel = new QLabel(this);
+
+    titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    titleLabel->setFixedHeight(24);
+    titleLabel->move(10, 8);
+    titleLabel->setText(title);
+
+    titleLabel->setStyleSheet(
+        "QLabel { color: rgb(254, 253, 254); border: 0px; font: 12pt DaxOT; }"
+      );
+  }
+
   closeButton = new QPushButton(this);
 
   closeButton->setFixedSize(24, 24);
-  closeButton->move(QPoint(width() - 32, 8));
+  closeButton->move(width() - 34, 8);
+  closeButton->setText("x");
 
   if (HandlebarStyle == EHandlebarStyle::Black) {
     setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
 
     closeButton->setStyleSheet(
       "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
-      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-      "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
+      "QPushButton:hover { background-color: #ffbf00; color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
+      "QPushButton:pressed { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }" 
     );
   }
 
@@ -37,9 +53,6 @@ Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle)
       "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
     );
   }
-  
-
-  closeButton->setText("x");
 
   QObject::connect(closeButton, &QPushButton::clicked, this, &Handlebar::onCloseButtonClicked);
 

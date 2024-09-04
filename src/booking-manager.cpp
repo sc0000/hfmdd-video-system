@@ -225,7 +225,7 @@ void BookingManager::on_deleteBookingButton_clicked()
   const QString& selectedBookingMail = selectedBooking->email;
 
   if (MailHandler::isAdmin && selectedBookingMail != MailHandler::adminEmail) {
-    Widgets::adminMailDialog->display(selectedBooking);
+    Widgets::adminMailDialog->display(EAdminMailType::Deletion, selectedBooking);
   }
 
   JsonParser::removeBooking(selectedBooking);

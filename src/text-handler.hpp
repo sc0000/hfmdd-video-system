@@ -62,10 +62,10 @@ enum class ETextId {
   CONFLICT,
   MAIL_FILES_SUBJECT,
   MAIL_FILES_BODY,
-  MAIL_ADMIN_SUBJECT_EDITED,
-  MAIL_ADMIN_BODY_EDITED,
-  MAIL_ADMIN_SUBJECT_DELETED,
-  MAIL_ADMIN_BODY_DELETED,
+  MAIL_ADMIN_ADJUSTMENT_SUBJECT,
+  MAIL_ADMIN_ADJUSTMENT_BODY,
+  MAIL_ADMIN_DELETION_SUBJECT,
+  MAIL_ADMIN_DELETION_BODY,
 };
 
 using ID = ETextId;
@@ -75,13 +75,15 @@ class TextHandler
 public:
   static void translate(const QString language);
   static const QString getText(ETextId id);
+  static const QString getTextEnglish(ETextId id);
+  static const QString getTextGerman(ETextId id);
 
   static QLocale locale;
 
 private:
-  static QMap<ETextId, QString>* currentTexts;
-  static QMap<ETextId, QString> english;
-  static QMap<ETextId, QString> german;
+  static const QMap<ETextId, QString>* currentTexts;
+  static const QMap<ETextId, QString> english;
+  static const QMap<ETextId, QString> german;
 };
 
 class Translatable

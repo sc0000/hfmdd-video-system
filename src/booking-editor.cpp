@@ -13,12 +13,13 @@
 BookingEditor::BookingEditor(QWidget* parent)
   : AnimatedDialog(parent),
     ui(new Ui::BookingEditor),
+    handlebar(nullptr),
     booking(BookingHandler::currentBooking),
     timeToSet(ETimeToSet::StartTime)
 {
   ui->setupUi(this);
 
-  Handlebar* handlebar = new Handlebar(this);
+  handlebar = new Handlebar(this, EHandlebarStyle::Black, "Booking Editor");
  
   ui->masterWidget->setFixedWidth(width() - 16);
   ui->masterWidget->setFixedHeight(height() - 56);
@@ -49,6 +50,7 @@ void BookingEditor::reload(Booking* bookingToEdit)
 {
   if (bookingToEdit) {
     isEditing = true;
+    originalBooking = *bookingToEdit;
 
     booking->date = bookingToEdit->date;
     booking->email = bookingToEdit->email;
@@ -94,15 +96,20 @@ void BookingEditor::reload(Booking* bookingToEdit)
     "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
-  ui->saveButton->setAttribute(Qt::WA_UnderMouse, false);
-  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
-
   ui->calendarWidget->setSelectedDate(booking->date);
   updateExistingBookingsLabel(booking->date);
 
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
 
   drawTimespan();
+
+  ui->saveButton->setAttribute(Qt::WA_UnderMouse, false);
+  ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
+
+  QPushButton* closeButton = handlebar->getCloseButton();
+  
+  if (closeButton)
+    closeButton->setAttribute(Qt::WA_UnderMouse, false);
 
   fade();
   exec();
@@ -383,8 +390,14 @@ void BookingEditor::on_saveButton_clicked()
     const QString sendMail = MailHandler::sendMail(*booking, EMailType::BookingConflictWarning);
   }
     
-  if (isEditing) 
+  if (isEditing) {
     JsonParser::updateBooking(booking);
+
+    if (MailHandler::isAdmin && booking->email != MailHandler::adminEmail) {
+      Widgets::adminMailDialog->display(EAdminMailType::Adjustment, booking, &originalBooking);
+    }
+  }
+    
   
   else 
     JsonParser::addBooking(booking);

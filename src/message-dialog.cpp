@@ -308,7 +308,8 @@ AdminMailDialog::AdminMailDialog(QWidget* parent)
  :  AnimatedDialog(parent),
     ui(new Ui::AdminMailDialog),
     handlebar(nullptr),
-    m_booking(nullptr)
+    m_booking(nullptr),
+    locale(QLocale::German)
 {
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
@@ -321,7 +322,11 @@ AdminMailDialog::AdminMailDialog(QWidget* parent)
 
   // ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
 
-  handlebar = new Handlebar(this, EHandlebarStyle::Blue);
+  handlebar = new Handlebar(this, EHandlebarStyle::Blue, "Mail Editor");
+
+  ui->mailSubjectLineEdit->setStyleSheet(
+    "QLineEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+  );
 
   ui->mailBodyTextEdit->setStyleSheet(
     "QTextEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
@@ -349,23 +354,24 @@ AdminMailDialog::AdminMailDialog(QWidget* parent)
   hide();
 }
 
-void AdminMailDialog::display(const Booking* booking)
+void AdminMailDialog::display(EAdminMailType type, const Booking* booking, const Booking* originalEditedBooking)
 {
   ui->okButton->setAttribute(Qt::WA_UnderMouse, false);
   ui->cancelButton->setAttribute(Qt::WA_UnderMouse, false);
   ui->languageButton->setAttribute(Qt::WA_UnderMouse, false);
+
   QPushButton* closeButton = handlebar->getCloseButton();
-  if (!closeButton) return;
-  closeButton->setAttribute(Qt::WA_UnderMouse, false);
+  
+  if (closeButton)
+    closeButton->setAttribute(Qt::WA_UnderMouse, false);
 
+  m_type = type;
   m_booking = booking;
+  
+  if (originalEditedBooking)
+    m_originalEditedBooking = originalEditedBooking;
 
-  ui->mailBodyTextEdit->setText(
-    TextHandler::getText(ID::MAIL_ADMIN_BODY_DELETED)
-    .arg(m_booking->date.toString())
-    .arg(m_booking->startTime.toString("HH:mm"))
-    .arg(m_booking->stopTime.toString("HH:mm"))
-    .arg(m_booking->event));
+  updateTemplate("Deutsch");
 
   fade();
 }
@@ -382,5 +388,92 @@ void AdminMailDialog::on_cancelButton_clicked()
 
 void AdminMailDialog::on_languageButton_clicked()
 {
+  const QString& buttonText = ui->languageButton->text();
 
+  if (buttonText == "English") {
+     locale = QLocale::English;
+     ui->languageButton->setText("Deutsch");
+  }
+   
+  if (buttonText == "Deutsch") {
+    locale = QLocale::German;
+    ui->languageButton->setText("English");
+  }
+    
+  updateTemplate(buttonText);
+}
+
+void AdminMailDialog::updateTemplate(const QString& language)
+{
+  switch (m_type) {
+    case EAdminMailType::Adjustment:
+      if (language == "English") {
+        ui->mailSubjectLineEdit->setText(
+          TextHandler::getTextEnglish(ID::MAIL_ADMIN_ADJUSTMENT_SUBJECT)
+        );
+
+        ui->mailBodyTextEdit->setText(
+          TextHandler::getTextEnglish(ID::MAIL_ADMIN_ADJUSTMENT_BODY)
+          .arg(m_booking->event)
+          .arg(locale.toString(m_originalEditedBooking->date))
+          .arg(m_originalEditedBooking->startTime.toString("HH:mm"))
+          .arg(m_originalEditedBooking->stopTime.toString("HH:mm"))
+          .arg(locale.toString(m_booking->date))
+          .arg(m_booking->startTime.toString("HH:mm"))
+          .arg(m_booking->stopTime.toString("HH:mm"))
+        );
+      }
+
+      if (language == "Deutsch") {
+        ui->mailSubjectLineEdit->setText(
+          TextHandler::getTextGerman(ID::MAIL_ADMIN_ADJUSTMENT_SUBJECT)
+        );
+
+        ui->mailBodyTextEdit->setText(
+          TextHandler::getTextGerman(ID::MAIL_ADMIN_ADJUSTMENT_BODY)
+          .arg(m_booking->event)
+          .arg(locale.toString(m_originalEditedBooking->date))
+          .arg(m_originalEditedBooking->startTime.toString("HH:mm"))
+          .arg(m_originalEditedBooking->stopTime.toString("HH:mm"))
+          .arg(locale.toString(m_booking->date))
+          .arg(m_booking->startTime.toString("HH:mm"))
+          .arg(m_booking->stopTime.toString("HH:mm"))
+        );
+      }
+    break;
+
+    case EAdminMailType::Deletion:
+      if (language == "English") {
+        ui->mailSubjectLineEdit->setText(
+          TextHandler::getTextEnglish(ID::MAIL_ADMIN_DELETION_SUBJECT)
+        );
+
+        ui->mailBodyTextEdit->setText(
+          TextHandler::getTextEnglish(ID::MAIL_ADMIN_DELETION_BODY)
+          .arg(m_booking->event)
+          .arg(locale.toString(m_booking->date))
+          .arg(m_booking->startTime.toString("HH:mm"))
+          .arg(m_booking->stopTime.toString("HH:mm"))
+        );
+      }
+
+      if (language == "Deutsch") {
+        ui->mailSubjectLineEdit->setText(
+          TextHandler::getTextGerman(ID::MAIL_ADMIN_DELETION_SUBJECT)
+        );
+
+        ui->mailBodyTextEdit->setText(
+          TextHandler::getTextGerman(ID::MAIL_ADMIN_DELETION_BODY)
+          .arg(m_booking->event)
+          .arg(locale.toString(m_booking->date))
+          .arg(m_booking->startTime.toString("HH:mm"))
+          .arg(m_booking->stopTime.toString("HH:mm"))
+        );
+      }
+    break;
+  }
+
+  if (m_type == EAdminMailType::Deletion) {
+    
+  }
 }

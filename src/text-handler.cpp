@@ -4,32 +4,42 @@
 #include "widgets.hpp"
 #include "text-handler.hpp"
 
-QMap<ETextId, QString>* TextHandler::currentTexts = &TextHandler::english;
+const QMap<ETextId, QString>* TextHandler::currentTexts = &TextHandler::english;
 QLocale TextHandler::locale = QLocale::English;
 
 void TextHandler::translate(const QString language) 
 {
     if (language == "English") {
-      TextHandler::currentTexts = &TextHandler::english;
+      currentTexts = &english;
       locale = QLocale::English;
     }
       
     else if (language == "Deutsch") {
-      TextHandler::currentTexts = &TextHandler::german;
+      currentTexts = &german;
       locale = QLocale::German;
     }
 }
 
 const QString TextHandler::getText(ETextId id)
 {
-  return TextHandler::currentTexts->value(id, "Text/Label not found");
+  return currentTexts->value(id, "Text/Label not found");
+}
+
+const QString TextHandler::getTextEnglish(ETextId id)
+{
+  return english.value(id, "Text/Label not found");
+}
+
+const QString TextHandler::getTextGerman(ETextId id)
+{
+  return german.value(id, "Text/Label not found");
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 //---TEXTS------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-QMap<ETextId, QString> TextHandler::english = {
+const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::LOGIN_INFO, 
     QString("<html><head/><body>") + 
@@ -369,27 +379,27 @@ QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
-    ID::MAIL_ADMIN_SUBJECT_EDITED,
-    "Your booking has been edited"
+    ID::MAIL_ADMIN_ADJUSTMENT_SUBJECT,
+    "Your booking had to be adjusted "
   },
 
   {
-    ID::MAIL_ADMIN_BODY_EDITED,
-    QString("MAIL_ADMIN_BODY_EDITED")
+    ID::MAIL_ADMIN_ADJUSTMENT_BODY,
+    "The following booking had to be adjusted: \n\nEvent: %1\n\nDate: %2\nStart Time: %3\nStopTime: %4\n\nThe timeslot for this event is now the following:\n\nDate: %5\nStart Time: %6\nStop Time: %7"
   },
 
   {
-    ID::MAIL_ADMIN_SUBJECT_DELETED,
+    ID::MAIL_ADMIN_DELETION_SUBJECT,
     "Your booking has been deleted"
   },
 
   {
-    ID::MAIL_ADMIN_BODY_DELETED,
-    "The following booking of yours had to have been deleted:\n\nDate: %1\nStart Time: %2\nStopTime: %3\nEvent: %4"
+    ID::MAIL_ADMIN_DELETION_BODY,
+    "The following booking had to be deleted:\n\nEvent: %1\nDate: %2\nStart Time: %3\nStop Time: %4"
   }
 };
 
-QMap<ETextId, QString> TextHandler::german = {
+const QMap<ETextId, QString> TextHandler::german = {
   {ID::LOGIN_INFO,
   
       QString("<html><head/><body>") + 
@@ -730,22 +740,22 @@ QMap<ETextId, QString> TextHandler::german = {
   },
 
   {
-    ID::MAIL_ADMIN_SUBJECT_EDITED,
-    "Your booking has been edited"
+    ID::MAIL_ADMIN_ADJUSTMENT_SUBJECT,
+    "Ihre Buchung wurde angepasst"
   },
 
   {
-    ID::MAIL_ADMIN_BODY_EDITED,
-    QString("MAIL_ADMIN_BODY_EDITED")
+    ID::MAIL_ADMIN_ADJUSTMENT_BODY,
+    "Die folgende Buchung musste angepasst werden: \n\nVeranstaltung: %1\n\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4\n\nDer für die genannte Veranstaltung gebuchte Zeitraum ist nun folgender:\n\nDatum: %5\nAufnahmebeginn: %6\nAufnahmeende: %7"
   },
 
   {
-    ID::MAIL_ADMIN_SUBJECT_DELETED,
-    "Your booking has been deleted"
+    ID::MAIL_ADMIN_DELETION_SUBJECT,
+    "Ihre Buchung wurde gelöscht"
   },
 
   {
-    ID::MAIL_ADMIN_BODY_DELETED,
-    "The following booking of yours had to have been deleted:\n\nDate: %1\nStart Time: %2\nStop Time: %3\nEvent: %4"
+    ID::MAIL_ADMIN_DELETION_BODY,
+    "Die folgende Buchung musste leider gelöscht werden:\n\nVeranstaltung: %1\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4"
   }
 };

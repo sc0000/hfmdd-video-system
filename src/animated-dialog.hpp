@@ -18,7 +18,7 @@ class Handlebar : public QFrame
   Q_OBJECT
 
 public:
-  explicit Handlebar(QWidget* parent = nullptr, EHandlebarStyle HandlebarStyle = EHandlebarStyle::Black);
+  explicit Handlebar(QWidget* parent = nullptr, EHandlebarStyle HandlebarStyle = EHandlebarStyle::Black, const QString& title = "");
   inline QPushButton* getCloseButton() { return closeButton; }
 
 protected:

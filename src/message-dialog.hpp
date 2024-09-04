@@ -119,6 +119,13 @@ public:
   virtual void fade(void (*result)(void) = nullptr) override;
 };
 
+enum class EAdminMailType 
+{
+  Adjustment,
+  Deletion,
+  Default
+};
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class AdminMailDialog;
@@ -133,10 +140,15 @@ private:
   Ui::AdminMailDialog* ui;
   Handlebar* handlebar;
   const Booking* m_booking;
+  const Booking* m_originalEditedBooking;
+  QLocale locale;
+  EAdminMailType m_type;
+
+  void updateTemplate(const QString& language);
 
 public:
   explicit AdminMailDialog(QWidget* parent = nullptr);
-  void display(const Booking* m_booking); 
+  void display(EAdminMailType type, const Booking* booking, const Booking* originalEditedBooking = nullptr); 
 
 private slots:
   void on_okButton_clicked();
