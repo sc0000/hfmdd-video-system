@@ -396,6 +396,36 @@ const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::MAIL_ADMIN_DELETION_BODY,
     "The following booking had to be deleted:\n\nEvent: %1\nDate: %2\nStart Time: %3\nStop Time: %4"
+  },
+
+  {
+    ID::MAIL_ADMIN_SEND,
+    "Send"
+  },
+  
+  {
+    ID::MAIL_ADMIN_NO_SEND,
+    "Don't Send"
+  },
+
+  {
+    ID::INPUT_CONFIRM,
+    "Confirm"
+  },
+
+  {
+    ID::INPUT_CANCEL,
+    "Cancel"
+  },
+
+  {
+    ID::INPUT_PASSWORD,
+    "Password"
+  },
+
+  {
+    ID::INPUT_PRESET,
+    "Preset Name"
   }
 };
 
@@ -757,5 +787,35 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MAIL_ADMIN_DELETION_BODY,
     "Die folgende Buchung musste leider gelöscht werden:\n\nVeranstaltung: %1\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4"
+  },
+
+  {
+    ID::MAIL_ADMIN_SEND,
+    "Senden"
+  },
+
+  {
+    ID::MAIL_ADMIN_NO_SEND,
+    "Nicht Senden"
+  },
+
+  {
+    ID::INPUT_CONFIRM,
+    "Bestätigen"
+  },
+
+  {
+    ID::INPUT_CANCEL,
+    "Verwerfen"
+  },
+
+  {
+    ID::INPUT_PASSWORD,
+    "Passwort"
+  },
+
+  {
+    ID::INPUT_PRESET,
+    "Name"
   }
 };

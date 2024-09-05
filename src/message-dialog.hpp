@@ -6,6 +6,7 @@
 
 #include "animated-dialog.hpp"
 #include "booking-handler.hpp"
+#include "text-handler.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -57,7 +58,7 @@ class PasswordDialog;
 }
 QT_END_NAMESPACE
 
-class PasswordDialog : public AnimatedDialog
+class PasswordDialog : public AnimatedDialog, public Translatable
 {
   Q_OBJECT
 
@@ -68,6 +69,7 @@ private:
 public:
   explicit PasswordDialog(QWidget* parent = nullptr);
   int display();
+  virtual void updateTexts() override;
   inline bool isValid() { return valid; } 
 
 private slots:
@@ -81,7 +83,7 @@ class PresetDialog;
 }
 QT_END_NAMESPACE
 
-class PresetDialog : public AnimatedDialog
+class PresetDialog : public AnimatedDialog, public Translatable
 {
   Q_OBJECT
 
@@ -91,6 +93,7 @@ private:
 public:
   explicit PresetDialog(QWidget* parent = nullptr);
   void display(Booking* booking = nullptr);
+  virtual void updateTexts() override;
   
 private slots:
   void on_okButton_clicked();
@@ -115,7 +118,6 @@ private:
 public:
   explicit InfoDialog(QWidget* parent = nullptr);
   void display(const QString& message, QPushButton* activatingButton = nullptr, const int offsetX = 0, const int offsetY = 0);
-
   virtual void fade(void (*result)(void) = nullptr) override;
 };
 
@@ -132,7 +134,7 @@ class AdminMailDialog;
 }
 QT_END_NAMESPACE
 
-class AdminMailDialog : public AnimatedDialog
+class AdminMailDialog : public AnimatedDialog, public Translatable
 {
   Q_OBJECT
 
@@ -148,7 +150,8 @@ private:
 
 public:
   explicit AdminMailDialog(QWidget* parent = nullptr);
-  void display(EAdminMailType type, const Booking* booking, const Booking* originalEditedBooking = nullptr); 
+  void display(EAdminMailType type, const Booking* booking, const Booking* originalEditedBooking = nullptr);
+  virtual void updateTexts() override; 
 
 private slots:
   void on_okButton_clicked();

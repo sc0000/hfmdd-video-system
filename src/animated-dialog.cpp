@@ -20,7 +20,7 @@ Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle, const QStr
 
     titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     titleLabel->setFixedHeight(24);
-    titleLabel->move(10, 8);
+    titleLabel->move(12, 8);
     titleLabel->setText(title);
 
     titleLabel->setStyleSheet(

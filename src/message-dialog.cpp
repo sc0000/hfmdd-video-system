@@ -172,6 +172,13 @@ int PasswordDialog::display()
   return exec();
 }
 
+void PasswordDialog::updateTexts()
+{
+  ui->okButton->setText(TextHandler::getText(ID::INPUT_CONFIRM));
+  ui->cancelButton->setText(TextHandler::getText(ID::INPUT_CANCEL));
+  ui->passwordLabel->setText(TextHandler::getText(ID::INPUT_PASSWORD));
+}
+
 void PasswordDialog::on_okButton_clicked()
 {
   if (ui->passwordLineEdit->text() == MailHandler::adminPassword) 
@@ -233,6 +240,13 @@ void PresetDialog::display(Booking* booking)
   }
 
   fade();
+}
+
+void PresetDialog::updateTexts()
+{
+  ui->okButton->setText(TextHandler::getText(ID::INPUT_CONFIRM));
+  ui->cancelButton->setText(TextHandler::getText(ID::INPUT_CANCEL));
+  ui->presetNameLabel->setText(TextHandler::getText(ID::INPUT_PRESET));
 }
 
 void PresetDialog::on_okButton_clicked()
@@ -374,6 +388,12 @@ void AdminMailDialog::display(EAdminMailType type, const Booking* booking, const
   updateTemplate("Deutsch");
 
   fade();
+}
+
+void AdminMailDialog::updateTexts()
+{
+  ui->okButton->setText(TextHandler::getText(ID::MAIL_ADMIN_SEND));
+  ui->cancelButton->setText(TextHandler::getText(ID::MAIL_ADMIN_NO_SEND));
 }
 
 void AdminMailDialog::on_okButton_clicked()
