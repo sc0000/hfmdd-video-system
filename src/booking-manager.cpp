@@ -277,6 +277,18 @@ void BookingManager::on_toPTZControlsButton_clicked()
   currentRow = ui->bookingsList->currentRow();
   Booking* selectedBooking = BookingHandler::loadedBookings[currentRow];
 
+  if (!MailHandler::isAdmin && selectedBooking->date < QDate::currentDate()) {
+    int result = Widgets::okCancelDialog->display(
+      TextHandler::getText(ID::MANAGER_TO_PTZ_OBSOLETE)
+    );
+
+    if (result == QDialog::Rejected) 
+      return;
+
+    deleteBooking(selectedBooking);
+    return;
+  }
+
   BookingHandler::currentBooking->date = selectedBooking->date;
   BookingHandler::currentBooking->email = selectedBooking->email;
   BookingHandler::currentBooking->index = selectedBooking->index;

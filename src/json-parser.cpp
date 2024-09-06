@@ -110,7 +110,9 @@ void JsonParser::getAllBookings(QVector<Booking>& outVector)
       obj.value("Index").toVariant().toInt()
     };
 
-    outVector.append(booking);
+    // Bookings a week in the past and older are not loaded, and later fizzled
+    if (booking.date.addDays(7) > QDate::currentDate())
+      outVector.append(booking);
   }
 }
 

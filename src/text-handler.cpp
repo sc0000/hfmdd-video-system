@@ -177,6 +177,13 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
+    ID::MANAGER_TO_PTZ_OBSOLETE,
+    "The selected booking is in the past. "
+    "Please select another one. "
+    "Do you want to delete this booking?"
+  },
+
+  {
     ID::MANAGER_BACK,
     "Go back to Mode Selection"
   }, 
@@ -598,6 +605,13 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MANAGER_TO_PTZ_TOO_MANY_SELECTED,
     "Bitte wählen Sie nur eine Buchung aus, um fortzufahren."
+  },
+
+  {
+    ID::MANAGER_TO_PTZ_OBSOLETE,
+    "Die ausgewählte Buchung liegt in der Vergangenheit. "
+    "Bitte wählen Sie eine andere aus. "
+    "Möchsten Sie diese Buchung löschen?"
   },
 
   {

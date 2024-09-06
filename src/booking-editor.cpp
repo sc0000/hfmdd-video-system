@@ -27,8 +27,8 @@ BookingEditor::BookingEditor(QWidget* parent)
 
   ui->calendarWidget->setStyleSheet(
     "QCalendarWidget { border: 1px solid rgb(31, 30, 31); }"
-    "QPushButton:disabled { background-color: rgb(229, 230, 230); }"
-    "QToolButton:disabled { background-color: rgb(229, 230, 230); }"
+    "QPushButton:disabled { }"
+    "QToolButton:disabled { }"
   );
 
   ui->scrollArea->takeWidget();
