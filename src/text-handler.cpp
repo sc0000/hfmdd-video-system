@@ -196,11 +196,6 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
-    ID::MANAGER_FORMAT,
-    "ddd MMM dd yyyy"
-  },
-
-  {
     ID::EDITOR_DATE_NONE_SELECTED,
     "No date selected."
   },
@@ -390,7 +385,8 @@ const QMap<ETextId, QString> TextHandler::english = {
 
   {
     ID::MAIL_CONFLICT_BODY,
-    "A conflicting time slot has been booked:\n\n%1\n%2\n%3"
+    "A conflicting time slot has been booked:\n\n"
+    "User:\t%1\nEvent:\t%2\nDate:\t%3\nTime:\t%4 - %5"
   },
 
   {
@@ -401,9 +397,9 @@ const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::MAIL_ADMIN_ADJUSTMENT_BODY,
     "The following booking had to be adjusted: \n\n"
-    "Event: %1\n\nDate: %2\nStart Time: %3\nStopTime: %4\n\n"
+    "Event:\t%1\n\nDate:\t%2\nTime:\t%3 - %4\n\n"
     "The timeslot for this event is now the following:\n\n"
-    "Date: %5\nStart Time: %6\nStop Time: %7"
+    "Date:\t%5\nTime:\t%6 - %7\n\n"
   },
 
   {
@@ -414,7 +410,7 @@ const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::MAIL_ADMIN_DELETION_BODY,
     "The following booking had to be deleted:\n\n"
-    "Event: %1\nDate: %2\nStart Time: %3\nStop Time: %4"
+    "Event:\t%1\nDate:\t%2\nTime:\t%3 - %4\n\n"
   },
 
   {
@@ -425,6 +421,12 @@ const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::MAIL_ADMIN_NO_SEND,
     "Don't Send"
+  },
+
+  {
+    ID::MAIL_NO_ANSWER,
+    "Please do not respond to this email. "
+    "If you have any questions, please contact %1 instead."
   },
 
   {
@@ -445,6 +447,11 @@ const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::INPUT_PRESET,
     "Preset Name"
+  },
+
+  {
+    ID::DATE_FORMAT,
+    "ddd MMM dd yyyy"
   }
 };
 
@@ -603,11 +610,6 @@ const QMap<ETextId, QString> TextHandler::german = {
       "<span style=\"font-weight: bold;\">Was passiert danach?</span><br/>" +
       "Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
       "</body></html>"
-  },
-
-  {
-    ID::MANAGER_FORMAT,
-    "ddd dd MMM yyyy"
   },
 
   {
@@ -790,7 +792,7 @@ const QMap<ETextId, QString> TextHandler::german = {
     ID::MAIL_FILES_BODY,
     QString("Sie können ihre Aufnahme aus dem Konzertsaal über den Link unten herunterladen.\n") +
       "Bitte beachten Sie, dass es einen Moment dauern kann, ehe der Download beginnt.\n" +
-      "Für Fragen oder Feedback wenden Sie sich bitte an Oliver Fenk (oliver.fenk@hfmdd.de).\n\n"
+      "Für Fragen oder Feedback wenden Sie sich bitte an %1.\n\n"
   },
 
   {
@@ -800,7 +802,8 @@ const QMap<ETextId, QString> TextHandler::german = {
 
   {
     ID::MAIL_CONFLICT_BODY,
-    "Es wurde ein kollidierender Videotermin gebucht:\n\n%1\n%2\n%3"
+    "Es wurde ein kollidierender Videotermin gebucht:\n\n"
+    "Nutzer:\t\t%1\nVeranstaltung:\t%2\nDatum:\t\t%3\nZeit:\t\t%4 - %5"
   },
 
   {
@@ -811,9 +814,9 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MAIL_ADMIN_ADJUSTMENT_BODY,
     "Die folgende Buchung musste angepasst werden: \n\n"
-    "Veranstaltung: %1\n\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4\n\n"
+    "Veranstaltung:\t%1\n\nDatum:\t\t%2\nZeit:\t\t%3 - %4\n\n"
     "Der für die genannte Veranstaltung gebuchte Zeitraum ist nun folgender:\n\n"
-    "Datum: %5\nAufnahmebeginn: %6\nAufnahmeende: %7"
+    "Datum:\t\t%5\nZeit:\t\t%6 - %7\n\n"
   },
 
   {
@@ -824,7 +827,7 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MAIL_ADMIN_DELETION_BODY,
     "Die folgende Buchung musste leider gelöscht werden:\n\n"
-    "Veranstaltung: %1\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4"
+    "Veranstaltung:\t%1\nDatum:\t\t%2\nZeit:\t\t%3 - %4\n\n"
   },
 
   {
@@ -835,6 +838,12 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MAIL_ADMIN_NO_SEND,
     "Nicht Senden"
+  },
+
+  {
+    ID::MAIL_NO_ANSWER,
+    "Bitte antworten Sie nicht auf diese Mail. "
+    "Wenden Sie sich mit Rückfragen etc. stattdessen an %1."
   },
 
   {
@@ -855,5 +864,10 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::INPUT_PRESET,
     "Name"
+  },
+
+  {
+    ID::DATE_FORMAT,
+    "ddd dd MMM yyyy"
   }
 };

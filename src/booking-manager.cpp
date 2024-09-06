@@ -115,7 +115,7 @@ void BookingManager::reload()
 
 QString BookingManager::makeEntry(const Booking& booking)
 {
-  const QString& format = TextHandler::getText(ID::MANAGER_FORMAT);
+  const QString& format = TextHandler::getText(ID::DATE_FORMAT);
 
   QString entry = 
     TextHandler::locale.toString(booking.date, format) + "\t" +
@@ -282,4 +282,3 @@ void BookingManager::on_logoutButton_clicked()
   Widgets::showFullScreenDialogs(true);
   fade(Widgets::loginDialog);
 }
-

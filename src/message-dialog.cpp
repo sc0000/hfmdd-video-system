@@ -344,6 +344,8 @@ AdminMailDialog::AdminMailDialog(QWidget* parent)
 
   ui->mailBodyTextEdit->setStyleSheet(
     "QTextEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
+    "QScrollBar::handle::vertical { background-color: rgb(254, 253, 254); min-height: 20px; margin: 2x; border-radius: 0px; border: none}"
+    "QScrollBar::handle::horizontal { background-color: rgb(254, 253, 254); min-height: 20px; margin: 2x; border-radius: 0px; border: none}"
   );
 
   ui->okButton->setStyleSheet(
@@ -432,6 +434,9 @@ void AdminMailDialog::on_languageButton_clicked()
 
 void AdminMailDialog::updateTemplate(const QString& language)
 {
+  const QString& formatGerman = TextHandler::getTextGerman(ID::DATE_FORMAT);
+  const QString& formatEnglish = TextHandler::getTextEnglish(ID::DATE_FORMAT);
+
   switch (m_type) {
     case EAdminMailType::Adjustment:
       if (language == "English") {
@@ -441,13 +446,15 @@ void AdminMailDialog::updateTemplate(const QString& language)
 
         ui->mailBodyTextEdit->setText(
           TextHandler::getTextEnglish(ID::MAIL_ADMIN_ADJUSTMENT_BODY)
-          .arg(m_booking->event)
-          .arg(locale.toString(m_originalEditedBooking->date))
-          .arg(m_originalEditedBooking->startTime.toString("HH:mm"))
-          .arg(m_originalEditedBooking->stopTime.toString("HH:mm"))
-          .arg(locale.toString(m_booking->date))
-          .arg(m_booking->startTime.toString("HH:mm"))
-          .arg(m_booking->stopTime.toString("HH:mm"))
+            .arg(m_booking->event)
+            .arg(locale.toString(m_originalEditedBooking->date, formatEnglish))
+            .arg(m_originalEditedBooking->startTime.toString("HH:mm"))
+            .arg(m_originalEditedBooking->stopTime.toString("HH:mm"))
+            .arg(locale.toString(m_booking->date))
+            .arg(m_booking->startTime.toString("HH:mm"))
+            .arg(m_booking->stopTime.toString("HH:mm")) +
+          TextHandler::getTextEnglish(ID::MAIL_NO_ANSWER)
+            .arg(MailHandler::adminEmail)
         );
       }
 
@@ -458,13 +465,15 @@ void AdminMailDialog::updateTemplate(const QString& language)
 
         ui->mailBodyTextEdit->setText(
           TextHandler::getTextGerman(ID::MAIL_ADMIN_ADJUSTMENT_BODY)
-          .arg(m_booking->event)
-          .arg(locale.toString(m_originalEditedBooking->date))
-          .arg(m_originalEditedBooking->startTime.toString("HH:mm"))
-          .arg(m_originalEditedBooking->stopTime.toString("HH:mm"))
-          .arg(locale.toString(m_booking->date))
-          .arg(m_booking->startTime.toString("HH:mm"))
-          .arg(m_booking->stopTime.toString("HH:mm"))
+            .arg(m_booking->event)
+            .arg(locale.toString(m_originalEditedBooking->date, formatGerman))
+            .arg(m_originalEditedBooking->startTime.toString("HH:mm"))
+            .arg(m_originalEditedBooking->stopTime.toString("HH:mm"))
+            .arg(locale.toString(m_booking->date))
+            .arg(m_booking->startTime.toString("HH:mm"))
+            .arg(m_booking->stopTime.toString("HH:mm")) +
+          TextHandler::getTextGerman(ID::MAIL_NO_ANSWER)
+            .arg(MailHandler::adminEmail)
         );
       }
     break;
@@ -477,10 +486,12 @@ void AdminMailDialog::updateTemplate(const QString& language)
 
         ui->mailBodyTextEdit->setText(
           TextHandler::getTextEnglish(ID::MAIL_ADMIN_DELETION_BODY)
-          .arg(m_booking->event)
-          .arg(locale.toString(m_booking->date))
-          .arg(m_booking->startTime.toString("HH:mm"))
-          .arg(m_booking->stopTime.toString("HH:mm"))
+            .arg(m_booking->event)
+            .arg(locale.toString(m_booking->date, formatEnglish))
+            .arg(m_booking->startTime.toString("HH:mm"))
+            .arg(m_booking->stopTime.toString("HH:mm")) +
+          TextHandler::getTextEnglish(ID::MAIL_NO_ANSWER)
+            .arg(MailHandler::adminEmail)
         );
       }
 
@@ -491,10 +502,12 @@ void AdminMailDialog::updateTemplate(const QString& language)
 
         ui->mailBodyTextEdit->setText(
           TextHandler::getTextGerman(ID::MAIL_ADMIN_DELETION_BODY)
-          .arg(m_booking->event)
-          .arg(locale.toString(m_booking->date))
-          .arg(m_booking->startTime.toString("HH:mm"))
-          .arg(m_booking->stopTime.toString("HH:mm"))
+            .arg(m_booking->event)
+            .arg(locale.toString(m_booking->date, formatGerman))
+            .arg(m_booking->startTime.toString("HH:mm"))
+            .arg(m_booking->stopTime.toString("HH:mm")) +
+          TextHandler::getTextGerman(ID::MAIL_NO_ANSWER)
+            .arg(MailHandler::adminEmail)
         );
       }
     break;

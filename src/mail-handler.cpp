@@ -134,17 +134,16 @@ QString MailHandler::sendMail(EMailType mailType, const Booking* booking,
   jsonObj["mailPassword"] = mailPassword;
   jsonObj["mailSenderAddress"] = mailSenderAddress;
 
-  QString dateTime = booking->date.toString("ddd MMM dd yyyy\n") + 
-    booking->startTime.toString("HH:mm") + " - " +
-    booking->stopTime.toString("HH:mm");
+  const QString& format = TextHandler::getText(ID::DATE_FORMAT);
 
   switch (mailType) {
     case EMailType::SendFiles:
       jsonObj["type"] = "send-files";
       jsonObj["receiver"] = booking->email;
       jsonObj["subject"] = TextHandler::getText(ID::MAIL_FILES_SUBJECT) + 
-        booking->date.toString("ddd MMM dd yyyy");
-      jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_FILES_BODY);
+        booking->date.toString(TextHandler::getText(ID::DATE_FORMAT));
+      jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_FILES_BODY)
+        .arg(adminEmail);
 
       jsonObj["basePath"] = QString("/team-folders/video/") +
         StorageHandler::baseDirectory.last(StorageHandler::baseDirectory.size() - 3);
@@ -159,11 +158,14 @@ QString MailHandler::sendMail(EMailType mailType, const Booking* booking,
     case EMailType::BookingConflictWarning:
       jsonObj["type"] = "booking-conflict-warning";
       jsonObj["receiver"] = adminEmail;
-      jsonObj["subject"] = TextHandler::getText(ID::MAIL_CONFLICT_SUBJECT);
-      jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_CONFLICT_BODY)
-        .arg(dateTime)
+      // ! German version of this mail hard coded for now...
+      jsonObj["subject"] = TextHandler::getTextGerman(ID::MAIL_CONFLICT_SUBJECT);
+      jsonObj["mailBody"] = TextHandler::getTextGerman(ID::MAIL_CONFLICT_BODY)
         .arg(booking->email)
-        .arg(booking->event);
+        .arg(booking->event)
+        .arg(TextHandler::locale.toString(booking->date, format))
+        .arg(booking->startTime.toString("HH:mm"))
+        .arg(booking->stopTime.toString("HH:mm"));
       break;
 
     case EMailType::AdminEmail:
