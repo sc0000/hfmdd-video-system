@@ -283,7 +283,7 @@ void QuickRecord::on_toPTZControlsButton_clicked()
     if (result == QDialog::Rejected)
       return;
 
-    const QString sendMail = MailHandler::sendMail(*booking, EMailType::BookingConflictWarning);
+    const QString sendMail = MailHandler::sendMail(EMailType::BookingConflictWarning, booking);
   }
 
   JsonParser::addBooking(booking);

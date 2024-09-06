@@ -179,7 +179,9 @@ void LoginDialog::on_manageBookingsButton_clicked()
       return;
 
     MailHandler::isAdmin = true; 
-  } 
+  }
+
+  else MailHandler::isAdmin = false; 
 
   fade(Widgets::modeSelect);
 }

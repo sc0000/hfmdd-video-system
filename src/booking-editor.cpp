@@ -141,6 +141,7 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
           TextHandler::getText(ID::EDITOR_PREV_BOOKINGS_NONE) + dateStr + "."
         );
 
+        booking->isConflicting = false;
         resizeBookingsOnExistingDateLabel();
         return;
   }
@@ -387,7 +388,9 @@ void BookingEditor::on_saveButton_clicked()
     if (result == QDialog::Rejected)
       return;
 
-    const QString sendMail = MailHandler::sendMail(*booking, EMailType::BookingConflictWarning);
+    const QString& sendWarningMsg = MailHandler::sendMail(EMailType::BookingConflictWarning, booking);
+
+    // Widgets::okDialog->display(sendWarningMsg);
   }
     
   if (isEditing) {
@@ -398,9 +401,7 @@ void BookingEditor::on_saveButton_clicked()
     }
   }
     
-  
-  else 
-    JsonParser::addBooking(booking);
+  else JsonParser::addBooking(booking);
   
   Widgets::bookingManager->constructList();
 

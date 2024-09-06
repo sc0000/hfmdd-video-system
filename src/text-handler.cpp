@@ -379,13 +379,26 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
+    ID::MAIL_CONFLICT_SUBJECT,
+    "Booking Conflict"
+  },
+
+  {
+    ID::MAIL_CONFLICT_BODY,
+    "A conflicting time slot has been booked:\n\n%1\n%2\n%3"
+  },
+
+  {
     ID::MAIL_ADMIN_ADJUSTMENT_SUBJECT,
     "Your booking had to be adjusted "
   },
 
   {
     ID::MAIL_ADMIN_ADJUSTMENT_BODY,
-    "The following booking had to be adjusted: \n\nEvent: %1\n\nDate: %2\nStart Time: %3\nStopTime: %4\n\nThe timeslot for this event is now the following:\n\nDate: %5\nStart Time: %6\nStop Time: %7"
+    "The following booking had to be adjusted: \n\n"
+    "Event: %1\n\nDate: %2\nStart Time: %3\nStopTime: %4\n\n"
+    "The timeslot for this event is now the following:\n\n"
+    "Date: %5\nStart Time: %6\nStop Time: %7"
   },
 
   {
@@ -395,7 +408,8 @@ const QMap<ETextId, QString> TextHandler::english = {
 
   {
     ID::MAIL_ADMIN_DELETION_BODY,
-    "The following booking had to be deleted:\n\nEvent: %1\nDate: %2\nStart Time: %3\nStop Time: %4"
+    "The following booking had to be deleted:\n\n"
+    "Event: %1\nDate: %2\nStart Time: %3\nStop Time: %4"
   },
 
   {
@@ -718,7 +732,7 @@ const QMap<ETextId, QString> TextHandler::german = {
 
   {
     ID::CONTROLS_RECORD_WRONG_TIME,
-    QString("Sie können eine gebuchte Aufnahme frühestens 15 Minuten\n") +
+    "Sie können eine gebuchte Aufnahme frühestens 15 Minuten\n"
     "vor und spätestens 30 Minuten nach der angegebenen Zeit starten."
   },
 
@@ -770,13 +784,26 @@ const QMap<ETextId, QString> TextHandler::german = {
   },
 
   {
+    ID::MAIL_CONFLICT_SUBJECT,
+    "Buchungskonflikt"
+  },
+
+  {
+    ID::MAIL_CONFLICT_BODY,
+    "Es wurde ein kollidierender Videotermin gebucht:\n\n%1\n%2\n%3"
+  },
+
+  {
     ID::MAIL_ADMIN_ADJUSTMENT_SUBJECT,
     "Ihre Buchung wurde angepasst"
   },
 
   {
     ID::MAIL_ADMIN_ADJUSTMENT_BODY,
-    "Die folgende Buchung musste angepasst werden: \n\nVeranstaltung: %1\n\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4\n\nDer für die genannte Veranstaltung gebuchte Zeitraum ist nun folgender:\n\nDatum: %5\nAufnahmebeginn: %6\nAufnahmeende: %7"
+    "Die folgende Buchung musste angepasst werden: \n\n"
+    "Veranstaltung: %1\n\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4\n\n"
+    "Der für die genannte Veranstaltung gebuchte Zeitraum ist nun folgender:\n\n"
+    "Datum: %5\nAufnahmebeginn: %6\nAufnahmeende: %7"
   },
 
   {
@@ -786,7 +813,8 @@ const QMap<ETextId, QString> TextHandler::german = {
 
   {
     ID::MAIL_ADMIN_DELETION_BODY,
-    "Die folgende Buchung musste leider gelöscht werden:\n\nVeranstaltung: %1\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4"
+    "Die folgende Buchung musste leider gelöscht werden:\n\n"
+    "Veranstaltung: %1\nDatum: %2\nAufnahmebeginn: %3\nAufnahmeende: %4"
   },
 
   {

@@ -205,7 +205,7 @@ void PTZControls::stopRecording(bool manual)
     TextHandler::getText(ID::CONTROLS_RECORD)
   );
 
-  const QString sendFilesMsg = MailHandler::sendMail(*booking, EMailType::SendFiles);
+  const QString sendFilesMsg = MailHandler::sendMail(EMailType::SendFiles, booking);
 
   if (manual)
     Widgets::okDialog->display(sendFilesMsg, true);

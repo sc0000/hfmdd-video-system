@@ -398,12 +398,19 @@ void AdminMailDialog::updateTexts()
 
 void AdminMailDialog::on_okButton_clicked()
 {
+  const QString& adminEmailMsg = MailHandler::sendMail(
+    EMailType::AdminEmail, m_booking, 
+    ui->mailSubjectLineEdit->text(), ui->mailBodyTextEdit->toPlainText()
+  );
 
+  fade();
+
+  // Widgets::okDialog->display(adminEmailMsg);
 }
   
 void AdminMailDialog::on_cancelButton_clicked()
 {
-
+  fade();
 }
 
 void AdminMailDialog::on_languageButton_clicked()
@@ -491,9 +498,5 @@ void AdminMailDialog::updateTemplate(const QString& language)
         );
       }
     break;
-  }
-
-  if (m_type == EAdminMailType::Deletion) {
-    
   }
 }

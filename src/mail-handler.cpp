@@ -101,8 +101,12 @@ void MailHandler::loadCredentials()
   mailSenderAddress = obs_data_get_string(loaddata, "sender_address");
 }
 
-QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
+QString MailHandler::sendMail(EMailType mailType, const Booking* booking, 
+  const QString& subject, const QString& body)
 {
+  if (!booking)
+    return QString();
+
   if (mailType == EMailType::BookingConflictWarning && !sendConflictWarnings)
     return QString();
 
@@ -122,60 +126,57 @@ QString MailHandler::sendMail(const Booking& booking, EMailType mailType)
   if (!nodeProcess->waitForStarted()) 
     return "Process started with error: " + nodeProcess->errorString();
 
-  const QString& baseDir = StorageHandler::baseDirectory;
-
-  const QString apiBasePath = 
-    QString("/team-folders/video/") + baseDir.last(baseDir.size() - 3);
-
-  QString type = "";
-
-  switch (mailType) {
-    case EMailType::SendFiles:
-      type = "send-files";
-      break;
-
-    case EMailType::BookingConflictWarning:
-      type = "booking-conflict-warning";
-      break;
-
-    case EMailType::Default:
-      break;
-  }
-
-  if (type.isEmpty())
-    return "Mail type specification invalid. ";
-
   QJsonObject jsonObj;
-
-  jsonObj["type"] = type;
-
-  jsonObj["basePath"] = apiBasePath;
-  jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
-  jsonObj["receiver"] = booking.email;
-
-  jsonObj["subject"] = TextHandler::getText(ID::MAIL_FILES_SUBJECT) + 
-    booking.date.toString("ddd MMM dd yyyy");
-
-  jsonObj["dateTime"] = booking.date.toString("ddd MMM dd yyyy\n") + 
-    booking.startTime.toString("HH:mm") + " - " +
-    booking.stopTime.toString("HH:mm");
-
-  jsonObj["event"] = booking.event;
-
-  jsonObj["nasIP"] = nasIP;
-  jsonObj["nasPort"] = nasPort;
-  jsonObj["nasUser"] = nasUser;
-  jsonObj["nasPassword"] = nasPassword;
 
   jsonObj["mailHost"] = mailHost;
   jsonObj["mailPort"] = mailPort;
   jsonObj["mailUser"] = mailUser;
   jsonObj["mailPassword"] = mailPassword;
   jsonObj["mailSenderAddress"] = mailSenderAddress;
-  jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_FILES_BODY);
 
-  jsonObj["adminAddress"] = adminEmail;
-  
+  QString dateTime = booking->date.toString("ddd MMM dd yyyy\n") + 
+    booking->startTime.toString("HH:mm") + " - " +
+    booking->stopTime.toString("HH:mm");
+
+  switch (mailType) {
+    case EMailType::SendFiles:
+      jsonObj["type"] = "send-files";
+      jsonObj["receiver"] = booking->email;
+      jsonObj["subject"] = TextHandler::getText(ID::MAIL_FILES_SUBJECT) + 
+        booking->date.toString("ddd MMM dd yyyy");
+      jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_FILES_BODY);
+
+      jsonObj["basePath"] = QString("/team-folders/video/") +
+        StorageHandler::baseDirectory.last(StorageHandler::baseDirectory.size() - 3);
+      jsonObj["path"] = StorageHandler::outerDirectory + StorageHandler::innerDirectory;
+
+      jsonObj["nasIP"] = nasIP;
+      jsonObj["nasPort"] = nasPort;
+      jsonObj["nasUser"] = nasUser;
+      jsonObj["nasPassword"] = nasPassword;
+      break;
+
+    case EMailType::BookingConflictWarning:
+      jsonObj["type"] = "booking-conflict-warning";
+      jsonObj["receiver"] = adminEmail;
+      jsonObj["subject"] = TextHandler::getText(ID::MAIL_CONFLICT_SUBJECT);
+      jsonObj["mailBody"] = TextHandler::getText(ID::MAIL_CONFLICT_BODY)
+        .arg(dateTime)
+        .arg(booking->email)
+        .arg(booking->event);
+      break;
+
+    case EMailType::AdminEmail:
+      jsonObj["type"] = "admin-email";
+      jsonObj["receiver"] = booking->email;
+      jsonObj["subject"] = subject;
+      jsonObj["mailBody"] = body;
+      break;
+
+    case EMailType::Default:
+      return "Mail type specification invalid. ";
+  }
+
   QJsonDocument jsonDoc(jsonObj);
 
   nodeProcess->write(jsonDoc.toJson());

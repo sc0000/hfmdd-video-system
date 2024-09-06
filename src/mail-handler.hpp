@@ -6,6 +6,7 @@ enum class EMailType
 {
   SendFiles,
   BookingConflictWarning,
+  AdminEmail,
   Default
 };
 
@@ -34,7 +35,7 @@ public:
 
   static bool sendConflictWarnings;
 
-  static QString sendMail(const Booking& booking, EMailType mailType);
+  static QString sendMail(EMailType mailType, const Booking* booking, const QString& subject = "", const QString& body = "");
 
   static void saveCredentials();
   static void loadCredentials(); 
