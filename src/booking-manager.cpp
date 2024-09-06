@@ -115,8 +115,10 @@ void BookingManager::reload()
 
 QString BookingManager::makeEntry(const Booking& booking)
 {
+  const QString& format = TextHandler::getText(ID::MANAGER_FORMAT);
+
   QString entry = 
-    booking.date.toString("ddd MMM dd yyyy") + "\t" +
+    TextHandler::locale.toString(booking.date, format) + "\t" +
     booking.startTime.toString("HH:mm") + " - " +
     booking.stopTime.toString("HH:mm") + "\t" +
     booking.event.leftJustified(20, ' ') + "\t" +

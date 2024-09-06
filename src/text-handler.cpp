@@ -196,6 +196,11 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
+    ID::MANAGER_FORMAT,
+    "ddd MMM dd yyyy"
+  },
+
+  {
     ID::EDITOR_DATE_NONE_SELECTED,
     "No date selected."
   },
@@ -598,6 +603,11 @@ const QMap<ETextId, QString> TextHandler::german = {
       "<span style=\"font-weight: bold;\">Was passiert danach?</span><br/>" +
       "Nach Ende der Aufnahme (egal ob manuell oder automatisch ausgelöst) erhalten Sie einen Downloadlink per E-Mail." +
       "</body></html>"
+  },
+
+  {
+    ID::MANAGER_FORMAT,
+    "ddd dd MMM yyyy"
   },
 
   {
