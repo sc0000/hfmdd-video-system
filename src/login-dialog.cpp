@@ -202,7 +202,7 @@ void LoginDialog::on_infoButton_pressed()
       "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
     );
 
-    Widgets::infoDialog->display(TextHandler::getText(ID::LOGIN_INFO), ui->infoButton);
+    Widgets::infoDialog->display(TextHandler::getText(ID::LOGIN_INFO).arg(MailHandler::adminEmail), ui->infoButton);
   }
     
 
