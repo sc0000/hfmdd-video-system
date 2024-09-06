@@ -136,6 +136,12 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
+    ID::MANAGER_EDIT_OBSOLETE,
+    "The selected booking is in the past, and can't be edited. "
+    "Do you want to delete it?"
+  },
+
+  {
     ID::MANAGER_DELETE,
     "Delete Booking"
   },
@@ -551,6 +557,12 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MANAGER_EDIT_TOO_MANY_SELECTED,
     "Bitte wählen Sie nur eine Buchung zur Bearbeitung aus."
+  },
+
+  {
+    ID::MANAGER_EDIT_OBSOLETE,
+    "Die ausgewählte Buchung liegt in der Vergangenheit und kann nicht bearbeitet werden. "
+    "Möchten Sie sie löschen?"
   },
 
   {

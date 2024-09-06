@@ -128,6 +128,16 @@ QString BookingManager::makeEntry(const Booking& booking)
   return entry;
 }
 
+void BookingManager::deleteBooking(const Booking* booking)
+{
+  if (MailHandler::isAdmin && booking->email != MailHandler::adminEmail) {
+    Widgets::adminMailDialog->display(EAdminMailType::Deletion, booking);
+  }
+
+  JsonParser::removeBooking(booking);
+  constructList();
+}
+
 void BookingManager::updateTexts()
 {
   ui->newBookingButton->setText(TextHandler::getText(ID::MANAGER_NEW));
@@ -191,7 +201,7 @@ void BookingManager::on_editBookingButton_clicked()
     return;
   }
 
-  else if (ui->bookingsList->selectedItems().size() > 1) {
+  if (ui->bookingsList->selectedItems().size() > 1) {
     Widgets::okDialog->display(
       TextHandler::getText(ID::MANAGER_EDIT_TOO_MANY_SELECTED)
     );
@@ -200,7 +210,23 @@ void BookingManager::on_editBookingButton_clicked()
   }
 
   currentRow = ui->bookingsList->currentRow();
-  Widgets::bookingEditor->reload(BookingHandler::loadedBookings[currentRow]);
+  Booking* selectedBooking = BookingHandler::loadedBookings[currentRow];
+
+  if (!selectedBooking) return;
+
+  if (!MailHandler::isAdmin && selectedBooking->date < QDate::currentDate()) {
+    int result = Widgets::okCancelDialog->display(
+      TextHandler::getText(ID::MANAGER_EDIT_OBSOLETE)
+    );
+
+    if (result == QDialog::Rejected) 
+      return;
+
+    deleteBooking(selectedBooking);
+    return;
+  }
+
+  Widgets::bookingEditor->reload(selectedBooking);
 }
 
 void BookingManager::on_deleteBookingButton_clicked()
@@ -222,21 +248,17 @@ void BookingManager::on_deleteBookingButton_clicked()
   if (result == QDialog::Rejected) 
     return;
   
-  int rowIndex = ui->bookingsList->currentRow();
-  Booking* selectedBooking = BookingHandler::loadedBookings[rowIndex];
-  const QString& selectedBookingMail = selectedBooking->email;
+  currentRow = ui->bookingsList->currentRow();
+  Booking* selectedBooking = BookingHandler::loadedBookings[currentRow];
 
-  if (MailHandler::isAdmin && selectedBookingMail != MailHandler::adminEmail) {
-    Widgets::adminMailDialog->display(EAdminMailType::Deletion, selectedBooking);
-  }
+  if (!selectedBooking) return;
 
-  JsonParser::removeBooking(selectedBooking);
-  constructList();
+  deleteBooking(selectedBooking);
 }
 
 void BookingManager::on_toPTZControlsButton_clicked()
 {
-   if (ui->bookingsList->selectedItems().isEmpty()) {
+  if (ui->bookingsList->selectedItems().isEmpty()) {
     Widgets::okDialog->display(
       TextHandler::getText(ID::MANAGER_TO_PTZ_NONE_SELECTED)
     );
@@ -244,7 +266,7 @@ void BookingManager::on_toPTZControlsButton_clicked()
     return;
   }
 
-  else if (ui->bookingsList->selectedItems().size() > 1) {
+  if (ui->bookingsList->selectedItems().size() > 1) {
     Widgets::okDialog->display(
       TextHandler::getText(ID::MANAGER_TO_PTZ_TOO_MANY_SELECTED)
     );

@@ -24,7 +24,8 @@ private:
   bool infoLabelVisible;
   int currentRow;
 
-  static QString makeEntry(const Booking& booking);
+  QString makeEntry(const Booking& booking);
+  void deleteBooking(const Booking* booking);
   
 private slots:
   void on_infoButton_pressed();

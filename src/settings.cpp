@@ -125,7 +125,7 @@ PTZSettings::PTZSettings(QWidget* parent)
   ui->tabWidget->setFixedWidth(width());
   ui->tabWidget->setFixedHeight(height() - 41);
 
-  Handlebar* handlebar = new Handlebar(this);
+  Handlebar* handlebar = new Handlebar(this, EHandlebarStyle::Black, "Settings");
 
 	ui->livemoveCheckBox->setChecked(
 		Widgets::ptzControls->liveMovesDisabled());

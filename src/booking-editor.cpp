@@ -25,7 +25,11 @@ BookingEditor::BookingEditor(QWidget* parent)
   ui->masterWidget->setFixedHeight(height() - 56);
   ui->masterWidget->move(QPoint(8, 48));
 
-  ui->calendarWidget->setStyleSheet("QCalendarWidget { border: 1px solid rgb(31, 30, 31); }");
+  ui->calendarWidget->setStyleSheet(
+    "QCalendarWidget { border: 1px solid rgb(31, 30, 31); }"
+    "QPushButton:disabled { background-color: rgb(229, 230, 230); }"
+    "QToolButton:disabled { background-color: rgb(229, 230, 230); }"
+  );
 
   ui->scrollArea->takeWidget();
 
@@ -80,7 +84,8 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
     BookingHandler::roundTime(booking->startTime);
     
-    booking->stopTime = booking->startTime.addSecs(60 * 60) < QTime(23, 0) && booking->startTime.addSecs(60 * 60) > QTime(7, 0) ? 
+    booking->stopTime = 
+      booking->startTime.addSecs(60 * 60) < QTime(23, 0) && booking->startTime.addSecs(60 * 60) > QTime(7, 0) ? 
       booking->startTime.addSecs(60 * 60) : 
       QTime(23, 0);
 
@@ -96,6 +101,7 @@ void BookingEditor::reload(Booking* bookingToEdit)
     "QPushButton:hover { background-color: #ffbf00; }"  
   );
 
+  ui->calendarWidget->setMinimumDate(QDate::currentDate());
   ui->calendarWidget->setSelectedDate(booking->date);
   updateExistingBookingsLabel(booking->date);
 
@@ -225,27 +231,34 @@ void BookingEditor::on_setStopTimeButton_pressed()
 
 void BookingEditor::on_decreaseTimeBy60Button_pressed()
 {
-  if (timeToSet == ETimeToSet::StartTime) {
-    QTime newStartTime = booking->startTime.addSecs(60 * -60);
+  switch(timeToSet) {
+    case ETimeToSet::StartTime: {
+      QTime newStartTime = booking->startTime.addSecs(60 * -60);
 
-    if (newStartTime > QTime(23, 0) || newStartTime < QTime(7, 0))
-      return;
+      if (newStartTime > QTime(23, 0) || newStartTime < QTime( 7, 0))
+        return;
 
-    booking->startTime = newStartTime;
-  }
-
-  if (timeToSet == ETimeToSet::StopTime) {
-    QTime newStopTime = booking->stopTime.addSecs(60 * -60);
-
-    if (newStopTime > QTime(23, 0) || newStopTime < QTime(7, 0))
-      return;
-
-    if (newStopTime <= booking->startTime) {
-      QTime newStartTime = newStopTime.addSecs(60 * -60);
-      booking->startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
+      booking->startTime = newStartTime;
+      break;
     }
 
-    booking->stopTime = newStopTime;
+    case ETimeToSet::StopTime: {
+      QTime newStopTime = booking->stopTime.addSecs(60 * -60);
+
+      if (newStopTime > QTime(23, 0) || newStopTime < QTime( 7, 0))
+        return;
+
+      if (newStopTime <= booking->startTime) {
+        QTime newStartTime = newStopTime.addSecs(60 * -60);
+        booking->startTime = newStartTime > QTime(7, 0) ? newStartTime : QTime(7, 0);
+      }
+
+      booking->stopTime = newStopTime;
+      break;
+    }
+
+    case ETimeToSet::Default:
+      break;
   }
 
   updateExistingBookingsLabel(booking->date);
