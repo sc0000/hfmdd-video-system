@@ -24,6 +24,7 @@ private:
   bool infoLabelVisible;
 
   Booking* booking;
+  int numLaterBookings;
 
 private:
   void updateExistingBookingsLabel(QDate date);

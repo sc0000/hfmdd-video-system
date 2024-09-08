@@ -20,8 +20,9 @@
 QuickRecord::QuickRecord(QWidget* parent)
   : FullScreenDialog(parent), 
     ui(new Ui::QuickRecord),
+    infoLabelVisible(false),
     booking(BookingHandler::currentBooking),
-    infoLabelVisible(false)
+    numLaterBookings(0)
 {
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
   
@@ -111,14 +112,8 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   const QVector<Booking*>& bosd = BookingHandler::bookingsOnSelectedDate;
 
-  if (bosd.isEmpty() ||
-     (bosd.size() == 1 && bosd[0]->index == booking->index)) {
-        ui->bookingsOnSelectedDateLabel->setText(TextHandler::getText(ID::QUICK_PREV_BOOKINGS_NONE));
-        resizeBookingsOnExistingDateLabel();
-        return;
-  }
-
   booking->isConflicting = false;
+  numLaterBookings = 0;
 
   QString str = TextHandler::getText(ID::QUICK_PREV_BOOKINGS);
 
@@ -128,6 +123,7 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
     if (b->index == booking->index ||
         b->stopTime < booking->startTime) continue;
 
+    ++numLaterBookings;
     bool isConflicting = false;
     
     if (BookingHandler::bookingsAreConflicting(booking, b)) {
@@ -148,6 +144,13 @@ void QuickRecord::updateExistingBookingsLabel(QDate date)
 
   str += "</body></html>";
 
+  if (numLaterBookings == 0 ||
+     (bosd.size() == 1 && bosd[0]->index == booking->index)) {
+        ui->bookingsOnSelectedDateLabel->setText(TextHandler::getText(ID::QUICK_PREV_BOOKINGS_NONE));
+        resizeBookingsOnExistingDateLabel();
+        return;
+  }
+
   ui->bookingsOnSelectedDateLabel->setTextFormat(Qt::RichText);
   ui->bookingsOnSelectedDateLabel->setText(str);
 
@@ -158,7 +161,7 @@ void QuickRecord::resizeBookingsOnExistingDateLabel()
 {
   QFontMetrics fontMetrics(ui->bookingsOnSelectedDateLabel->font());
   int lineHeight = fontMetrics.lineSpacing();
-  int numLines = 2 + BookingHandler::bookingsOnSelectedDate.size();
+  int numLines = numLaterBookings + 2;
   int labelHeight = lineHeight * numLines;
 
   ui->bookingsOnSelectedDateLabel->setFixedHeight(labelHeight);
@@ -283,7 +286,7 @@ void QuickRecord::on_toPTZControlsButton_clicked()
     if (result == QDialog::Rejected)
       return;
 
-    const QString sendMail = MailHandler::sendMail(EMailType::BookingConflictWarning, booking);
+    MailHandler::sendMail(EMailType::BookingConflictWarning, booking);
   }
 
   JsonParser::addBooking(booking);
