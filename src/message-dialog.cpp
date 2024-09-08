@@ -400,14 +400,12 @@ void AdminMailDialog::updateTexts()
 
 void AdminMailDialog::on_okButton_clicked()
 {
-  const QString& adminEmailMsg = MailHandler::sendMail(
+  MailHandler::sendMail(
     EMailType::AdminEmail, m_booking, 
     ui->mailSubjectLineEdit->text(), ui->mailBodyTextEdit->toPlainText()
   );
 
   fade();
-
-  // Widgets::okDialog->display(adminEmailMsg);
 }
   
 void AdminMailDialog::on_cancelButton_clicked()

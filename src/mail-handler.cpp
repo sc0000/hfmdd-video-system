@@ -11,6 +11,8 @@
 #include <obs-module.h>
 
 #include "source-record.h"
+#include "widgets.hpp"
+#include "message-dialog.hpp"
 #include "storage-handler.hpp"
 #include "text-handler.hpp"
 #include "mail-handler.hpp"
@@ -101,14 +103,14 @@ void MailHandler::loadCredentials()
   mailSenderAddress = obs_data_get_string(loaddata, "sender_address");
 }
 
-QString MailHandler::sendMail(EMailType mailType, const Booking* booking, 
+void MailHandler::sendMail(EMailType mailType, const Booking* booking, 
   const QString& subject, const QString& body)
 {
-  if (!booking)
-    return QString();
+  if (!booking) 
+    return;
 
   if (mailType == EMailType::BookingConflictWarning && !sendConflictWarnings)
-    return QString();
+    return;
 
   const QString dllFilePath = QCoreApplication::applicationFilePath();
   const QString dllDir = QFileInfo(dllFilePath).absolutePath();
@@ -120,11 +122,6 @@ QString MailHandler::sendMail(EMailType mailType, const Booking* booking,
   QProcess* nodeProcess = new QProcess();
   nodeProcess->setEnvironment(QProcess::systemEnvironment());
   nodeProcess->setEnvironment(QStringList() << "DEBUG_MODE=false");
-
-  nodeProcess->start("node", nodeArgs);
-
-  if (!nodeProcess->waitForStarted()) 
-    return "Process started with error: " + nodeProcess->errorString();
 
   QJsonObject jsonObj;
 
@@ -176,17 +173,22 @@ QString MailHandler::sendMail(EMailType mailType, const Booking* booking,
       break;
 
     case EMailType::Default:
-      return "Mail type specification invalid. ";
+      break;
   }
 
   QJsonDocument jsonDoc(jsonObj);
+  QByteArray jsonData = jsonDoc.toJson();
 
-  nodeProcess->write(jsonDoc.toJson());
-  nodeProcess->closeWriteChannel();
+  QObject::connect(nodeProcess, &QProcess::started, [nodeProcess, jsonData]() {
+        nodeProcess->write(jsonData);
+        nodeProcess->closeWriteChannel();
+    }
+  );
 
-  if (!nodeProcess->waitForFinished())
-    return "Process finished with error: " + nodeProcess->errorString();
+  QObject::connect(nodeProcess, &QProcess::finished, [nodeProcess](int exitCode, QProcess::ExitStatus exitStatus) {
+      nodeProcess->deleteLater();
+    }
+  );
 
-  const QByteArray output = nodeProcess->readAllStandardOutput();
-  return QString::fromUtf8(output);
+  nodeProcess->start("node", nodeArgs);
 }

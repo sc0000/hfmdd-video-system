@@ -439,7 +439,13 @@ const QMap<ETextId, QString> TextHandler::english = {
   {
     ID::MAIL_NO_ANSWER,
     "Please do not respond to this email. "
-    "If you have any questions, please contact %1 instead."
+    "If you have any questions, please contact %1."
+  },
+
+  {
+    ID::MAIL_SENT,
+    "Email with download link sent to %1. "
+    "Please be aware that it might take a few minutes for it to arrive. "
   },
 
   {
@@ -870,7 +876,13 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::MAIL_NO_ANSWER,
     "Bitte antworten Sie nicht auf diese Mail. "
-    "Wenden Sie sich mit Rückfragen etc. stattdessen an %1."
+    "Wenden Sie sich mit Rückfragen etc. an %1."
+  },
+
+  {
+    ID::MAIL_SENT,
+    "Es wurde eine Mail mit dem Downloadlink an %1 geschickt. "
+    "Bitte beachten Sie, dass es einige Minuten dauern kann, bis Sie sie in Ihrem Postfach finden. "
   },
 
   {

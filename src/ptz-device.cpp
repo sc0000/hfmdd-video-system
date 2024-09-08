@@ -420,6 +420,7 @@ int PTZPresetListModel::find(QString key, QVariant value)
 		if (i.value()[key] == value)
 			return (int)i.key();
 	}
+
 	return -1;
 }
 
@@ -432,7 +433,9 @@ void PTZPresetListModel::loadPresets(OBSDataArray preset_array)
 	m_presets.clear();
 	m_displayOrder.clear();
 
-	for (size_t i = 0; i < obs_data_array_count(preset_array); i++) {
+  size_t count = obs_data_array_count(preset_array);
+
+	for (size_t i = 0; i < count; i++) {
 		OBSDataAutoRelease item = obs_data_array_item(preset_array, i);
 		auto id = obs_data_get_int(item, "id");
 
@@ -443,6 +446,7 @@ void PTZPresetListModel::loadPresets(OBSDataArray preset_array)
 		m_presets[id] = preset;
 		sanitize(id);
 	}
+
 	endResetModel();
 }
 
@@ -456,10 +460,6 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
 	m_displayOrder.clear();
 
   QVector<int> currentUserPresets;
-
-  BookingManager* bookingManager = Widgets::bookingManager;
-
-  if (!bookingManager) return;
 
   JsonParser::getPresetsForEmail(
     MailHandler::currentEmail,
@@ -480,6 +480,7 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
 		m_presets[id] = preset;
 		sanitize(id);
 	}
+  
 	endResetModel();
 }
 

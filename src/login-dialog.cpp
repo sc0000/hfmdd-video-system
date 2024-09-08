@@ -50,7 +50,11 @@ LoginDialog::LoginDialog(QWidget *parent)
   ui->languageComboBox->addItem("English");
   ui->languageComboBox->setCurrentText("English");
 
-  ui->languageComboBox->setStyleSheet("QComboBox { background-color: #ffbf00; border-radius: none; color: rgb(31, 30, 31); font-size: 16px; }");
+  ui->languageComboBox->setStyleSheet(
+    "QComboBox { background-color: #ffbf00; border-radius: none; color: rgb(31, 30, 31); font-size: 16px; }"
+    "QComboBox::down-arrow { qproperty-alignment: AlignTop; image: url(../../assets/down-black.svg); width: 100%;}"
+  );
+
   QListView* dropdown = static_cast<QListView*>(ui->languageComboBox->view());
   dropdown->setStyleSheet("QListView { background-color: #ffbf00; color: rgb(31, 30, 31); font-size: 16px; }"
                           "QListView::item { min-height: 64px; }"

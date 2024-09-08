@@ -35,7 +35,7 @@ public:
 
   static bool sendConflictWarnings;
 
-  static QString sendMail(EMailType mailType, const Booking* booking, const QString& subject = "", const QString& body = "");
+  static void sendMail(EMailType mailType, const Booking* booking, const QString& subject = "", const QString& body = "");
 
   static void saveCredentials();
   static void loadCredentials(); 

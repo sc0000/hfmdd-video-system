@@ -401,9 +401,7 @@ void BookingEditor::on_saveButton_clicked()
     if (result == QDialog::Rejected)
       return;
 
-    const QString& sendWarningMsg = MailHandler::sendMail(EMailType::BookingConflictWarning, booking);
-
-    // Widgets::okDialog->display(sendWarningMsg);
+    MailHandler::sendMail(EMailType::BookingConflictWarning, booking);
   }
     
   if (isEditing) {
