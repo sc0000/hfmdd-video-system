@@ -196,22 +196,24 @@ void PTZControls::startRecording()
 
 void PTZControls::stopRecording(bool manual)
 {
+  ui->recordButton->setText(
+    TextHandler::getText(ID::CONTROLS_RECORD)
+  );
+
   obs_frontend_recording_stop();
 
   hasRecorded = true;
   m_timeObserver->stop();
 
-  ui->recordButton->setText(
-    TextHandler::getText(ID::CONTROLS_RECORD)
-  );
+  booking->stopTime = QTime::currentTime();
+  JsonParser::updateBooking(booking);
 
-  const QString sendFilesMsg = MailHandler::sendMail(EMailType::SendFiles, booking);
+  MailHandler::sendMail(EMailType::SendFiles, booking);
 
   if (manual)
-    Widgets::okDialog->display(sendFilesMsg, true);
+    Widgets::okDialog->display(TextHandler::getText(ID::MAIL_SENT), true);
 
-  else
-    logout();
+  else logout();
 }
 
 void PTZControls::logout()
@@ -848,7 +850,7 @@ void PTZControls::LoadConfig()
 
 void PTZControls::loadUserPresets()
 {
-  if (MailHandler::currentEmail == MailHandler::adminEmail) {
+  if (MailHandler::isAdmin) {
     ui->presetListView->setModel(presetModel());
     return;
   }
