@@ -14,6 +14,7 @@
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
 #include "mode-select.hpp"
+#include "styles.hpp"
 #include "ui_login-dialog.h"
 #include "login-dialog.hpp"
 
@@ -28,7 +29,7 @@ LoginDialog::LoginDialog(QWidget *parent)
   setFont(QFont("DaxOT-Medium"));
 
   ui->setupUi(this);
-  ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border: 2px solid #f21a1a }");
+  ui->mailAddressLineEdit->setStyleSheet(Styles::invalidLineEdit);
 
   ui->reminderLabel->setText(reminderLabelText);
   ui->reminderLabel->hide();
@@ -43,29 +44,28 @@ LoginDialog::LoginDialog(QWidget *parent)
                                         "background-size: contain;");
   ui->logoWidget->setStyleSheet(logoWidgetStyleSheet);
 
-  QString nameLabelStyleSheet = QString("QLabel { color: #ffbf00; }");
+  QString nameLabelStyleSheet = QString("QLabel { color: %1; }").arg(Color::yellow);
   ui->nameLabel->setStyleSheet(nameLabelStyleSheet);
 
   ui->languageComboBox->addItem("Deutsch");
   ui->languageComboBox->addItem("English");
   ui->languageComboBox->setCurrentText("English");
 
-  ui->languageComboBox->setStyleSheet(
-    "QComboBox { background-color: #ffbf00; border-radius: none; color: rgb(31, 30, 31); font-size: 16px; }"
+  ui->languageComboBox->setStyleSheet(QString(
+    "QComboBox { background-color: %1; border-radius: none; color: %2; font-size: 16px; }"
     "QComboBox::down-arrow { qproperty-alignment: AlignTop; image: url(../../assets/down-black.svg); width: 100%;}"
-  );
+ ).arg(Color::yellow).arg(Color::black));
 
   QListView* dropdown = static_cast<QListView*>(ui->languageComboBox->view());
-  dropdown->setStyleSheet("QListView { background-color: #ffbf00; color: rgb(31, 30, 31); font-size: 16px; }"
-                          "QListView::item { min-height: 64px; }"
-                          "QListView::item:hover { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: none; }");
+  dropdown->setStyleSheet(QString(
+    "QListView { background-color: %1; color: %2; font-size: 16px; }"
+    "QListView::item { min-height: 64px; }"
+    "QListView::item:hover { background-color: %2; color: %3; border: none; }"
+  ).arg(Color::yellow).arg(Color::black).arg(Color::white));
 
   ui->mailAddressLineEdit->setStyleSheet("QLineEdit { border-radius: none; }");
 
-  ui->infoButton->setStyleSheet(
-    "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: rgb(42, 130, 218); border: 1px solid rgb(254, 253, 254); }"
-  );
+  ui->infoButton->setStyleSheet(Styles::infoButtonOff);
 
   updateTexts();
 
@@ -128,18 +128,13 @@ bool LoginDialog::verifyMailAddress()
 {
   if (!MailHandler::mailAddressIsValid) {
     ui->reminderLabel->setText(reminderLabelText);
-    ui->mailAddressLineEdit->setStyleSheet(
-      "QLineEdit { border: 2px solid #f21a1a; border-radius: 0px; background-color: rgb(254, 253, 254)}"
-    );
+    ui->mailAddressLineEdit->setStyleSheet(Styles::invalidLineEdit);
 
     return false;
   }
 
-  else {
-    ui->mailAddressLineEdit->setStyleSheet(
-      "QLineEdit { border: 2px solid rgb(31, 30, 31); border-radius: 0px; background-color: rgb(254, 253, 254)}"
-    );
-  }
+  else 
+    ui->mailAddressLineEdit->setStyleSheet(Styles::validLineEdit);
 
   return true;
 }

@@ -1,5 +1,6 @@
 #include <QLabel>
 
+#include "styles.hpp"
 #include "animated-dialog.hpp"
 
 Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle, const QString& title) 
@@ -24,7 +25,7 @@ Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle, const QStr
     titleLabel->setText(title);
 
     titleLabel->setStyleSheet(
-        "QLabel { color: rgb(254, 253, 254); border: 0px; font: 12pt DaxOT; }"
+        QString("QLabel { color: %1; border: 0px; font: 12pt DaxOT; }").arg(Color::white)
       );
   }
 
@@ -35,23 +36,19 @@ Handlebar::Handlebar(QWidget* parent, EHandlebarStyle HandlebarStyle, const QStr
   closeButton->setText("x");
 
   if (HandlebarStyle == EHandlebarStyle::Black) {
-    setStyleSheet("QWidget { background-color: rgb(31, 30, 31); }");
-
-    closeButton->setStyleSheet(
-      "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
-      "QPushButton:hover { background-color: #ffbf00; color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-      "QPushButton:pressed { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }" 
+    setStyleSheet(
+      QString("QWidget { background-color: %1; }").arg(Color::black)
     );
+
+    closeButton->setStyleSheet(Styles::blackButtonYellowHover);
   }
 
   else if (HandlebarStyle == EHandlebarStyle::Blue) {
-    setStyleSheet("QWidget { background-color: rgb(42, 130, 218); }");
-
-    closeButton->setStyleSheet(
-      "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 254, 254); border: 1px solid rgb(254, 254, 254); }"
-      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-      "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }" 
+    setStyleSheet(
+      QString("QWidget { background-color: %1; }").arg(Color::blue)
     );
+
+    closeButton->setStyleSheet(Styles::blueButton);
   }
 
   QObject::connect(closeButton, &QPushButton::clicked, this, &Handlebar::onCloseButtonClicked);

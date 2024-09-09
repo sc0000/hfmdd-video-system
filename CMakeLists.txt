@@ -118,6 +118,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/circularlistview.hpp
   src/touch-control.hpp
   src/widgets.hpp
+  src/styles.hpp
   src/imported/qt-wrappers.hpp
   src/imported/obs-app.hpp
   src/imported/properties-view.hpp

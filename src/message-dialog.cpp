@@ -5,6 +5,7 @@
 #include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "ptz-controls.hpp"
+#include "styles.hpp"
 #include "ui_ok-dialog.h"
 #include "ui_ok-cancel-dialog.h"
 #include "ui_password-dialog.h"
@@ -23,15 +24,10 @@ OkDialog::OkDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
+  setStyleSheet(Styles::messageBox);
 
-  ui->okButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+  ui->okButton->setStyleSheet(Styles::blueButton);
+  ui->messageLabel->setStyleSheet(Styles::framedLabel);
 
   setModal(true);
   hide();
@@ -64,21 +60,11 @@ OkCancelDialog::OkCancelDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
+  setStyleSheet(Styles::messageBox);
 
-  ui->okButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
-
-  ui->cancelButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
+  ui->okButton->setStyleSheet(Styles::blueButton);
+  ui->cancelButton->setStyleSheet(Styles::blueButton);
+  ui->messageLabel->setStyleSheet(Styles::framedLabel);
 
   setModal(true);
   hide();
@@ -136,26 +122,13 @@ PasswordDialog::PasswordDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
+  setStyleSheet(Styles::messageBox);
 
-  ui->okButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->passwordWidget->setStyleSheet("QWidget { border: 1px solid rgb( 254, 253, 254); }");
-  ui->passwordLabel->setStyleSheet("QLabel { border: none; }");
-
-  ui->cancelButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->passwordLineEdit->setStyleSheet(
-    "QLineEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-  );
+  ui->okButton->setStyleSheet(Styles::blueButton);
+  ui->cancelButton->setStyleSheet(Styles::blueButton);
+  ui->passwordWidget->setStyleSheet(Styles::framedWidget);
+  ui->passwordLabel->setStyleSheet(Styles::unframedLabel);
+  ui->passwordLineEdit->setStyleSheet(Styles::blueLineEdit);
 
   setModal(true);
   hide();
@@ -200,26 +173,13 @@ PresetDialog::PresetDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; border: 1px rgb(31, 30, 31); }");
+  setStyleSheet(Styles::messageBox);
 
-  ui->okButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->presetNameWidget->setStyleSheet("QWidget { border: 1px solid rgb( 254, 253, 254); }");
-  ui->presetNameLabel->setStyleSheet("QLabel { border: none; }");
-
-  ui->cancelButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->presetNameLineEdit->setStyleSheet(
-    "QLineEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-  );
+  ui->okButton->setStyleSheet(Styles::blueButton);
+  ui->cancelButton->setStyleSheet(Styles::blueButton);
+  ui->presetNameWidget->setStyleSheet(Styles::framedWidget);
+  ui->presetNameLabel->setStyleSheet(Styles::unframedLabel);
+  ui->presetNameLineEdit->setStyleSheet(Styles::blueLineEdit);
 
   setModal(true);
   hide();
@@ -235,9 +195,8 @@ void PresetDialog::display(Booking* booking)
     );
   }
 
-  else {
+  else 
     ui->presetNameLineEdit->setPlaceholderText("New Preset Name");
-  }
 
   fade();
 }
@@ -275,13 +234,13 @@ InfoDialog::InfoDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+  setStyleSheet(Styles::unframedMessageBox);
   
   ui->masterWidget->setFixedWidth(width() - 4);
   ui->masterWidget->setFixedHeight(height() - 32);
   ui->masterWidget->move(QPoint(4, 32));
 
-  ui->messageLabel->setStyleSheet("QLabel { border: 1px solid rgb( 254, 253, 254); }");
+  ui->messageLabel->setStyleSheet(Styles::framedLabel);
 
   handlebar = new Handlebar(this, EHandlebarStyle::Blue);
 
@@ -309,19 +268,11 @@ void InfoDialog::fade(void (*result)(void))
 {
   AnimatedDialog::fade(result);
 
-  if (isVisible()) {
-    button->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42, 130, 218); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    );
-  }
+  if (isVisible())
+    button->setStyleSheet(Styles::infoButtonOn);
 
-  else {
-    button->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-    );
-  }
+  else 
+    button->setStyleSheet(Styles::infoButtonOff);
 }
 
 AdminMailDialog::AdminMailDialog(QWidget* parent)
@@ -334,7 +285,7 @@ AdminMailDialog::AdminMailDialog(QWidget* parent)
   ui->setupUi(this);
   setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::FramelessWindowHint);
 
-  setStyleSheet("QWidget { background-color: rgb(42,130,218); color: rgb(254, 253, 254); font: 12pt 'DaxOT'; }");
+  setStyleSheet(Styles::unframedMessageBox);
   
   ui->masterWidget->setFixedWidth(width() - 4);
   ui->masterWidget->setFixedHeight(height() - 32);
@@ -344,33 +295,11 @@ AdminMailDialog::AdminMailDialog(QWidget* parent)
 
   handlebar = new Handlebar(this, EHandlebarStyle::Blue, "Mail Editor");
 
-  ui->mailSubjectLineEdit->setStyleSheet(
-    "QLineEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-  );
-
-  ui->mailBodyTextEdit->setStyleSheet(
-    "QTextEdit { background-color: rgb(42,130,218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-    "QScrollBar::handle::vertical { background-color: rgb(254, 253, 254); min-height: 20px; margin: 2x; border-radius: 0px; border: none}"
-    "QScrollBar::handle::horizontal { background-color: rgb(254, 253, 254); min-height: 20px; margin: 2x; border-radius: 0px; border: none}"
-  );
-
-  ui->okButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->cancelButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
-
-  ui->languageButton->setStyleSheet(
-    "QPushButton { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(31, 30, 31); }"
-    "QPushButton:pressed { background-color: rgb(254, 253, 254); color: rgb(31, 30, 31); border: 1px solid rgb(31, 30, 31); }"
-  );
+  ui->okButton->setStyleSheet(Styles::blueButton);
+  ui->cancelButton->setStyleSheet(Styles::blueButton);
+  ui->languageButton->setStyleSheet(Styles::blueButton);
+  ui->mailSubjectLineEdit->setStyleSheet(Styles::blueLineEdit);
+  ui->mailBodyTextEdit->setStyleSheet(Styles::blueTextEdit);
 
   setModal(true);
   hide();

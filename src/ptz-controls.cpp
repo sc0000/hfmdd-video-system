@@ -34,6 +34,7 @@
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
 #include "json-parser.hpp"
+#include "styles.hpp"
 #include "ptz-controls.hpp"
 
 void ptz_load_controls(void)
@@ -433,17 +434,15 @@ PTZControls::PTZControls(QWidget *parent)
 		preset_hotkey_map[hotkey] = i;
 	}
 
+  ui->recordButton->setStyleSheet(QString(
+    "QPushButton { background-color: %1; color: %2; font-size: 20px; }"
+  ).arg(Color::black).arg(Color::white));
 
-  ui->recordButton->setStyleSheet(
-    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); font-size: 20px; }"
-  );
-
-  ui->infoButton->setStyleSheet(
-    "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-  );
+  ui->infoButton->setStyleSheet(Styles::infoButtonOff);
   
-  ui->presetListView->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
+  ui->presetListView->setStyleSheet(
+    QString("QListWidget { border: 1px solid %1; }").arg(Color::black)
+  );
   //----------------------------------------------------
 
   m_timeObserver = new TimeObserver(QDateTime(booking->date, booking->stopTime), &timeOut, this);

@@ -13,6 +13,7 @@
 #include "booking-manager.hpp"
 #include "quick-record.hpp"
 #include "json-parser.hpp"
+#include "styles.hpp"
 #include "ui_mode-select.h"
 #include "mode-select.hpp"
 
@@ -27,8 +28,10 @@ ModeSelect::ModeSelect(QWidget *parent)
   
   center(ui->masterWidget);
 
-  ui->bookingModeButton->setStyleSheet("QPushButton:hover { background-color: rgb(42, 130, 218); }"
-                                       "QPushButton:pressed  { background-color: rgb(31, 30, 31); }");
+  ui->bookingModeButton->setStyleSheet(QString(
+    "QPushButton:hover { background-color: %1; }"
+    "QPushButton:pressed  { background-color: %2; }"
+  ).arg(Color::blue).arg(Color::black));
 
   updateTexts();
   setModal(false);

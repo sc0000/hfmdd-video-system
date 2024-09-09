@@ -7,6 +7,7 @@
 #include "message-dialog.hpp"
 #include "text-handler.hpp"
 #include "booking-manager.hpp"
+#include "styles.hpp"
 #include "ui_booking-editor.h"
 #include "booking-editor.hpp"
 
@@ -25,11 +26,11 @@ BookingEditor::BookingEditor(QWidget* parent)
   ui->masterWidget->setFixedHeight(height() - 56);
   ui->masterWidget->move(QPoint(8, 48));
 
-  ui->calendarWidget->setStyleSheet(
-    "QCalendarWidget { border: 1px solid rgb(31, 30, 31); }"
-    "QPushButton:disabled { }"
-    "QToolButton:disabled { }"
-  );
+  ui->calendarWidget->setStyleSheet(QString(
+    "QCalendarWidget { border: 1px solid %1; }"
+    "QPushButton:disabled { background-color: %1; }"
+    "QToolButton:disabled { background-color: %1; }"
+  ).arg(Color::black));
 
   ui->scrollArea->takeWidget();
 
@@ -95,11 +96,8 @@ void BookingEditor::reload(Booking* bookingToEdit)
 
   timeToSet = ETimeToSet::StartTime;
 
-  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; border: 1px solid rgb(31, 30, 31); }");
-  ui->setStopTimeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px; border: 1px solid rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: #ffbf00; }"  
-  );
+  ui->setStartTimeButton->setStyleSheet(Styles::selectedButtonLF);
+  ui->setStopTimeButton->setStyleSheet(Styles::regularButtonLF);  
 
   ui->calendarWidget->setMinimumDate(QDate::currentDate());
   ui->calendarWidget->setSelectedDate(booking->date);
@@ -166,7 +164,9 @@ void BookingEditor::updateExistingBookingsLabel(const QDate& date)
     if (BookingHandler::bookingsAreConflicting(booking, b)) {
       isConflicting = true;
       booking->isConflicting = true;
-      str += "<span style=\"background-color: rgb(31, 30, 31); color: rgb(254, 253, 254);\">";
+      str += QString(
+        "<span style=\"background-color: %1; color: %2;\">"
+      ).arg(Color::black).arg(Color::white);
     }
       
     str += b->startTime.toString("HH:mm") + "-" + b->stopTime.toString("HH:mm") + ": " + 
@@ -209,22 +209,16 @@ void BookingEditor::on_calendarWidget_clicked(QDate date)
 
 void BookingEditor::on_setStartTimeButton_pressed()
 {
-  ui->setStartTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; border: 1px solid rgb(31, 30, 31); }");
-  ui->setStopTimeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px; border: 1px solid rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: #ffbf00; }"  
-  );
+  ui->setStartTimeButton->setStyleSheet(Styles::selectedButtonLF);
+  ui->setStopTimeButton->setStyleSheet(Styles::regularButtonLF);
 
   timeToSet = ETimeToSet::StartTime;
 }
   
 void BookingEditor::on_setStopTimeButton_pressed()
 {
-  ui->setStopTimeButton->setStyleSheet("QPushButton { background-color: #ffbf00; font-size: 16px; border: 1px solid rgb(31, 30, 31); }");
-  ui->setStartTimeButton->setStyleSheet(
-    "QPushButton { background-color: rgb(229, 230, 230); font-size: 16px; border: 1px solid rgb(31, 30, 31); }"
-    "QPushButton:hover { background-color: #ffbf00; }"  
-  );
+  ui->setStartTimeButton->setStyleSheet(Styles::regularButtonLF);
+  ui->setStopTimeButton->setStyleSheet(Styles::selectedButtonLF);
 
   timeToSet = ETimeToSet::StopTime;
 }

@@ -12,6 +12,7 @@
 #include "ptz-controls.hpp"
 #include "text-handler.hpp"
 #include "mode-select.hpp"
+#include "styles.hpp"
 #include "ui_booking-manager.h"
 #include "booking-manager.hpp"
 
@@ -30,22 +31,18 @@ BookingManager::BookingManager(QWidget* parent)
   ui->setupUi(this);
   center(ui->masterWidget);
 
-  ui->infoButton->setStyleSheet(
-    "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-    "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-    "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-  );
+  ui->infoButton->setStyleSheet(Styles::infoButtonOff);
 
-  ui->infoLabel->setStyleSheet(
-    "QLabel { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-  );
+  ui->infoLabel->setStyleSheet(Styles::infoLabel);
 
   infoLabelAnimation = new QPropertyAnimation(ui->infoLabel, "maximumWidth");
   infoLabelAnimation->setDuration(100);
 
   ui->infoLabel->setFont(QFont("DaxOT", 12));
 
-  ui->bookingsList->setStyleSheet("QListWidget { border: 1px solid rgb(31, 30, 31); }");
+  ui->bookingsList->setStyleSheet(
+    QString("QListWidget { border: 1px solid %1; }").arg(Color::black)
+  );
 
   updateTexts();
   setModal(false);
@@ -165,11 +162,7 @@ void BookingManager::on_infoButton_pressed()
       infoLabelAnimation->setEndValue(0);
       infoLabelVisible = false;
 
-      ui->infoButton->setStyleSheet(
-        "QPushButton { background-color: rgb(31, 30, 31); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-        "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-        "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-      );
+      ui->infoButton->setStyleSheet(Styles::infoButtonOff);
   } 
   
   else {
@@ -178,11 +171,7 @@ void BookingManager::on_infoButton_pressed()
       infoLabelAnimation->setEndValue(420);
       infoLabelVisible = true;
 
-      ui->infoButton->setStyleSheet(
-        "QPushButton { background-color: rgb(42, 130, 218); color: rgb(254, 253, 254); border: 1px solid rgb(254, 253, 254); }"
-        "QPushButton:hover { background-color: rgb(42, 130, 218); }"
-        "QPushButton:pressed { background-color: rgb(42, 130, 218); }"
-      );
+      ui->infoButton->setStyleSheet(Styles::infoButtonOn);
   }
 
   infoLabelAnimation->start();
