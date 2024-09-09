@@ -307,16 +307,21 @@ void InfoDialog::display(const QString& message, QPushButton* activatingButton, 
 
 void InfoDialog::fade(void (*result)(void))
 {
-  if (button) {
-    button->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); }"
-    );
+  AnimatedDialog::fade(result);
 
-    button = nullptr;
+  if (isVisible()) {
+    button->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42, 130, 218); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(31, 30, 31); }"
+    );
   }
 
-  AnimatedDialog::fade(result);
+  else {
+    button->setStyleSheet(
+      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); border: 1px solid rgb(254, 253, 254); }"
+      "QPushButton:hover { background-color: rgb(42, 130, 218); }"
+    );
+  }
 }
 
 AdminMailDialog::AdminMailDialog(QWidget* parent)

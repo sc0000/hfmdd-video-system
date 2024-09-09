@@ -130,6 +130,8 @@ QString BookingManager::makeEntry(const Booking& booking)
 
 void BookingManager::deleteBooking(const Booking* booking)
 {
+  if (!booking) return;
+
   if (MailHandler::isAdmin && booking->email != MailHandler::adminEmail) {
     Widgets::adminMailDialog->display(EAdminMailType::Deletion, booking);
   }

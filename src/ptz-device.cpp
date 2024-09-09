@@ -511,31 +511,6 @@ void PTZPresetListModel::removePresetWithId(int id)
   }
 }
 
-int PTZPresetListModel::getPresetIndexByName(const QString& name)
-{
-  qsizetype count = rowCount();
-
-  for (qsizetype i = 0; i < count; ++i) {
-    QModelIndex iterIndex = index(i, 0);
-    QVariantMap &preset = m_presets[i];
-    if (name == preset["name"])
-      return data(iterIndex, Qt::UserRole).toInt();
-  }
-
-  return -1;
-}
-
-QString PTZPresetListModel::getDebugInfo()
-{
-  QString debugInfo = "";
-
-  for (auto& map : m_presets) {
-    debugInfo += QString::number(map["id"].toInt()) + " " + map["name"].toString() + "\n";
-  }
-
-  return debugInfo;
-}
-
 PTZDevice::PTZDevice(OBSData config) : QObject()
 {
 	setObjectName(obs_data_get_string(config, "name"));

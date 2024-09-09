@@ -56,5 +56,5 @@ public:
   virtual void fade(void (*result)(void) = nullptr);
   void setFadeDuration(int fadeDuration);
   void (* sendResultCode)(void);
-  // inline bool isVisible() { return visible; }
+  inline bool isVisible() { return visible; }
 };

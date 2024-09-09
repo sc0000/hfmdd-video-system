@@ -58,8 +58,6 @@ private:
   
   QDialog* savePresetDialog;
   QString newPresetName;
-  QString infoDialogText;
-  // QString savePresetLineEditText;
 
 	void copyActionsDynamicProperties();
 	void SaveConfig();

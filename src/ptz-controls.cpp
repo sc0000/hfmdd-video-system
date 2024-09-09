@@ -241,8 +241,6 @@ void PTZControls::updateTexts()
   ui->deletePresetButton->setText(TextHandler::getText(ID::CONTROLS_PRESET_DELETE));
   ui->recordButton->setText(TextHandler::getText(ID::CONTROLS_RECORD));
   ui->toBookingManagerButton->setText(TextHandler::getText(ID::CONTROLS_BACK_MANAGER));
-
-  infoDialogText = TextHandler::getText(ID::CONTROLS_INFO);
 }
 
 PTZControls::PTZControls(QWidget *parent)
@@ -1120,23 +1118,7 @@ void PTZControls::on_overviewButton_clicked()
 
 void PTZControls::on_infoButton_pressed()
 {
-  if (Widgets::infoDialog->isHidden()) {
-    ui->infoButton->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); }"
-    );
-
-    Widgets::infoDialog->display(infoDialogText, ui->infoButton);
-  }
-
-  else {
-    ui->infoButton->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); }"
-    );
-
-    Widgets::infoDialog->fade();
-  }
+  Widgets::infoDialog->display(TextHandler::getText(ID::CONTROLS_INFO), ui->infoButton);
 }
 
 void PTZControls::on_savePresetButton_clicked()

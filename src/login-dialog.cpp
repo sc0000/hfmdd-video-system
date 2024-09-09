@@ -200,22 +200,5 @@ void LoginDialog::on_languageComboBox_currentTextChanged(const QString& text)
 
 void LoginDialog::on_infoButton_pressed()
 {
-  if (Widgets::infoDialog->isHidden()) {
-    ui->infoButton->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    );
-
-    Widgets::infoDialog->display(TextHandler::getText(ID::LOGIN_INFO).arg(MailHandler::adminEmail), ui->infoButton);
-  }
-    
-
-  else {
-    ui->infoButton->setStyleSheet(
-      "QPushButton { color: rgb(254, 253, 254); background-color: rgb(31, 30, 31); }"
-      "QPushButton:hover { background-color: rgb(42,130,218); border: 1px solid rgb(254, 253, 254); }"
-    );
-
-    Widgets::infoDialog->fade();
-  }
+  Widgets::infoDialog->display(TextHandler::getText(ID::LOGIN_INFO).arg(MailHandler::adminEmail), ui->infoButton);
 }
