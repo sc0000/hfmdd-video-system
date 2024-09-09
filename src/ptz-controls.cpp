@@ -844,17 +844,12 @@ void PTZControls::LoadConfig()
   OBSDataArray preset_array = obs_data_get_array(loaddata, "global_presets");
   obs_data_array_release(preset_array);
   m_presetsModel.loadPresets(preset_array);
-
+  
   ui->presetListView->setModel(presetModel());
 }
 
 void PTZControls::loadUserPresets()
 {
-  if (MailHandler::isAdmin) {
-    ui->presetListView->setModel(presetModel());
-    return;
-  }
-
   char *file = obs_module_config_path("config.json");
 
   if (!file) return;
@@ -876,7 +871,14 @@ void PTZControls::loadUserPresets()
   obs_data_release(loaddata);
 
   OBSDataArray preset_array = obs_data_get_array(loaddata, "global_presets");
+  obs_data_array_release(preset_array);
+  m_presetsModel.loadPresets(preset_array);
   m_userPresetsModel.loadUserPresets(preset_array);
+
+  if (MailHandler::isAdmin) {
+    ui->presetListView->setModel(presetModel());
+    return;
+  }
 
   ui->presetListView->setModel(userPresetModel());
 }
@@ -1202,10 +1204,13 @@ void PTZControls::on_deletePresetButton_clicked()
 
 	model->removePresetWithId(id);
 
-  if (MailHandler::currentEmail == MailHandler::adminEmail) return;
+  SaveConfig();
+  loadUserPresets();
 
-  PTZPresetListModel* userModel = userPresetModel();
-  userModel->removePresetWithId(id);
+  // if (MailHandler::currentEmail == MailHandler::adminEmail) return;
+
+  // PTZPresetListModel* userModel = userPresetModel();
+  // userModel->removePresetWithId(id);
 }
 
 bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*)
@@ -1434,17 +1439,35 @@ void PTZControls::setNewPresetName(const QString& text)
 
 void PTZControls::savePreset()
 {
-  // auto model = ui->presetListView->model();
-
   PTZPresetListModel* model = presetModel();
 
-	auto row = model->rowCount();
-	model->insertRows(row, 1);
-	QModelIndex index = model->index(row, 0);
+  int existingNameId = model->find("name", newPresetName);
+
+  QModelIndex index;
+
+  if (existingNameId != -1) {
+    int result = Widgets::okCancelDialog->display(
+      TextHandler::getText(ID::CONTROLS_PRESET_SAVE_OVERWRITE)
+    );
+    
+    if (result == QDialog::Rejected) {
+      Widgets::presetDialog->display(booking);
+      return;
+    }
+      
+    index = model->index(existingNameId);
+  }
+
+  else {
+    auto row = model->rowCount();
+	  model->insertRows(row, 1);
+	  index = model->index(row);
+  }
+	
   int id = presetIndexToId(model, index);
 
-  // QString deb = "Number of rows: " + QString::number(row) + " " + "Index: " + QString::number(presetIndexToId(model, index));
-  // Widgets::okDialog->display(deb, this);
+  // QString deb = "Number of rows: " + QString::number(model->rowCount()) + " " + "Index: " + QString::number(presetIndexToId(model, index));
+  // Widgets::okDialog->display(deb);
 
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
@@ -1461,7 +1484,6 @@ void PTZControls::savePreset()
 
   SaveConfig();
   loadUserPresets();
-  // ui->presetListView->setModel(userPresetModel());
 }
 
 void PTZControls::savePresets()

@@ -110,6 +110,8 @@ public:
 	OBSDataArray savePresets() const;
   
   void removePresetWithId(int id);
+  int getPresetIndexByName(const QString& name);
+  QString getDebugInfo();
 };
 
 class PTZDevice : public QObject {

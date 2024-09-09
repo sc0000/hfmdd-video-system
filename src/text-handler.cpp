@@ -299,6 +299,12 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
+    ID::CONTROLS_PRESET_SAVE_OVERWRITE,
+    "A preset with the given name already exists. "
+    "Do you want to overwrite it?"
+  },
+
+  {
     ID::CONTROLS_PRESET_LOAD,
     "Load"
   },
@@ -733,6 +739,12 @@ const QMap<ETextId, QString> TextHandler::german = {
   {
     ID::CONTROLS_PRESET_SAVE,
     "Speichern"
+  },
+
+  {
+    ID::CONTROLS_PRESET_SAVE_OVERWRITE,
+    "Es gibt bereits ein Preset mit dem gewählten Namen."
+    "Möchten Sie es überschreiben?"
   },
 
   {

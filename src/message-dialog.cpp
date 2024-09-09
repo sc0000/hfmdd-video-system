@@ -251,13 +251,14 @@ void PresetDialog::updateTexts()
 
 void PresetDialog::on_okButton_clicked()
 {
+  fade();
+
   PTZControls* ptzControls = Widgets::ptzControls;
 
   if (!ptzControls) return;
 
   ptzControls->setNewPresetName(ui->presetNameLineEdit->text());
   ptzControls->savePreset();
-  fade();
 }
 
 void PresetDialog::on_cancelButton_clicked()

@@ -375,6 +375,7 @@ bool PTZPresetListModel::setData(const QModelIndex &index,
 		emit dataChanged(index, index);
 		return true;
 	}
+
 	return false;
 }
 
@@ -466,7 +467,9 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
     currentUserPresets
   );
 
-	for (size_t i = 0; i < obs_data_array_count(preset_array); i++) {
+  size_t count = obs_data_array_count(preset_array);
+
+	for (size_t i = 0; i < count; i++) {
 		OBSDataAutoRelease item = obs_data_array_item(preset_array, i);
 		auto id = obs_data_get_int(item, "id");
 
@@ -480,16 +483,16 @@ void PTZPresetListModel::loadUserPresets(OBSDataArray preset_array)
 		m_presets[id] = preset;
 		sanitize(id);
 	}
-  
+
 	endResetModel();
 }
 
 OBSDataArray PTZPresetListModel::savePresets() const
 {
 	OBSDataArrayAutoRelease preset_array = obs_data_array_create();
-	for (auto id : m_displayOrder) {
-		OBSDataAutoRelease data = variantMapToOBSData(m_presets[id]);
-		obs_data_set_int(data, "id", id);
+	for (auto& preset : m_presets) {
+		OBSDataAutoRelease data = variantMapToOBSData(preset);
+		obs_data_set_int(data, "id", preset["id"].toInt());
 		obs_data_array_push_back(preset_array, data);
 	}
 	return preset_array.Get();
@@ -497,13 +500,40 @@ OBSDataArray PTZPresetListModel::savePresets() const
 
 void PTZPresetListModel::removePresetWithId(int id)
 {
-  for (qsizetype i = 0; i < rowCount(); ++i) {
-    QModelIndex iterIndex = index(i, 0);
+  qsizetype count = rowCount();
+
+  for (qsizetype i = 0; i < count; ++i) {
+    QModelIndex iterIndex = index(i);
     if (data(iterIndex, Qt::UserRole).toInt() == id) {
       removeRow(i);
       return;
     }
   }
+}
+
+int PTZPresetListModel::getPresetIndexByName(const QString& name)
+{
+  qsizetype count = rowCount();
+
+  for (qsizetype i = 0; i < count; ++i) {
+    QModelIndex iterIndex = index(i, 0);
+    QVariantMap &preset = m_presets[i];
+    if (name == preset["name"])
+      return data(iterIndex, Qt::UserRole).toInt();
+  }
+
+  return -1;
+}
+
+QString PTZPresetListModel::getDebugInfo()
+{
+  QString debugInfo = "";
+
+  for (auto& map : m_presets) {
+    debugInfo += QString::number(map["id"].toInt()) + " " + map["name"].toString() + "\n";
+  }
+
+  return debugInfo;
 }
 
 PTZDevice::PTZDevice(OBSData config) : QObject()
