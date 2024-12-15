@@ -1,3 +1,10 @@
+/* Full screen login widget 
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 
@@ -9,7 +16,6 @@
 #include "booking-handler.hpp"
 #include "mail-handler.hpp"
 #include "widgets.hpp"
-#include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
@@ -76,7 +82,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 
 LoginDialog::~LoginDialog()
 {
-    delete ui;
+  delete ui;
 }
 
 void LoginDialog::reload()

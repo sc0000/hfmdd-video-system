@@ -1,3 +1,10 @@
+/* Sending mails to users and admin
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDir>
@@ -35,7 +42,7 @@ QString MailHandler::currentEmail = "";
 bool MailHandler::mailAddressIsValid = false;
 bool MailHandler::isAdmin = false;
 
-QVector<QString> MailHandler::mailSuffices = { "@hfmdd.de", "@mailbox.hfmdd.de", "@gmx.net", "@gmail.com", "@gmail.de" };
+QVector<QString> MailHandler::mailSuffices = { "@hfmdd.de", "@mailbox.hfmdd.de", "admin.default" };
 
 bool MailHandler::sendConflictWarnings = true;
 

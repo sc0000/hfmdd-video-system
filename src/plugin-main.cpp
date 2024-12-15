@@ -1,19 +1,7 @@
-/*
-HfM Dresden Concert Hall Video Recording Interface
-Copyright (C) 2023 Sebastian Cyliax sebastiancyliax@gmx.net
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along
-with this program. If not, see <https://www.gnu.org/licenses/>
+/* Entry point
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
 */
 
 #include <obs-module.h>
@@ -25,12 +13,12 @@ with this program. If not, see <https://www.gnu.org/licenses/>
 #include <plugin-support.h>
 #include <util/config-file.h>
 #include <util/platform.h>
-#include "ptz.h"
 #include "login.hpp"
 #include "login-dialog.hpp"
 #include "widgets.hpp"
 #include "settings.hpp"
 #include "mail-handler.hpp"
+#include "ptz.h"
 
 OBS_DECLARE_MODULE()
 OBS_MODULE_AUTHOR("Sebastian Cyliax <sebastiancyliax@gmx.net>");
@@ -39,8 +27,6 @@ OBS_MODULE_USE_DEFAULT_LOCALE(PLUGIN_NAME, "en-US")
 bool obs_module_load(void)
 {
   QWidget* mainWindow = (QWidget*)obs_frontend_get_main_window();
-  // SimpleRecordingWidget* simpleRecordingWidget = new SimpleRecordingWidget(mainWindow);
-  // obs_frontend_add_dock(simpleRecordingWidget);
 
   if (!mainWindow) return false;
 
@@ -64,7 +50,7 @@ bool obs_module_load(void)
 
   if (!globalConfig) return false;
 
-  config_set_string(globalConfig, "General", "CurrentTheme3", "CustomDark");
+  config_set_string(globalConfig, "General", "CurrentTheme3", "Mondrian");
   config_set_string(globalConfig, "BasicWindow", "DockState", 
     "AAAA/wAAAAD9AAAAAgAAAAEAAADQAAAD4/wCAAAABPsAAAAKAEwAbwBnAGkAbgEAAAAWAAAD4wAAAaYAB///+wAAABQAcwBjAGUAbgBlAHMARABvAGMAawAAAAAWAAAAjAAAAG8A////+wAAABYAcwBvAHUAcgBjAGUAcwBEAG8AYwBrAAAAABYAAADGAAAAbwD////7AAAAFgBQAFQAWgBDAG8AbgB0AHIAbwBsAHMAAAAAFgAAA+MAAAIXAAf//wAAAAMAAAeAAAAA0PwBAAAAA/wAAAAAAAACSgAAAAAA////+v////8CAAAAAvsAAAASAG0AaQB4AGUAcgBEAG8AYwBrAAAAAAD/////AAAAcQD////7AAAAHgB0AHIAYQBuAHMAaQB0AGkAbwBuAHMARABvAGMAawAAAAKiAAAAegAAAGsA////+wAAABgAYwBvAG4AdAByAG8AbABzAEQAbwBjAGsAAAAAAAAAB4AAAAE2AP////sAAAASAHMAdABhAHQAcwBEAG8AYwBrAgAAAcD///0iAAACuQAAAN4AAAasAAAD4wAAAAQAAAAEAAAACAAAAAj8AAAAAA==");
   config_set_string(globalConfig, "BasicWindow", "DocksLocked", "true");

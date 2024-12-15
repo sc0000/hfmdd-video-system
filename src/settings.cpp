@@ -1,3 +1,11 @@
+/* Settings menu
+ *
+ * Copyright 2020 Grant Likely (2020) <grant.likely@secretlab.ca>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QPlainTextEdit>
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -370,7 +378,6 @@ void PTZSettings::resetFilterSettings()
   }
 
   StorageHandler::setOuterDirectory();
-
 
   if (StorageHandler::outerDirectory == "") {
     Widgets::okDialog->display("ERROR: Unspecified outer directory");

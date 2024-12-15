@@ -1,3 +1,10 @@
+/* Sending mails to users and admin
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include "booking-handler.hpp"

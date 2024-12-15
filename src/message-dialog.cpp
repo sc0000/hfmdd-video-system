@@ -1,3 +1,10 @@
+/* Different kinds of message dialogs
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -14,8 +21,6 @@
 #include "ui_admin-mail-dialog.h"
 
 #include "message-dialog.hpp"
-
-// TODO: Setup some form of inheritance structure here?
 
 OkDialog::OkDialog(QWidget* parent)
   : AnimatedDialog(parent),
@@ -187,16 +192,7 @@ PresetDialog::PresetDialog(QWidget* parent)
 
 void PresetDialog::display(Booking* booking)
 {
-  if (booking) {
-    ui->presetNameLineEdit->setText(
-      booking->date.toString() + ", " +
-      booking->startTime.toString("HH:mm") + " - " +
-      booking->event
-    );
-  }
-
-  else 
-    ui->presetNameLineEdit->setPlaceholderText("New Preset Name");
+  ui->presetNameLineEdit->setText("");
 
   fade();
 }
@@ -210,6 +206,24 @@ void PresetDialog::updateTexts()
 
 void PresetDialog::on_okButton_clicked()
 {
+  const QString& name = ui->presetNameLineEdit->text();
+
+  bool justWhiteSpace = true;
+
+  for (const QChar c : name) {
+    if (c.isLetterOrNumber())
+      justWhiteSpace = false;
+  }
+
+  if (name == "" || justWhiteSpace) {
+    Widgets::okDialog->display(
+      TextHandler::getText(ID::CONTROLS_PRESET_NO_NAME)
+    );
+
+    ui->presetNameLineEdit->setText("");
+    return;
+  }
+
   fade();
 
   PTZControls* ptzControls = Widgets::ptzControls;

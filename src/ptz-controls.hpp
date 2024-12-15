@@ -1,9 +1,11 @@
 /* Pan Tilt Zoom camera controls
  *
- * Copyright 2020 Grant Likely <grant.likely@secretlab.ca>
+ * Copyright 2020 Grant Likely (2020) <grant.likely@secretlab.ca>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
  *
  * SPDX-License-Identifier: GPLv2
  */
+
 #pragma once
 
 #include <QTimer>
@@ -14,7 +16,6 @@
 #include "text-handler.hpp"
 #include "time-observer.hpp"
 #include "booking-handler.hpp"
-#include "ptz.h"
 #include "imported/qjoysticks/QJoysticks.h"
 #include "touch-control.hpp"
 #include "ptz-device.hpp"

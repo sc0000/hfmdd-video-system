@@ -1,3 +1,11 @@
+/* Storing sources' output separately
+ *
+ * Copyright 2023 Exeldro <https://github.com/exeldro>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #pragma once
 
 #include <obs-module.h>

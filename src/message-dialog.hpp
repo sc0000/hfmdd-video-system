@@ -1,3 +1,10 @@
+/* Different kinds of message dialogs
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QDialog>
 #include <QString>
 #include <QWidget>

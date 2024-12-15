@@ -1,6 +1,7 @@
 /* Pan Tilt Zoom device factory
  *
  * Copyright 2020 Grant Likely <grant.likely@secretlab.ca>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
  *
  * SPDX-License-Identifier: GPLv2
  */
@@ -12,10 +13,10 @@
 #include "mail-handler.hpp"
 #include "booking-manager.hpp"
 #include "widgets.hpp"
+#include "ptz.h"
 #include "ptz-visca-udp.hpp"
 #include "ptz-visca-tcp.hpp"
 #include "ptz-onvif.hpp"
-#include "ptz.h"
 #include "ptz-device.hpp"
 
 #if defined(ENABLE_SERIALPORT)

@@ -1,3 +1,11 @@
+/* Full screen widgets to choose between recording immediately
+ * or employing the booking system
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include <QWidget>
@@ -30,4 +38,3 @@ public:
   virtual void reload() override;
   virtual void updateTexts() override; 
 };
-

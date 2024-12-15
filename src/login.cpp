@@ -1,9 +1,15 @@
+/* Startup button for the interface (the name login is a remnant) 
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 
 #include <QMainWindow>
 
-#include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "mode-select.hpp"

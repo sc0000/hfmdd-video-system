@@ -1,3 +1,10 @@
+/* Some utility code for all full screen widgets, incl. (minimal) animations
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QRect>
 #include <QScreen>
 #include <QKeyEvent>

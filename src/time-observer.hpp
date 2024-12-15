@@ -1,3 +1,10 @@
+/* Wrapper around QTimer, used for automatic recording termination
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #pragma once
 
 #include <QDateTime>

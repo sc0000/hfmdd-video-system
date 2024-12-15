@@ -1,3 +1,10 @@
+/* Internal handling of bookings
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include <QVector>
@@ -45,5 +52,5 @@ public:
   static void sortBookings(QVector<Booking*>& bookings);
   static void reevaluateConflicts();
   static void roundTime(QTime& time);
-
+  static bool inThePast(const Booking* booking);
 };

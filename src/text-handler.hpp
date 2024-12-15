@@ -1,3 +1,10 @@
+/* Handling texts and languages
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #pragma once
 
 #include <QMap>
@@ -48,6 +55,7 @@ enum class ETextId {
   CONTROLS_CAMERA_MANAGER,
   CONTROLS_CAMERA_SINGLE,
   CONTROLS_PRESET_SAVE,
+  CONTROLS_PRESET_NO_NAME,
   CONTROLS_PRESET_SAVE_OVERWRITE,
   CONTROLS_PRESET_LOAD,
   CONTROLS_PRESET_LOAD_NONE_SELECTED,

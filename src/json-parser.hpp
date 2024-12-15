@@ -1,3 +1,11 @@
+/* Reading from and writing to JSON files (bookings and presets)
+ * 
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include "booking-handler.hpp"

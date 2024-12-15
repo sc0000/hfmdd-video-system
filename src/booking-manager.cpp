@@ -1,3 +1,10 @@
+/* Full screen widget for managing one's bookings
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QLabel>
 #include <QScreen>
 
@@ -129,10 +136,11 @@ void BookingManager::deleteBooking(const Booking* booking)
 {
   if (!booking) return;
 
-  if (MailHandler::isAdmin && booking->email != MailHandler::adminEmail) {
+  if (MailHandler::isAdmin && 
+      booking->email != MailHandler::adminEmail &&
+      !BookingHandler::inThePast(booking)) 
     Widgets::adminMailDialog->display(EAdminMailType::Deletion, booking);
-  }
-
+  
   JsonParser::removeBooking(booking);
   constructList();
 }

@@ -1,3 +1,10 @@
+/* Widget for creating and editing bookings
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QLabel>
 
 #include "booking-handler.hpp"

@@ -1,3 +1,10 @@
+/* Custom handlebar, fade animations for animated dialog boxes
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include <QDialog>

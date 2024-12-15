@@ -1,3 +1,10 @@
+/* Widget for creating and editing bookings
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QMouseEvent>
 
 #include "animated-dialog.hpp"
@@ -57,5 +64,4 @@ public:
 
   void reload(Booking* bookingToEdit = nullptr);
   virtual void updateTexts() override;  
-
 };

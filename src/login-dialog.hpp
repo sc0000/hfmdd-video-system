@@ -1,3 +1,10 @@
+/* Full screen login widget 
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include <QWidget>
@@ -39,4 +46,3 @@ public:
   virtual void reload() override;
   virtual void updateTexts() override; 
 };
-

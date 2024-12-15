@@ -1,6 +1,7 @@
 /* Pan Tilt Zoom camera controls
  *
- * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>, extending work by Grant Likely (2020) <grant.likely@secretlab.ca>
+ * Copyright 2020 Grant Likely (2020) <grant.likely@secretlab.ca>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
  *
  * SPDX-License-Identifier: GPLv2
  */
@@ -166,33 +167,36 @@ void PTZControls::connectSignalItemSelect()
 void PTZControls::startRecording()
 {
   if (booking->date != QDate::currentDate()) {
-      Widgets::okDialog->display(
-        TextHandler::getText(ID::CONTROLS_RECORD_WRONG_DATE)
-      );
-
-      return;
-    }
-
-    QTime currentTime = QTime::currentTime();
-
-    if (currentTime < booking->startTime.addSecs(-15 * 60)  ||
-        currentTime > booking->startTime.addSecs(30 * 60)) {
-      Widgets::okDialog->display(
-        TextHandler::getText(ID::CONTROLS_RECORD_WRONG_TIME)
-      );
-
-      return;
-    }
-
-    obs_frontend_recording_start();
-
-    QDateTime threshold(booking->date, booking->stopTime.addSecs(10 * 60));
-    m_timeObserver->setThreshold(threshold);
-    m_timeObserver->start();
-
-    ui->recordButton->setText(
-      "Stop"
+    Widgets::okDialog->display(
+      TextHandler::getText(ID::CONTROLS_RECORD_WRONG_DATE)
     );
+
+    return;
+  }
+
+  QTime currentTime = QTime::currentTime();
+
+  if (currentTime < booking->startTime.addSecs(-15 * 60)  ||
+      currentTime > booking->startTime.addSecs(30 * 60)) {
+    Widgets::okDialog->display(
+      TextHandler::getText(ID::CONTROLS_RECORD_WRONG_TIME)
+    );
+
+    return;
+  }
+
+  booking->startTime = QTime::currentTime();
+  JsonParser::updateBooking(booking);
+
+  obs_frontend_recording_start();
+
+  QDateTime threshold(booking->date, booking->stopTime.addSecs(10 * 60));
+  m_timeObserver->setThreshold(threshold);
+  m_timeObserver->start();
+
+  ui->recordButton->setText(
+    "Stop"
+  );
 }
 
 void PTZControls::stopRecording(bool manual)
@@ -212,7 +216,9 @@ void PTZControls::stopRecording(bool manual)
   MailHandler::sendMail(EMailType::SendFiles, booking);
 
   if (manual)
-    Widgets::okDialog->display(TextHandler::getText(ID::MAIL_SENT), true);
+    Widgets::okDialog->display(
+      TextHandler::getText(ID::MAIL_SENT).arg(booking->email), true
+    );
 
   else logout();
 }
@@ -1187,11 +1193,6 @@ void PTZControls::on_deletePresetButton_clicked()
 
   SaveConfig();
   loadUserPresets();
-
-  // if (MailHandler::currentEmail == MailHandler::adminEmail) return;
-
-  // PTZPresetListModel* userModel = userPresetModel();
-  // userModel->removePresetWithId(id);
 }
 
 bool selected_source_enum_callback(obs_scene_t* scene, obs_sceneitem_t* item, void*)
@@ -1389,9 +1390,6 @@ void PTZControls::presetRecallAll(int preset_id)
 
 int PTZControls::presetNameToId(QAbstractListModel* model, const QString& name)
 {
-  // TODO: support same preset name at different indeces
-  // with ui->presetListView->setModel(ptz->presetModel());
-
 	auto rowCount = model->rowCount();
 	
   for (int i = 0; i < rowCount; ++i)
@@ -1415,14 +1413,25 @@ int PTZControls::presetIndexToId(PTZPresetListModel* model, QModelIndex index)
 
 void PTZControls::setNewPresetName(const QString& text)
 {
-  newPresetName = text;
+  const QString tag = MailHandler::isAdmin ? "(HFM) " : "(USR) ";
+  newPresetName = tag + text;
+
+  qsizetype paddingSize = 12 - text.size();
+
+  if (paddingSize < 0) return;
+
+  for (qsizetype i = 0; i < paddingSize; ++i)
+    newPresetName.append(" ");
 }
 
 void PTZControls::savePreset()
 {
   PTZPresetListModel* model = presetModel();
+  PTZPresetListModel* userModel = userPresetModel();
 
-  int existingNameId = model->find("name", newPresetName);
+  if (!model || !userModel) return;
+
+  int existingNameId = userModel->find("name", newPresetName);
 
   QModelIndex index;
 
@@ -1447,13 +1456,10 @@ void PTZControls::savePreset()
 	
   int id = presetIndexToId(model, index);
 
-  // QString deb = "Number of rows: " + QString::number(model->rowCount()) + " " + "Index: " + QString::number(presetIndexToId(model, index));
-  // Widgets::okDialog->display(deb);
-
 	if (index.isValid()) {
 		ui->presetListView->setCurrentIndex(index);
 		model->setData(index, newPresetName, Qt::EditRole);
-    userPresetModel()->setData(index, newPresetName, Qt::EditRole);
+    userModel->setData(index, newPresetName, Qt::EditRole);
 
     JsonParser::addPreset(
       MailHandler::currentEmail, 

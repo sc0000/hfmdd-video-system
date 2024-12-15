@@ -1,3 +1,10 @@
+/* Organizing folder structure, handling temporary files etc.
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #include <QDir>
 
 #include <obs.hpp>

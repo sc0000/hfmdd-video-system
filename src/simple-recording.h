@@ -1,3 +1,10 @@
+/* Initial prototype, doesn't get compiled
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include <QPushButton>

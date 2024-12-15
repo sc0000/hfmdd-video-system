@@ -1,3 +1,10 @@
+/* All widgets are loaded on startup and released on close
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #include <QVector>
 
 #include "fullscreen-dialog.hpp"

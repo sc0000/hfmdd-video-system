@@ -1,3 +1,10 @@
+/* Startup button for the interface (the name login is a remnant) 
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #pragma once
 
 #include <QWidget>
@@ -38,4 +45,3 @@ public:
 
   static inline Login* getInstance() { return instance; }
 };
-

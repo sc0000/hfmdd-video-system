@@ -64,7 +64,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="presetNameLineEdit"/>
+        <widget class="QLineEdit" name="presetNameLineEdit">
+         <property name="maxLength">
+          <number>12</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

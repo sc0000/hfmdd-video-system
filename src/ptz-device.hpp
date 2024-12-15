@@ -1,12 +1,12 @@
 /* Pan Tilt Zoom device base object
  *
  * Copyright 2020 Grant Likely <grant.likely@secretlab.ca>
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
  *
  * SPDX-License-Identifier: GPLv2
  */
 #pragma once
 
-#include "ptz.h"
 #include "imported/qt-wrappers.hpp"
 #include <memory>
 #include <QObject>
@@ -75,7 +75,7 @@ protected:
 	/* Collection of all presets, keyed by unique integer id.
 	 * On cameras that use preset numbers, the id is mapped 1:1 with the
 	 * preset number.  */
-	size_t m_maxPresets = 16;
+	size_t m_maxPresets = 128;
 	QMap<size_t, QVariantMap> m_presets;
 	QList<size_t> m_displayOrder;
 	void sanitize(size_t id);

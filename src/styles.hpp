@@ -1,3 +1,10 @@
+/* Style sheets to be used in tandem with the included OBS theme
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #pragma once
 
 #include <QString>
@@ -12,7 +19,6 @@ namespace Color {
 }
 
 namespace Styles {
-  
   inline const QString regularButtonLF = QString(
     "QPushButton { background-color: %1; font-size: 16px; border: 1px solid %2; }"
     "QPushButton:hover { background-color: %3; }"

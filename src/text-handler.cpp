@@ -1,3 +1,10 @@
+/* Handling texts and languages
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ * 
+ * SPDX-License-Identifier: GPLv2
+*/
+
 #include <QString>
 
 #include "message-dialog.hpp"
@@ -45,13 +52,13 @@ const QMap<ETextId, QString> TextHandler::english = {
     "<html><head/><body>" 
     "<span style=\"font-weight: bold;\">What am I looking at?</span><br/>"
     "This is a system with which every member of HfMDD can independently record their concert hall performances on video.<br/><br/>"
-    "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdde.de or @mailbox.hfmdd.de). "
+    "<span style=\"font-weight: bold;\">How does it work?</span><br/>First, log in with your school email (@hfmdd.de or @mailbox.hfmdd.de). "
     "Please make sure to spell it correctly, otherwise you might not receive the download link for your videos. "
     "Then, you have two options: You could make a recording right away, only setting the stop time. "
     "However, you could also work with the booking system, and reserve a time slot to record a video at a later time or date.<br/><br/>"
     "<span style=\"font-weight: bold;\">Anything to be aware of?</span><br/>"
     "No matter which route you'll take, the system will let you know of any other planned recordings that might be in conflict with what you're planning. "
-    "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot."
+    "As of yet, you are not technically prohibited to make conflicting bookings, or let a recording run into another booked timeslot. "
     "Therefore, it is all the more important to communicate with whomever you're colliding with. Conflicting bookings might also be reviewed by the admin, and, if needed, adjusted.<br/><br/>"
     "<span style=\"font-weight: bold;\">Who can I talk to about this?</span><br/>For questions and feedback, please contact %1."
     "</body></html>"
@@ -299,6 +306,11 @@ const QMap<ETextId, QString> TextHandler::english = {
   },
 
   {
+    ID::CONTROLS_PRESET_NO_NAME,
+    "Please enter a valid name for your new preset!"
+  },
+
+  {
     ID::CONTROLS_PRESET_SAVE_OVERWRITE,
     "A preset with the given name already exists. "
     "Do you want to overwrite it?"
@@ -374,7 +386,8 @@ const QMap<ETextId, QString> TextHandler::english = {
     "or by clicking on the preview in overview mode. "
     "Save your current configuration as a preset, or load previously saved presets. Finally, you can start and stop the recording.<br/><br/>"
     "<span style=\"font-weight: bold;\">What's with the presets already in the list?</span><br/>"
-    "Additional to your own presets, you have access to a couple of standard presets provided by the admin.<br/><br/>"
+    "Additional to your own presets, you have access to a couple of standard presets provided by the admin. "
+    "These are preceded by the tag 'HFM'. Your own presets are preceded by 'USR'.<br/><br/>"
     "<span style=\"font-weight: bold;\">What do the numbers behind the preset names mean?</span><br/>"
     "Nothing of significance, just the (global) order in which the presets where saved. The numbers will be removed at some point.<br/><br/>"
     "</body></html>"
@@ -394,7 +407,7 @@ const QMap<ETextId, QString> TextHandler::english = {
     ID::MAIL_FILES_BODY,
     "You can download your concert hall recording following the link below.\n"
     "Please be advised that it might take a moment for the download to start.\n"
-    "For any questions or feedback, please contact Oliver Fenk (oliver.fenk@hfmdd.de).\n\n"
+    "For any questions or feedback, please contact %1.\n\n"
   },
 
   {
@@ -450,8 +463,8 @@ const QMap<ETextId, QString> TextHandler::english = {
 
   {
     ID::MAIL_SENT,
-    "Email with download link sent to %1. "
-    "Please be aware that it might take a few minutes for it to arrive. "
+    "Download link sent to %1. "
+    "Please be aware that it might take a few minutes for the mail to arrive. "
   },
 
   {
@@ -742,6 +755,11 @@ const QMap<ETextId, QString> TextHandler::german = {
   },
 
   {
+    ID::CONTROLS_PRESET_NO_NAME,
+    "Bitte geben Sie Ihrem neuen Preset einen sinnvollen Namen!"
+  },
+
+  {
     ID::CONTROLS_PRESET_SAVE_OVERWRITE,
     "Es gibt bereits ein Preset mit dem gewählten Namen."
     "Möchten Sie es überschreiben?"
@@ -817,7 +835,8 @@ const QMap<ETextId, QString> TextHandler::german = {
     "Sie können ihre aktuelle Konfiguration als Preset speichern, oder ein bereits vorhandenes Preset laden. "
     "Außerdem können Sie die Aufnahme hier natürlich starten und stoppen.<br/><br/>"
     "<span style=\"font-weight: bold;\">In der Liste sind ja bereits einige Presets..?</span><br/>"
-    "Zusätzlich zu Ihren eigenen Presets finden Sie ein paar vom Administrator bereit gestellte.<br/><br/>"
+    "Zusätzlich zu Ihren eigenen Presets finden Sie ein paar vom Administrator bereit gestellte. Diesen ist das Kürzel 'HFM' vorangestellt. "
+    "Ihre eigenen Presets tragen das Kürzel 'USR'.<br/><br/>"
     "<span style=\"font-weight: bold;\">Was bedeuten die Nummern hinter den Presets?</span><br/>"
     "Die Nummern zeigen lediglich die Reihenfolge an, in der die Presets gespeichert wurden, und werden voraussichtlich in einem kommenden Update entfernt."
     "</body></html>"

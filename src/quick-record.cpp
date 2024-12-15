@@ -1,3 +1,10 @@
+/* Full screen widget for booking instant recordings
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QLabel>
 #include <QScreen>
 
@@ -227,7 +234,6 @@ void QuickRecord::on_decreaseTimeBy05Button_pressed()
   if (newStopTime <= booking->startTime) 
     return;
   
-
   if (newStopTime > QTime(23, 0)) 
     return;
 
@@ -262,7 +268,6 @@ void QuickRecord::on_increaseTimeBy20Button_pressed()
   updateExistingBookingsLabel(booking->date);
   updateDurationLabel();
 }
-
 
 void QuickRecord::on_toPTZControlsButton_clicked()
 { 

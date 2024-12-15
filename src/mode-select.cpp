@@ -1,3 +1,11 @@
+/* Full screen widgets to choose between recording immediately
+ * or employing the booking system
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <obs-module.h>
 #include <obs-frontend-api.h>
 
@@ -7,7 +15,6 @@
 #include "mail-handler.hpp"
 #include "widgets.hpp"
 #include "login-dialog.hpp"
-#include "ptz.h"
 #include "ptz-controls.hpp"
 #include "message-dialog.hpp"
 #include "booking-manager.hpp"
@@ -70,4 +77,4 @@ void ModeSelect::on_bookingModeButton_clicked()
 {
   BookingHandler::mode = EMode::BookMode;
   fade(Widgets::bookingManager);
-}  
+}

@@ -1,3 +1,10 @@
+/* Internal handling of bookings
+ *
+ * Copyright 2024 Sebastian Cyliax <sebastiancyliax@gmx.net>
+ *
+ * SPDX-License-Identifier: GPLv2
+ */
+
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDir>
@@ -181,4 +188,13 @@ void BookingHandler::roundTime(QTime& time)
 
   else
     time = QTime(time.hour(), roundedMinutes);
+}
+
+bool BookingHandler::inThePast(const Booking* booking)
+{
+  if (!booking) return true;
+  
+  return (booking->date < QDate::currentDate() ||
+          (booking->date == QDate::currentDate() && 
+          booking->stopTime < QTime::currentTime()));
 }
