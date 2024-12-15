@@ -7,9 +7,6 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/common/bootstrap.cmake" NO_POLICY_SCO
 
 project(${_name} VERSION ${_version})
 
-# set(CMAKE_CXX_STANDARD 20)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 option(ENABLE_FRONTEND_API "Use obs-frontend-api for UI functionality" ON)
 option(ENABLE_QT "Use Qt functionality" ON)
 
@@ -46,8 +43,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/text-handler.cpp
   src/mail-handler.cpp
   src/storage-handler.cpp
-  # src/simple-recording.cpp
-  # src/globals.cpp
   src/json-parser.cpp
   src/animated-dialog.cpp
   src/fullscreen-dialog.cpp
@@ -70,7 +65,6 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/settings.ui
   src/login-dialog.qrc
   src/ptz-controls.qrc
-  # src/ptz.c
   src/ptz-controls.cpp
   src/ptz-device.cpp
   src/settings.cpp
@@ -90,12 +84,10 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   src/imported/double-slider.cpp
   src/imported/slider-ignorewheel.cpp
   src/imported/spinbox-ignorewheel.cpp
-  # src/ptz.h
   src/booking-handler.hpp
   src/text-handler.hpp
   src/mail-handler.hpp
   src/storage-handler.hpp
-  # src/globals.hpp
   src/login.hpp
   src/login-dialog.hpp
   src/mode-select.hpp
