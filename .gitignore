@@ -15,11 +15,11 @@
 !CMakePresets.json
 !LICENSE
 !README.md
+!/Mondrian
 !*.qss
-#!/node-scripts
+!/node-scripts
 
-#/node-scripts/node_modules
-
+/node-scripts/node_modules
 
 # Exclude lock files
 *.lock.json
